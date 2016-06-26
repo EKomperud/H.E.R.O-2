@@ -25,16 +25,14 @@ public class MenuSliding : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Menu.MainMenuSlide && Menu.Back) {
-			Debug.Log ("pieMajor");
-			timer += Time.deltaTime * speed;
-			this.transform.position = Vector3.Lerp (endPosition, startPosition, timer);
-			if (this.transform.position == startPosition) {
-				Debug.Log (this.transform.position);
-				Debug.Log (startPosition);
-				Menu.MainMenuSlide = false;
-				Menu.Back = false;
+		if (Menu.Back) {
+			if (Menu.MainMenuSlide) {
+				timer = 0;
 			}
+			timer += Time.deltaTime * speed;
+			Debug.Log (timer);
+			this.transform.position = Vector3.Lerp (endPosition, startPosition, timer);
+			Menu.MainMenuSlide = false;
 		} 
 		else if (Menu.MainMenuSlide) {
 			timer += Time.deltaTime * speed;
