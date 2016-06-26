@@ -7,11 +7,6 @@ public class FountainScript : MonoBehaviour {
 
 	public ArrayList Players = new ArrayList();
 
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	void OnTriggerEnter2D (Collider2D collider) {
 		PlayerController player = collider.gameObject.GetComponent<PlayerController> ();
 		if (player != null) {

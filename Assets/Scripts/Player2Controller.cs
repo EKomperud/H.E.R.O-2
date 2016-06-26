@@ -185,14 +185,14 @@ public class Player2Controller : MonoBehaviour
         if (weapon == null)
             holdingWeapon = false;
         float inputX = Input.GetAxis("Horizontal_P2");
-        inputX = Input.GetAxis("LeftJoystickX_P2");
+        //inputX = Input.GetAxis("LeftJoystickX_P2");
         float inputY = Input.GetAxis("Vertical_P2");
-        inputY = Input.GetAxis("LeftJoystickY_P2");
+        //inputY = Input.GetAxis("LeftJoystickY_P2");
 
         bool shoot = Input.GetButtonDown("Shoot_P2");
-        shoot = Input.GetButtonDown("X_P2");
+        //shoot = Input.GetButtonDown("X_P2");
         bool grab = Input.GetButtonDown("Grab_P2");
-        grab = Input.GetButtonDown("Y_P2");
+        //grab = Input.GetButtonDown("Y_P2");
 
         if (shoot)
         {

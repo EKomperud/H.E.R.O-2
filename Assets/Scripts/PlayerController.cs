@@ -17,8 +17,9 @@ public class PlayerController : MonoBehaviour
     public ArrayList fountains = new ArrayList();
 
     public FountainScript fountain;
-
     public bool inFountain = false;
+	public RockScript rock;
+	public bool nearRock = false;
     public PlayerWeaponScript weapon;
     private bool holdingWeapon = false;
     public Vector2 speed = new Vector2(50, 50);
@@ -146,14 +147,14 @@ public class PlayerController : MonoBehaviour
         if (weapon == null)
             holdingWeapon = false;
         float inputX = Input.GetAxis("Horizontal_P1");
-        inputX = Input.GetAxis("LeftJoystickX");
+        //inputX = Input.GetAxis("LeftJoystickX");
         float inputY = Input.GetAxis("Vertical_P1");
-        inputY = Input.GetAxis("LeftJoystickY");
+        //inputY = Input.GetAxis("LeftJoystickY");
 
         bool shoot = Input.GetButtonDown("Shoot_P1");
-        shoot = Input.GetButtonDown("X");
+        //shoot = Input.GetButtonDown("X");
         bool grab = Input.GetButtonDown("Grab_P1");
-        grab = Input.GetButtonDown("Y");
+        //grab = Input.GetButtonDown("Y");
 
         if (shoot)
         {
@@ -163,11 +164,17 @@ public class PlayerController : MonoBehaviour
                 weapon.Attack();
             }
         }
-        if (grab && inFountain && !holdingWeapon)
+        if (grab && !holdingWeapon)
         {
-            //FountainScript fountain = (FountainScript) fountains [0];
-            fountain.CreateShot(this);
-            holdingWeapon = true;
+			if (inFountain) {
+				fountain.CreateShot (this);
+				holdingWeapon = true;
+			} else if (nearRock) {
+				weapon = rock.gameObject.GetComponent<PlayerWeaponScript> ();
+				holdingWeapon = true;
+				weapon.caster = this;
+			}
+
         }
 
         velocity.x *= 0.85f;
