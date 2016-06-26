@@ -1,0 +1,277 @@
+fileFormatVersion: 2
+guid: 003a91828f14ffd48bcd71622bccfe2e
+timeCreated: 1466901026
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Plasma animation_0
+    21300002: Plasma animation_1
+    21300004: Plasma animation_2
+    21300006: Plasma animation_3
+    21300008: Plasma animation_4
+    21300010: Plasma animation_5
+    21300012: Plasma animation_6
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 300
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Plasma animation_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 124, y: -33}
+        - {x: 124, y: 32}
+        - {x: 112, y: 68}
+        - {x: 90, y: 93}
+        - {x: 69, y: 117}
+        - {x: 27, y: 134}
+        - {x: -35, y: 134}
+        - {x: -54, y: 130}
+        - {x: -101, y: 89}
+        - {x: -122, y: 52}
+        - {x: -129, y: 29}
+        - {x: -129, y: -21}
+        - {x: -126, y: -52}
+        - {x: -94, y: -97}
+        - {x: -52, y: -127}
+        - {x: -20, y: -133}
+        - {x: 20, y: -133}
+        - {x: 49, y: -125}
+        - {x: 82, y: -106}
+        - {x: 116, y: -60}
+      - - {x: 143, y: 49}
+        - {x: 141, y: 39}
+        - {x: 141, y: -42}
+        - {x: 142, y: -45}
+        - {x: 147, y: -48}
+        - {x: 150, y: -48}
+        - {x: 150, y: 49}
+    - name: Plasma animation_1
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 95, y: -131}
+        - {x: 105, y: -123}
+        - {x: 123, y: -101}
+        - {x: 138, y: -78}
+        - {x: 149, y: -47}
+        - {x: 150, y: -40}
+        - {x: 150, y: 29}
+        - {x: 149, y: 35}
+        - {x: 138, y: 67}
+        - {x: 120, y: 98}
+        - {x: 97, y: 122}
+        - {x: 64, y: 144}
+        - {x: 48, y: 150}
+        - {x: -64, y: 150}
+        - {x: -76, y: 145}
+        - {x: -106, y: 127}
+        - {x: -131, y: 98}
+        - {x: -147, y: 68}
+        - {x: -150, y: 55}
+        - {x: -150, y: -53}
+        - {x: -149, y: -58}
+        - {x: -135, y: -84}
+        - {x: -121, y: -106}
+        - {x: -108, y: -120}
+        - {x: -71, y: -146}
+        - {x: -59, y: -150}
+        - {x: 64, y: -150}
+        - {x: 76, y: -145}
+        - {x: 82, y: -139}
+    - name: Plasma animation_2
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 27, y: -131}
+        - {x: 63, y: -120}
+        - {x: 118, y: -53}
+        - {x: 118, y: 38}
+        - {x: 70, y: 109}
+        - {x: 31, y: 112}
+        - {x: -54, y: 112}
+        - {x: -116, y: 49}
+        - {x: -124, y: 20}
+        - {x: -124, y: -80}
+        - {x: -91, y: -144}
+        - {x: -81, y: -150}
+        - {x: -54, y: -150}
+        - {x: -49, y: -148}
+        - {x: -52, y: -134}
+        - {x: -40, y: -150}
+        - {x: 24, y: -150}
+      - - {x: 138, y: 49}
+        - {x: 121, y: -2}
+        - {x: 121, y: -53}
+        - {x: 145, y: -86}
+        - {x: 150, y: -86}
+        - {x: 150, y: 49}
+      - - {x: -150, y: -18}
+        - {x: -147, y: -17}
+        - {x: -147, y: -7}
+        - {x: -149, y: -5}
+        - {x: -150, y: -5}
+    - name: Plasma animation_3
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 112, y: 104}
+        - {x: 113, y: 90}
+        - {x: 114, y: 66}
+        - {x: 112, y: 66}
+        - {x: 110, y: 40}
+        - {x: 112, y: 64}
+        - {x: 113, y: 73}
+        - {x: 113, y: 78}
+        - {x: 112, y: 100}
+        - {x: 112, y: 139}
+        - {x: 91, y: 150}
+        - {x: 68, y: 150}
+        - {x: 69, y: 148}
+        - {x: 71, y: 133}
+        - {x: 80, y: 119}
+        - {x: 81, y: 116}
+        - {x: 78, y: 122}
+        - {x: 71, y: 134}
+        - {x: 64, y: 145}
+        - {x: 42, y: 139}
+        - {x: -79, y: 143}
+        - {x: -150, y: 82}
+        - {x: -150, y: -135}
+        - {x: -147, y: -150}
+        - {x: 91, y: -150}
+        - {x: 150, y: -132}
+        - {x: 150, y: 100}
+    - name: Plasma animation_4
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -148, y: 64}
+        - {x: -150, y: 62}
+        - {x: -150, y: -43}
+        - {x: -142, y: -43}
+        - {x: -126, y: -22}
+        - {x: -126, y: 38}
+        - {x: -130, y: 64}
+      - - {x: -150, y: 87}
+        - {x: -150, y: 79}
+        - {x: -148, y: 79}
+        - {x: -146, y: 81}
+        - {x: -147, y: 85}
+        - {x: -149, y: 87}
+    - name: Plasma animation_5
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 480
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -42, y: 137}
+        - {x: 40, y: 137}
+        - {x: 56, y: 139}
+        - {x: 56, y: 150}
+        - {x: -53, y: 150}
+        - {x: -53, y: 146}
+    - name: Plasma animation_6
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 480
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -36, y: 150}
+        - {x: -36, y: 148}
+        - {x: -29, y: 139}
+        - {x: 9, y: 139}
+        - {x: 15, y: 147}
+        - {x: 15, y: 150}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
