@@ -3,15 +3,12 @@ using System.Collections;
 
 public class PlayerWeaponScript : MonoBehaviour {
 
-	//public Transform shotPrefab;
-
-	//public float shootingRate = 0.25f;
-
-	//private float shootCooldown;
+    private AnimationController2D animator;
 
 	// ShotScript code
 	public PlayerController caster;
 	private bool atCaster = false;
+    private bool right = true;
 	public string shotType = "default";
 
 	public int damage = 1;
@@ -26,7 +23,7 @@ public class PlayerWeaponScript : MonoBehaviour {
 	public bool rock = false;
 
 	void Start() {
-		//shootCooldown = 0f;
+        animator = gameObject.GetComponent<AnimationController2D>();
 		sizeX = transform.localScale.x;
 		hasShot = false;
 	}
@@ -42,21 +39,40 @@ public class PlayerWeaponScript : MonoBehaviour {
 					direction.x = -1;
 				}
 
-
+                
 				float X = caster.transform.position.x - this.transform.position.x;
 				float Y = caster.transform.position.y - this.transform.position.y;
-				if ((X > 1 || X < -1) || (Y > 0.3 || Y < -0.3)) {
+				if ((X > 2 || X < -2) || (Y > 0.1 || Y < -0.1)) {
+                    atCaster = false;
 					Vector3 movement = new Vector3 ((speed.x / 2) * X, (speed.y / 2) * Y, 0);
 					movement *= Time.deltaTime;
 					this.transform.Translate (movement);
 				} else {
 					hasShot = true;
+                    atCaster = true;
+                    //Vector3 revolve = new Vector3();
+                    //if (X > 1.5)
+                    //{
+                    //    revolve = new Vector3(0.5f, 0, .01f);
+                    //}
+                    //else if (X < -1.5)
+                    //{
+                    //    revolve = new Vector3(-0.5f, 0, -.01f);
+                    //}
+                    //revolve *= Time.deltaTime;
+                    //this.transform.Translate(revolve);
 				}
 			}
 
 			// Weapon has been fired
-			if (fire) {
-			
+			if (fire && !connected) {
+
+                if (shotType.Equals("fire"))
+                    animator.setAnimation("Fireball Shoot");
+
+                if (shotType.Equals("plasma"))
+                    animator.setAnimation("plasmaShoot");
+
 				hasShot = false;
 
 				Vector3 movement = new Vector3 (speed.x * direction.x, 0, 0);
@@ -71,12 +87,24 @@ public class PlayerWeaponScript : MonoBehaviour {
 
 			// Shot connected
 			if (connected) {
-				if (shotType.Equals ("fire")) {
-					if (transform.localScale.x < (4 * sizeX)) { 
-						transform.localScale = new Vector3 (transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
-					} else
-						Destroy (gameObject);
-				}
+                if (shotType.Equals("fire"))
+                {
+                    animator.setAnimation("Fireball Explosion");
+                    if (transform.localScale.x < (4 * sizeX))
+                    {
+                        transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
+                    }
+                    else
+                        Destroy(gameObject);
+                }
+                else if (shotType.Equals("plasma"))
+                {
+                    animator.setAnimation("plasmaExplosion");
+                    if (transform.localScale.x < (4 * sizeX))
+                    {
+                        transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
+                    }
+                }
 			}
 		} 
 

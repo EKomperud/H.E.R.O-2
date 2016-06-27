@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public float gravity = -35;
     public float jumpHeight = 2;
     public float maxHeight = 20;
+    public float RunArrowStrength = 75;
 
     private CharacterController2D _controller;
     private AnimationController2D _animator;
@@ -18,8 +19,8 @@ public class PlayerController : MonoBehaviour
 
     public FountainScript fountain;
     public bool inFountain = false;
-	public RockScript rock;
-	public bool nearRock = false;
+    public RockScript rock;
+    public bool nearRock = false;
     public PlayerWeaponScript weapon;
     private bool holdingWeapon = false;
     public Vector2 speed = new Vector2(50, 50);
@@ -29,6 +30,10 @@ public class PlayerController : MonoBehaviour
     private bool doubleJump = false;            // Allows the player to double jump
     private bool doubleJumped = false;          // Records if the player has double jumped
     private bool slide = false;
+    private bool RunRight = false;
+    private bool RunLeft = false;
+    private bool RunArrows = false;
+    private bool AirControl = true;
 
     // Use this for initialization
     void Start()
@@ -81,7 +86,19 @@ public class PlayerController : MonoBehaviour
 
             if (slide)
             {
-                velocity.x += -walkSpeed * velocity.x;
+                if (velocity.x > 0)
+                {
+                    velocity.x += -walkSpeed * 0.002f;
+                }
+                else
+                {
+                    velocity.x += -walkSpeed * 0.11f;
+                }
+            }
+            else if (RunLeft | RunRight)
+            {
+                RunArrows = true;
+
             }
             else
             {
@@ -103,7 +120,19 @@ public class PlayerController : MonoBehaviour
         {
             if (slide)
             {
-                velocity.x += walkSpeed * velocity.x;
+                if (velocity.x < 0)
+                {
+                    velocity.x += walkSpeed * 0.002f;
+                }
+                else
+                {
+                    velocity.x += walkSpeed * 0.11f;
+                }
+            }
+            else if (RunLeft | RunRight)
+            {
+                RunArrows = true;
+
             }
             else
             {
@@ -133,10 +162,33 @@ public class PlayerController : MonoBehaviour
             {
                 velocity.x += velocity.x * 0.05f;
             }
-            else
+            else if (RunArrows)
+            {
+                velocity.x += velocity.x * 3;
+            }
+            else if (_controller.isGrounded)
             {
                 velocity.x = 0;
             }
+        }
+        if (RunLeft | RunRight)
+        {
+            RunArrows = true;
+        }
+
+        if (RunArrows)
+        {
+            if (RunRight)
+            {
+                velocity.x += RunArrowStrength;
+                velocity.y += 3;
+            }
+            else if (RunLeft)
+            {
+                velocity.x -= RunArrowStrength;
+                velocity.y += 3;
+            }
+            AirControl = false;
         }
 
         if ((Input.GetAxis("Vertical_P1") < 0 || Input.GetAxis("LeftJoystickY") > 0) && !_controller.isGrounded)
@@ -147,14 +199,14 @@ public class PlayerController : MonoBehaviour
         if (weapon == null)
             holdingWeapon = false;
         float inputX = Input.GetAxis("Horizontal_P1");
-        //inputX = Input.GetAxis("LeftJoystickX");
+        inputX = Input.GetAxis("LeftJoystickX");
         float inputY = Input.GetAxis("Vertical_P1");
-        //inputY = Input.GetAxis("LeftJoystickY");
+        inputY = Input.GetAxis("LeftJoystickY");
 
         bool shoot = Input.GetButtonDown("Shoot_P1");
-        //shoot = Input.GetButtonDown("X");
+        shoot = Input.GetButtonDown("X");
         bool grab = Input.GetButtonDown("Grab_P1");
-        //grab = Input.GetButtonDown("Y");
+        grab = Input.GetButtonDown("Y");
 
         if (shoot)
         {
@@ -166,14 +218,17 @@ public class PlayerController : MonoBehaviour
         }
         if (grab && !holdingWeapon)
         {
-			if (inFountain) {
-				fountain.CreateShot (this);
-				holdingWeapon = true;
-			} else if (nearRock) {
-				weapon = rock.gameObject.GetComponent<PlayerWeaponScript> ();
-				holdingWeapon = true;
-				weapon.caster = this;
-			}
+            if (inFountain)
+            {
+                fountain.CreateShot(this);
+                holdingWeapon = true;
+            }
+            else if (nearRock)
+            {
+                weapon = rock.gameObject.GetComponent<PlayerWeaponScript>();
+                holdingWeapon = true;
+                weapon.caster = this;
+            }
 
         }
 
@@ -208,6 +263,12 @@ public class PlayerController : MonoBehaviour
         }
 
         _controller.move(velocity * Time.deltaTime);
+        RunArrows = false;
+
+        if (_controller.isGrounded)
+        {
+            AirControl = true;
+        }
     }
 
     void Flip()
@@ -240,9 +301,13 @@ public class PlayerController : MonoBehaviour
         {
             slide = true;
         }
-        else
+        else if (collider.tag == "RunRight")
         {
-            slide = false;
+            RunRight = true;
+        }
+        else if (collider.tag == "RunLeft")
+        {
+            RunLeft = true;
         }
     }
 
@@ -257,9 +322,32 @@ public class PlayerController : MonoBehaviour
         {
             slide = true;
         }
-        else
+        if (col.tag == "RunRight")
+        {
+            RunRight = true;
+        }
+        if (col.tag == "RunLeft")
+        {
+            RunLeft = true;
+        }
+    }
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (slide)
         {
             slide = false;
+        }
+        if (RunLeft)
+        {
+            RunLeft = false;
+        }
+        if (RunRight)
+        {
+            RunRight = false;
+        }
+        if (RunArrows)
+        {
+            RunArrows = false;
         }
     }
 }
