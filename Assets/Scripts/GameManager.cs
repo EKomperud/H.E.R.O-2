@@ -4,6 +4,8 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 	public bool MainMenuSlide = false;
 	public bool Back = false;
+	public bool pickLevels = false;
+	public bool setTimer = false;
 
 	// Use this for initialization
 	void Start () {
@@ -32,8 +34,15 @@ public class GameManager : MonoBehaviour {
 	}
 	public void MainMenu() {
 		MainMenuSlide = true;
+		Back = false;
+		setTimer = true;
 	}
 	public void GoBack() {
 		Back = true;
+		MainMenuSlide = false;
+		setTimer = true;
+	}
+	public void Levels() {
+		pickLevels = true;
 	}
 }

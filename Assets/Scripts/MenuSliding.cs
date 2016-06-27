@@ -5,10 +5,17 @@ public class MenuSliding : MonoBehaviour {
 
 	public Vector3 endPosition = Vector3.zero;
 	public float speed = 3f;
+	public float buttonCountFirst = 0;
+	public float buttonCountSecond = 0;
+	public float buttonCountThird = 0;
+	public float buttonCountFirstMax = 5;
+	public float buttonCountSecondMax = 8;
+	public float buttonCountThirdMax = 2;
 
 	private float timer = 0f;
 	private Vector3 startPosition = Vector3.zero;
 	private GameManager Menu;
+	private bool setTimer = false;
 
 
 	// Use this for initialization
@@ -26,15 +33,40 @@ public class MenuSliding : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Menu.Back) {
-			if (Menu.MainMenuSlide) {
+			if (buttonCountFirst <= 5 && this.gameObject.tag == "firstLayer" && setTimer) {
 				timer = 0;
+				buttonCountFirst += 1;
+			}
+			if (buttonCountFirst <= 5 && this.gameObject.tag == "secondLayer" && setTimer) {
+				timer = 0;
+				buttonCountFirst += 1;
+			}
+			if (buttonCountFirst <= 5 && this.gameObject.tag == "backLayer" && setTimer) {
+				timer = 0;
+				buttonCountFirst += 1;
+			}
+			if (buttonCountFirst > 5 && setTimer) {
+				buttonCountFirst = 0;
+				setTimer = false;
 			}
 			timer += Time.deltaTime * speed;
 			Debug.Log (timer);
 			this.transform.position = Vector3.Lerp (endPosition, startPosition, timer);
-			Menu.MainMenuSlide = false;
+
 		} 
-		else if (Menu.MainMenuSlide) {
+		if (Menu.MainMenuSlide) {
+			if (buttonCountFirst <= 5 && this.gameObject.tag == "firstLayer" && setTimer) {
+				timer = 0;
+				buttonCountFirst += 1;
+			}
+			if (buttonCountFirst <= 5 && this.gameObject.tag == "secondLayer" && setTimer) {
+				timer = 0;
+				buttonCountFirst += 1;
+			}
+			if (buttonCountFirst <= 5 && this.gameObject.tag == "backLayer" && setTimer) {
+				timer = 0;
+				buttonCountFirst += 1;
+			}
 			timer += Time.deltaTime * speed;
 			this.transform.position = Vector3.Lerp (startPosition, endPosition, timer);
 		}
