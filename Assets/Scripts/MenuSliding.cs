@@ -31,19 +31,19 @@ public class MenuSliding : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Menu.Back) {
-			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "firstLayer" && Menu.setTimer) {
+			if (Menu.buttonCountFirst < 10 && this.gameObject.tag == "firstLayer" && Menu.setTimer) {
 				timer = 0;
 				Menu.buttonCountFirst += 1;
 			}
-			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "secondLayer" && Menu.setTimer) {
+			if (Menu.buttonCountFirst < 10 && this.gameObject.tag == "secondLayer" && Menu.setTimer) {
 				timer = 0;
 				Menu.buttonCountFirst += 1;
 			}
-			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "backLayer" && Menu.setTimer) {
+			if (Menu.buttonCountFirst < 10 && this.gameObject.tag == "backLayer" && Menu.setTimer) {
 				timer = 0;
 				Menu.buttonCountFirst += 1;
 			}
-			if (Menu.buttonCountFirst >= 6 && Menu.setTimer) {
+			if (Menu.buttonCountFirst >= 10 && Menu.setTimer) {
 				Menu.buttonCountFirst = 0;
 				Menu.setTimer = false;
 			}
@@ -52,22 +52,19 @@ public class MenuSliding : MonoBehaviour {
 
 		} 
 		if (Menu.MainMenuSlide) {
-			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "firstLayer" && Menu.setTimer) {
+			if (Menu.buttonCountFirst < 10 && this.gameObject.tag == "firstLayer" && Menu.setTimer) {
 				timer = 0;
 				Menu.buttonCountFirst += 1;
-				Debug.Log ("firstLayer");
 			}
-			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "secondLayer" && Menu.setTimer) {
+			if (Menu.buttonCountFirst < 10 && this.gameObject.tag == "secondLayer" && Menu.setTimer) {
 				timer = 0;
 				Menu.buttonCountFirst += 1;
-				Debug.Log ("secondLayer");
 			}
-			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "backLayer" && Menu.setTimer) {
+			if (Menu.buttonCountFirst < 10 && this.gameObject.tag == "backLayer" && Menu.setTimer) {
 				timer = 0;
 				Menu.buttonCountFirst += 1;
-				Debug.Log ("backLayer");
 			}
-			if (Menu.buttonCountFirst >= 6 && Menu.setTimer) {
+			if (Menu.buttonCountFirst >= 10 && Menu.setTimer) {
 				Menu.buttonCountFirst = 0;
 				Menu.setTimer = false;
 			}
