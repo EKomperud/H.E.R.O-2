@@ -16,10 +16,7 @@ public class RoundKeeper : MonoBehaviour {
 	private bool endRoundP1 = false;
 	private bool endRoundP2 = false;
 	void Start () {
-		P1Loss = GameObject.Find ("HealthScript").GetComponent<HealthScript> ();
-		P2Loss = GameObject.Find ("Health2Script").GetComponent<Health2Script> ();
-		player1 = GameObject.Find ("PlayerController").GetComponent<PlayerController> ();
-		player2 = GameObject.Find ("Player2Controller").GetComponent<Player2Controller> ();
+		DontDestroyOnLoad (this.gameObject);
 	}
 	
 	// Update is called once per frame
@@ -27,9 +24,16 @@ public class RoundKeeper : MonoBehaviour {
 		if (numOfRounds > 0 && newRound) {
 			randomLevel = Random.Range (1, 5);
 			Application.LoadLevel (randomLevel);
-			Debug.Log (randomLevel);
-			P1Loss.hp = 5;
-			P2Loss.hp = 5;
+			Debug.Log ("numberCount");
+			if (randomLevel > 0 && randomLevel < 9) {
+				P1Loss = GameObject.Find ("Player").GetComponent<HealthScript> ();
+				P2Loss = GameObject.Find ("Player2").GetComponent<Health2Script> ();
+				player1 = GameObject.Find ("Player").GetComponent<PlayerController> ();
+				player2 = GameObject.Find ("Player2").GetComponent<Player2Controller> ();
+				P1Loss.hp = 5;
+				P2Loss.hp = 5;
+				Debug.Log (P1Loss.hp);
+			}
 			newRound = false;
 		} 
 		else if (numOfRounds == 0) {
