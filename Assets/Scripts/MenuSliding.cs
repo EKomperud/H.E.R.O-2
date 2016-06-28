@@ -30,7 +30,7 @@ public class MenuSliding : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Menu.Back) {
+		if (Menu.playBack) {
 			if (Menu.buttonCountFirst < 10 && this.gameObject.tag == "firstLayer" && Menu.setTimer) {
 				timer = 0;
 				Menu.buttonCountFirst += 1;

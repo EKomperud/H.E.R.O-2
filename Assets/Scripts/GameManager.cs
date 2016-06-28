@@ -3,14 +3,14 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 	public bool MainMenuSlide = false;
-	public bool Back = false;
-	public bool pickLevels = false;
+	public bool playBack = false;
 	public bool setTimer = false;
 	public int buttonCountFirst = 0;
+	private RoundKeeper Keeper;
 
 	// Use this for initialization
 	void Start () {
-	
+		Keeper = GameObject.Find("RoundKeeper").GetComponent<RoundKeeper> ();
 	}
 	
 	// Update is called once per frame
@@ -35,15 +35,15 @@ public class GameManager : MonoBehaviour {
 	}
 	public void MainMenu() {
 		MainMenuSlide = true;
-		Back = false;
+		playBack = false;
 		setTimer = true;
 	}
 	public void GoBack() {
-		Back = true;
+		playBack = true;
 		MainMenuSlide = false;
 		setTimer = true;
 	}
-	public void Levels() {
-		pickLevels = true;
+	public void Three() {
+		Keeper.numOfRounds = 3;
 	}
 }
