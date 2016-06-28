@@ -5,7 +5,6 @@ public class MenuSliding : MonoBehaviour {
 
 	public Vector3 endPosition = Vector3.zero;
 	public float speed = 3f;
-	public float buttonCountFirst = 0;
 	public float buttonCountSecond = 0;
 	public float buttonCountThird = 0;
 	public float buttonCountFirstMax = 5;
@@ -15,7 +14,6 @@ public class MenuSliding : MonoBehaviour {
 	private float timer = 0f;
 	private Vector3 startPosition = Vector3.zero;
 	private GameManager Menu;
-	private bool setTimer = false;
 
 
 	// Use this for initialization
@@ -29,43 +27,49 @@ public class MenuSliding : MonoBehaviour {
 			speed = speed / distance;
 		}
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (Menu.Back) {
-			if (buttonCountFirst <= 5 && this.gameObject.tag == "firstLayer" && setTimer) {
+			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "firstLayer" && Menu.setTimer) {
 				timer = 0;
-				buttonCountFirst += 1;
+				Menu.buttonCountFirst += 1;
 			}
-			if (buttonCountFirst <= 5 && this.gameObject.tag == "secondLayer" && setTimer) {
+			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "secondLayer" && Menu.setTimer) {
 				timer = 0;
-				buttonCountFirst += 1;
+				Menu.buttonCountFirst += 1;
 			}
-			if (buttonCountFirst <= 5 && this.gameObject.tag == "backLayer" && setTimer) {
+			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "backLayer" && Menu.setTimer) {
 				timer = 0;
-				buttonCountFirst += 1;
+				Menu.buttonCountFirst += 1;
 			}
-			if (buttonCountFirst > 5 && setTimer) {
-				buttonCountFirst = 0;
-				setTimer = false;
+			if (Menu.buttonCountFirst >= 6 && Menu.setTimer) {
+				Menu.buttonCountFirst = 0;
+				Menu.setTimer = false;
 			}
 			timer += Time.deltaTime * speed;
-			Debug.Log (timer);
 			this.transform.position = Vector3.Lerp (endPosition, startPosition, timer);
 
 		} 
 		if (Menu.MainMenuSlide) {
-			if (buttonCountFirst <= 5 && this.gameObject.tag == "firstLayer" && setTimer) {
+			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "firstLayer" && Menu.setTimer) {
 				timer = 0;
-				buttonCountFirst += 1;
+				Menu.buttonCountFirst += 1;
+				Debug.Log ("firstLayer");
 			}
-			if (buttonCountFirst <= 5 && this.gameObject.tag == "secondLayer" && setTimer) {
+			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "secondLayer" && Menu.setTimer) {
 				timer = 0;
-				buttonCountFirst += 1;
+				Menu.buttonCountFirst += 1;
+				Debug.Log ("secondLayer");
 			}
-			if (buttonCountFirst <= 5 && this.gameObject.tag == "backLayer" && setTimer) {
+			if (Menu.buttonCountFirst < 6 && this.gameObject.tag == "backLayer" && Menu.setTimer) {
 				timer = 0;
-				buttonCountFirst += 1;
+				Menu.buttonCountFirst += 1;
+				Debug.Log ("backLayer");
+			}
+			if (Menu.buttonCountFirst >= 6 && Menu.setTimer) {
+				Menu.buttonCountFirst = 0;
+				Menu.setTimer = false;
 			}
 			timer += Time.deltaTime * speed;
 			this.transform.position = Vector3.Lerp (startPosition, endPosition, timer);

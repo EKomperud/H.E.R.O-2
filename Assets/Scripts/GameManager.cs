@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
 	public bool Back = false;
 	public bool pickLevels = false;
 	public bool setTimer = false;
+	public int buttonCountFirst = 0;
 
 	// Use this for initialization
 	void Start () {
