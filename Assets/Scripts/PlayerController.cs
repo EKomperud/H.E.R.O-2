@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     private bool RunLeft = false;
     private bool RunArrows = false;
     private bool AirControl = true;
+	public bool fallDeath = false;
 
     // Use this for initialization
     void Start()
@@ -291,6 +292,7 @@ public class PlayerController : MonoBehaviour
             }
             catch (MissingReferenceException e) { }
             audio.PlayOneShot(DeathScreamWhenYouDie, 1f);
+			fallDeath = true;
             Destroy(gameObject, 2);
         }
         else if (collider.tag == "Bounce")

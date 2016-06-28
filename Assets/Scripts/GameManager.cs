@@ -45,5 +45,18 @@ public class GameManager : MonoBehaviour {
 	}
 	public void Three() {
 		Keeper.numOfRounds = 3;
+		Keeper.newRound = true;
+	}
+	public void Five() {
+		Keeper.numOfRounds = 5;
+		Keeper.newRound = true;
+	}
+	public void Seven() {
+		Keeper.numOfRounds = 7;
+		Keeper.newRound = true;
+	}
+	public void Ten() {
+		Keeper.numOfRounds = 10;
+		Keeper.newRound = true;
 	}
 }
