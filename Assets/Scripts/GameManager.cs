@@ -15,27 +15,33 @@ public class GameManager : MonoBehaviour {
 	private bool startUp = false;
 	private bool P1exists = false;
 	private bool P2exists = false;
+	public NumberKeeper Keeper;
+	private int Player1W = 0;
+	private int Player2W = 0;
 
 	// Use this for initialization
 	void Start () {
-		//Keeper = GameObject.Find("RoundKeeper").GetComponent<RoundKeeper> ();
         p1 = gameObject.GetComponent<HealthScript>();
         p2 = gameObject.GetComponent<Health2Script>();
 		spikes = gameObject.GetComponent<SpikeScript> ();
+		Keeper = GameObject.Find("NumberKeeper").GetComponent<NumberKeeper> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (startUp) {
-			randomLevel = Random.Range (1, 8);
+			randomLevel = Random.Range (1, 9);
 			Application.LoadLevel (randomLevel);
 			numOfRounds -= 1;
+			Keeper.numberOfRounds = numOfRounds;
 			startUp = false;
 		}
+		numOfRounds = Keeper.numberOfRounds;
 		if (ifDied && numOfRounds > 0) {
-			randomLevel = Random.Range (1, 8);
+			randomLevel = Random.Range (1, 9);
 			Application.LoadLevel (randomLevel);
 			numOfRounds -= 1;
+			Keeper.numberOfRounds = numOfRounds;
 			ifDied = false;
 		} else if (ifDied && numOfRounds <= 0) {
 			//setActive winscreen
@@ -46,41 +52,61 @@ public class GameManager : MonoBehaviour {
 		if (p2 != null) {
 			P2exists = true;
 		}
-		if (p1 != null && p1.hp == 0) {
-			ifDied = true;
-		} 
-		else if (p2 != null && p2.hp == 0) {
-			ifDied = true;
-		}
 		if (P1exists) {
-			if (p1 == null) {
-				Debug.Log ("the code gets here");
-				if (p2.shotsHaveFired) {
+			if (p1 != null && p1.hp == 0) {
+				ifDied = true;
+				if (this.gameObject.tag == "Player") {
+					Player2W += 1;
+					Keeper.P2WINS = Player2W;
+				}
+				Debug.Log ("this is Player2 wins " + Keeper.P2WINS);
+				P1exists = false;
+			}
+			if (p2 == null) {
+				if (p1.shotsHaveFired) {
 					ifDied = true;
-					p2.shotsHaveFired = false;
+					Player1W += 1;
+					Keeper.P1WINS = Player1W;
+					p1.shotsHaveFired = false;
 					P1exists = false;
 				}
-				if (spikes != null) {
+				else if (spikes != null) {
 					if (spikes.hasHit) {
 						ifDied = true;
+						Player1W += 1;
+						Keeper.P1WINS = Player1W;
 						P1exists = false;
 					}
 				}
 			}
 		}
 		else if (P2exists) {
-			if (p2 == null) {
-				if (p1.shotsHaveFired) {
+			if (p2 != null && p2.hp == 0) {
+				ifDied = true;
+				if (this.gameObject.tag == "Player2") {
+					Player1W += 1;
+					Keeper.P1WINS = Player1W;
+				}
+				Debug.Log ("this is Player wins " + Keeper.P1WINS);
+				P2exists = false;
+			}
+			if (p1 == null) {
+				if (p2.shotsHaveFired) {
 					ifDied = true;
-					p1.shotsHaveFired = false;
+					Player2W += 1;
+					Keeper.P2WINS = Player2W;
+					p2.shotsHaveFired = false;
 					P2exists = false;
 				}
-				if (spikes != null) {
+				else if (spikes != null) {
+					Debug.Log ("the code gets here");
 					if (spikes.hasHit) {
 						ifDied = true;
+						Player2W += 1;
+						Keeper.P2WINS = Player2W;
 						P2exists = false;
 					}
-				}
+				} 
 			}
 		}
 	}

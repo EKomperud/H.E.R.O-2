@@ -1,0 +1,20 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class NumberKeeper : MonoBehaviour {
+
+	public int numberOfRounds = 0;
+	public int P1WINS = 0;
+	public int P2WINS = 0;
+
+
+	// Use this for initialization
+	void Start () {
+		DontDestroyOnLoad (this.gameObject);
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+}
