@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerWeaponScript : MonoBehaviour {
 
     private AnimationController2D animator;
+    public RockScript rockScript;
 
 	// ShotScript code
 	public PlayerController caster;
@@ -23,6 +24,7 @@ public class PlayerWeaponScript : MonoBehaviour {
 	public bool rock = false;
 
 	void Start() {
+        rockScript = gameObject.GetComponent<RockScript>();
         animator = gameObject.GetComponent<AnimationController2D>();
 		sizeX = transform.localScale.x;
 		hasShot = false;

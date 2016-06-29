@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public AudioClip DeathScreamWhenYouDie;
     public ArrayList fountains = new ArrayList();
 
+    public HealthScript health;
     public FountainScript fountain;
     public bool inFountain = false;
     public RockScript rock;
@@ -39,7 +40,7 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        health = gameObject.GetComponent<HealthScript>();
         _controller = gameObject.GetComponent<CharacterController2D>();
         _animator = gameObject.GetComponent<AnimationController2D>();
     }
@@ -227,6 +228,7 @@ public class PlayerController : MonoBehaviour
             else if (nearRock)
             {
                 weapon = rock.gameObject.GetComponent<PlayerWeaponScript>();
+                weapon.rockScript.caster = this;
                 holdingWeapon = true;
                 weapon.caster = this;
             }
@@ -285,6 +287,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collider.tag == "KillZ")
         {
+            health.hp = 0;
             audio = gameObject.GetComponent<AudioSource>();
             try
             {
