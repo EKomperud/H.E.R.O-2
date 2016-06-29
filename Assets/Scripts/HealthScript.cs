@@ -4,6 +4,7 @@ using System.Collections;
 public class HealthScript : MonoBehaviour {
 
 	public int hp = 5;
+	public bool shotsHaveFired = false;
 	private PlayerController player; 
 
 	void Awake () {
@@ -13,7 +14,8 @@ public class HealthScript : MonoBehaviour {
 	void OnTriggerEnter2D (Collider2D collider) {
 		//player = gameObject.GetComponent<PlayerScript>();
 		Player2WeaponScript shot = collider.gameObject.GetComponent<Player2WeaponScript> ();
-		if (shot != null) {			
+		if (shot != null) {	
+			shotsHaveFired = true;
 			hp -= shot.damage;
             System.Threading.Thread d = new System.Threading.Thread(() => shot.Destroy());
             d.Start();
