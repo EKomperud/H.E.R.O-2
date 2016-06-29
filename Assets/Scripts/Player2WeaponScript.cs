@@ -3,20 +3,15 @@ using System.Collections;
 
 public class Player2WeaponScript : MonoBehaviour
 {
-
-    //public Transform shotPrefab;
-
-    //public float shootingRate = 0.25f;
-
-    //private float shootCooldown;
+	private AnimationController2D animator;
 
     // ShotScript code
     public Player2Controller caster;
     private bool atCaster = false;
+	private bool right = true;
     public string shotType = "default";
 
     public int damage = 1;
-    private float timer = 0f;
     private float sizeX;
 
     public Vector2 speed = new Vector2(0f, 0f);
@@ -25,110 +20,173 @@ public class Player2WeaponScript : MonoBehaviour
     public bool hasShot { get; set; }
     public bool fire = false;
     private bool connected = false;
+	public bool rock = false;
 
     void Start()
     {
-        //shootCooldown = 0f;
-        sizeX = transform.localScale.x;
-        hasShot = false;
+		animator = gameObject.GetComponent<AnimationController2D>();
+		sizeX = transform.localScale.x;
+		hasShot = false;
     }
 
-    void Update()
-    {
-        // Shot is following player
-
-        if (!fire)
-        {
-            if (caster.faceRight)
-            {
-                direction.x = 1;
-            }
-            else
-            {
-                direction.x = -1;
-            }
+	void Update() {
+		// Regular weapons
+		if (!rock) {
+			// Weapon is following player
+			if (!fire) {
+				if (caster.faceRight) {
+					direction.x = 1;
+				} else {
+					direction.x = -1;
+				}
 
 
-            float X = caster.transform.position.x - this.transform.position.x;
-            float Y = caster.transform.position.y - this.transform.position.y;
-            if ((X > 1 || X < -1) || (Y > 0.3 || Y < -0.3))
-            {
-                Vector3 movement = new Vector3((speed.x / 2) * X, (speed.y / 2) * Y, 0);
-                movement *= Time.deltaTime;
-                this.transform.Translate(movement);
-            }
-            else
-            {
-                hasShot = true;
-            }
-        }
+				float X = caster.transform.position.x - this.transform.position.x;
+				float Y = caster.transform.position.y - this.transform.position.y;
+				if ((X > 2 || X < -2) || (Y > 0.1 || Y < -0.1)) {
+					atCaster = false;
+					Vector3 movement = new Vector3 ((speed.x / 2) * X, (speed.y / 2) * Y, 0);
+					movement *= Time.deltaTime;
+					this.transform.Translate (movement);
+				} else {
+					hasShot = true;
+					atCaster = true;
+				}
+			}
 
-        // Weapon has been fired
-        if (fire)
-        {
-            hasShot = false;
-            Destroy(gameObject, 10);
+			// Weapon has been fired
+			if (fire && !connected) {
 
-            Vector3 movement = new Vector3(speed.x * direction.x, 0, 0);
-            movement *= Time.deltaTime;
-            transform.Translate(movement);
-        }
-        timer = Time.deltaTime;
+				if (shotType.Equals("fire"))
+					animator.setAnimation("Fireball Shoot");
 
-        // Shot connected
-        if (connected)
-        {
-            if (shotType.Equals("fire"))
-            {
-                if (transform.localScale.x < (4 * sizeX))
-                {
-                    transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
-                }
+				if (shotType.Equals("plasma"))
+					animator.setAnimation("plasmaShoot");
 
-                else
-                    Destroy(gameObject);
-            }
-        }
+				hasShot = false;
+
+				Vector3 movement = new Vector3 (speed.x * direction.x, 0, 0);
+				if (shotType.Equals ("rock")) {
+					movement = new Vector3 (speed.x * direction.x * 1.5f, 0, 0);
+					Destroy (gameObject, 0.25f);
+				}
+				movement *= Time.deltaTime;
+				transform.Translate (movement);
+
+			}
+
+			// Shot connected
+			if (connected) {
+				if (shotType.Equals("fire"))
+				{
+					animator.setAnimation("Fireball Explosion");
+					if (transform.localScale.x < (4 * sizeX))
+					{
+						transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
+					}
+					else
+						Destroy(gameObject);
+				}
+				else if (shotType.Equals("plasma"))
+				{
+					animator.setAnimation("plasmaExplosion");
+					if (transform.localScale.x < (4 * sizeX))
+					{
+						transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
+					}
+				}
+			}
+		} 
+
+		// Rock
+		else {
+			if (caster != null) {
+				if (!fire) {
+					if (caster.faceRight) {
+						direction.x = 1;
+					} else {
+						direction.x = -1;
+					}
 
 
+					float X = caster.transform.position.x - this.transform.position.x;
+					float Y = caster.transform.position.y - this.transform.position.y;
+					if ((X > 1 || X < -1) || (Y > 0.3 || Y < -0.3)) {
+						Vector3 movement = new Vector3 ((speed.x / 2) * X, (speed.y / 2) * Y, 0);
+						movement *= Time.deltaTime;
+						this.transform.Translate (movement);
+					} else {
+						hasShot = true;
+					}
+				}
 
-    }
+				// Weapon has been fired
+				if (fire) {
 
-    public void Attack()
-    {
-        if (hasShot)
-        {
-            fire = true;
-        }
-    }
+					hasShot = false;
 
-    public bool CanAttack
-    {
-        get
-        {
-            return hasShot;
-        }
-    }
+					Vector3 movement = new Vector3 (speed.x * direction.x, 0, 0);
+					if (shotType.Equals ("rock")) {
+						movement = new Vector3 (speed.x * direction.x * 1.5f, 0, 0);
+						Destroy (gameObject, 0.25f);
+					}
+					movement *= Time.deltaTime;
+					transform.Translate (movement);
 
-    public void MoveToCaster()
-    {
-        float X = caster.transform.position.x - this.transform.position.x;
-        float Y = caster.transform.position.y - this.transform.position.y;
-        Vector3 movement = new Vector3(speed.x * X, speed.y * Y, 0);
-        movement *= Time.deltaTime;
-        this.transform.Translate(movement);
-    }
+				}
 
-    public void Flip()
-    {
-        Vector3 weaponScale = transform.localScale;
-        weaponScale.x *= -1;
-        transform.localScale = weaponScale;
-    }
+				// Shot connected
+				if (connected) {
+					if (shotType.Equals ("fire")) {
+						if (transform.localScale.x < (4 * sizeX)) { 
+							transform.localScale = new Vector3 (transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
+						} else
+							Destroy (gameObject);
+					}
+				}
+			}
+		}
+	}
 
-    public void Destroy()
-    {
-        speed = new Vector2(2, 2);
-        connected = true;
-    }
+	void OnTriggerEnter2D (Collider2D collider) {
+		PlayerWeaponScript projectile = collider.gameObject.GetComponent<PlayerWeaponScript> ();
+		if (projectile != null && shotType.Equals ("rock")) {
+			Destroy (collider.gameObject);
+		}
+	}
+
+	public void Attack() {
+		if (hasShot) {
+			fire = true;
+		}
+	}
+
+	public bool CanAttack {
+		get {
+			return hasShot;
+		}
+	}
+
+	public void MoveToCaster () {
+		float X = caster.transform.position.x - this.transform.position.x;
+		float Y = caster.transform.position.y - this.transform.position.y;
+		Vector3 movement = new Vector3 (speed.x * X, speed.y * Y, 0);
+		movement *= Time.deltaTime;
+		this.transform.Translate (movement);
+	}
+
+	public void Flip() {
+		Vector3 weaponScale = transform.localScale;
+		weaponScale.x *= -1;
+		transform.localScale = weaponScale;
+	}
+
+	public void Destroy() {
+		speed = new Vector2 (2, 2);	
+		connected = true;
+	}
+
+	public void Burn() {
+		//wtf;	
+	}
 }

@@ -50,17 +50,6 @@ public class PlayerWeaponScript : MonoBehaviour {
 				} else {
 					hasShot = true;
                     atCaster = true;
-                    //Vector3 revolve = new Vector3();
-                    //if (X > 1.5)
-                    //{
-                    //    revolve = new Vector3(0.5f, 0, .01f);
-                    //}
-                    //else if (X < -1.5)
-                    //{
-                    //    revolve = new Vector3(-0.5f, 0, -.01f);
-                    //}
-                    //revolve *= Time.deltaTime;
-                    //this.transform.Translate(revolve);
 				}
 			}
 

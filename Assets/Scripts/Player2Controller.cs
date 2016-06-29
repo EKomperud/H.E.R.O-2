@@ -161,7 +161,7 @@ public class Player2Controller : MonoBehaviour
             _animator.setAnimation("Idle");
             if (slide)
             {
-                velocity.x += velocity.x * 0.1f;
+                velocity.x += velocity.x * 0.05f;
             }
             else if (RunArrows)
             {
