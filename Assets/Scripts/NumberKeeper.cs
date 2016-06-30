@@ -4,6 +4,7 @@ using System.Collections;
 public class NumberKeeper : MonoBehaviour {
 
 	public int numberOfRounds = 0;
+	public int previousRounds = 0;
 	public int P1WINS = 0;
 	public int P2WINS = 0;
 	public bool hasHit = false;

@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour {
 			ifDied = false;
 		} 
 		else if (ifDied && numOfRounds <= 0) {
-			//WinScreen.setActive ();
+			WinScreen.SetActive (true);
 		}
 		if (p1 != null) {
 			P1exists = true;
@@ -122,6 +122,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void ExitLevel (){
+		Keeper.P1WINS = 0;
+		Keeper.P2WINS = 0;
 		Application.LoadLevel (0);
 	}
 
@@ -144,18 +146,30 @@ public class GameManager : MonoBehaviour {
 	}
 	public void Three() {
 		numOfRounds = 3;
+		Keeper.previousRounds = 3;
 		startUp = true;
 	}
 	public void Five() {
 		numOfRounds = 5;
+		Keeper.previousRounds = 5;
 		startUp = true;
 	}
 	public void Seven() {
 		numOfRounds = 7;
+		Keeper.previousRounds = 7;
 		startUp = true;
 	}
 	public void Ten() {
 		numOfRounds = 10;
+		Keeper.previousRounds = 10;
 		startUp = true;
+	}
+	public void RedoRounds() {
+		Keeper.P1WINS = 0;
+		Keeper.P2WINS = 0;
+		Keeper.numberOfRounds = Keeper.previousRounds;
+		randomLevel = Random.Range (1, 9);
+		Application.LoadLevel (randomLevel);
+
 	}
 }
