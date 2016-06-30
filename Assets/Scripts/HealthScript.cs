@@ -13,8 +13,9 @@ public class HealthScript : MonoBehaviour {
 
 	void OnTriggerEnter2D (Collider2D collider) {
 		//player = gameObject.GetComponent<PlayerScript>();
-		Player2WeaponScript shot = collider.gameObject.GetComponent<Player2WeaponScript> ();
-		if (shot != null) {	
+		PlayerWeaponScript shot = collider.gameObject.GetComponent<PlayerWeaponScript> ();
+        PlayerController target = shot.caster;
+		if (shot != null && !target.Equals(player)) {	
 			shotsHaveFired = true;
 			hp -= shot.damage;
             System.Threading.Thread d = new System.Threading.Thread(() => shot.Destroy());

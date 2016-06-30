@@ -4,13 +4,9 @@ using System.Collections;
 public class WallScript : MonoBehaviour {
 
 	void OnTriggerEnter2D (Collider2D collider) {
-		PlayerWeaponScript shot = collider.gameObject.GetComponent<PlayerWeaponScript> ();
-		Player2WeaponScript enemyShot = collider.gameObject.GetComponent<Player2WeaponScript> ();
-		if (shot != null) {			
+        PlayerWeaponScript shot = collider.gameObject.GetComponent<PlayerWeaponScript>();
+		if (shot != null && shot.fire) {			
 			shot.Destroy ();
-		}
-		if (enemyShot != null) {
-			enemyShot.Destroy ();
 		}
 	}
 }

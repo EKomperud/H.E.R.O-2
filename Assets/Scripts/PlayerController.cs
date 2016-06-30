@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
             Bounce = false;
         }
 
-        if (Input.GetAxis("Horizontal_P1") < 0 || Input.GetAxis("LeftJoystickX") < 0)
+        if (MultiInput.GetAxis("Horizontal","",name) < 0 || MultiInput.GetAxis("LeftJoystickX","",name) < 0)
         {
 
             if (slide)
@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour
             faceRight = false;
         }
 
-        else if (Input.GetAxis("Horizontal_P1") > 0 || Input.GetAxis("LeftJoystickX") > 0)
+        else if (MultiInput.GetAxis("Horizontal","",name) > 0 || MultiInput.GetAxis("LeftJoystickX","",name) > 0)
         {
             if (slide)
             {
@@ -193,22 +193,23 @@ public class PlayerController : MonoBehaviour
             AirControl = false;
         }
 
-        if ((Input.GetAxis("Vertical_P1") < 0 || Input.GetAxis("LeftJoystickY") > 0) && !_controller.isGrounded)
+        if ((MultiInput.GetAxis("Vertical","",name) < 0 || MultiInput.GetAxis("LeftJoystickY","",name) > 0) && !_controller.isGrounded)
         {
             velocity.y += gravity * Time.deltaTime * 4;
         }
 
         if (weapon == null)
             holdingWeapon = false;
-        float inputX = Input.GetAxis("Horizontal_P1");
-        inputX = Input.GetAxis("LeftJoystickX");
-        float inputY = Input.GetAxis("Vertical_P1");
-        inputY = Input.GetAxis("LeftJoystickY");
+        float inputX = MultiInput.GetAxis("Horizontal","",name);
+        inputX = MultiInput.GetAxis("LeftJoystickX","",name);
+        float inputY = MultiInput.GetAxis("Vertical","",name);
+        inputY = MultiInput.GetAxis("LeftJoystickY","",name);
 
-        bool shoot = Input.GetButtonDown("Shoot_P1");
-        shoot = Input.GetButtonDown("X");
-        bool grab = Input.GetButtonDown("Grab_P1");
-        grab = Input.GetButtonDown("Y");
+        //bool shoot = Input.GetButtonDown("Shoot_P1");
+        bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
+        //shoot = Input.GetButtonDown("X");
+        bool grab = MultiInput.GetButtonDown("Grab","",name);
+        //grab = Input.GetButtonDown("Y");
 
         if (shoot)
         {
@@ -249,7 +250,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Double jump
-        if (!doubleJumped && doubleJump && (Input.GetButtonDown("Jump_P1") || Input.GetButtonDown("A")))
+        if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("Jump","",name) || MultiInput.GetButtonDown("A","",name)))
         {
             velocity.y = 0;
             velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
@@ -258,7 +259,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // First jump
-        else if ((Input.GetButtonDown("Jump_P1") || Input.GetButtonDown("A")) && _controller.isGrounded)
+        else if ((MultiInput.GetButtonDown("Jump","",name) || MultiInput.GetButtonDown("A","",name)) && _controller.isGrounded)
         {
             velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
             doubleJump = true;
