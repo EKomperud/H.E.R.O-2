@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
     public HealthScript p1;
     public Health2Script p2;
 	public SpikeScript spikes;
+	public GameObject WinScreen;
 	public bool MainMenuSlide = false;
 	public bool playBack = false;
 	public bool setTimer = false;
@@ -19,9 +20,13 @@ public class GameManager : MonoBehaviour {
 	public NumberKeeper Keeper;
 	private int Player1W = 0;
 	private int Player2W = 0;
+	Text firstWins;
+	Text secondWins;
 
 	// Use this for initialization
 	void Start () {
+		firstWins = GetComponent<Text> ();
+		secondWins = GetComponent<Text> ();
         p1 = gameObject.GetComponent<HealthScript>();
         p2 = gameObject.GetComponent<Health2Script>();
 		Keeper = GameObject.Find("NumberKeeper").GetComponent<NumberKeeper> ();
@@ -45,8 +50,9 @@ public class GameManager : MonoBehaviour {
 			numOfRounds -= 1;
 			Keeper.numberOfRounds = numOfRounds;
 			ifDied = false;
-		} else if (ifDied && numOfRounds <= 0) {
-			//setActive winscreen
+		} 
+		else if (ifDied && numOfRounds <= 0) {
+			//WinScreen.setActive ();
 		}
 		if (p1 != null) {
 			P1exists = true;
