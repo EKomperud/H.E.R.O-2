@@ -20,22 +20,23 @@ public class GameManager : MonoBehaviour {
 	public NumberKeeper Keeper;
 	private int Player1W = 0;
 	private int Player2W = 0;
-	Text firstWins;
-	Text secondWins;
+	public Text firstWins;
+	private bool dontChange = true;
 
 	// Use this for initialization
 	void Start () {
-		firstWins = GetComponent<Text> ();
-		secondWins = GetComponent<Text> ();
+		Keeper = GameObject.Find("NumberKeeper").GetComponent<NumberKeeper> ();
+		if (this.gameObject.tag == "Player" | this.gameObject.tag == "Player2") {
+			firstWins.text = "";
+		}
         p1 = gameObject.GetComponent<HealthScript>();
         p2 = gameObject.GetComponent<Health2Script>();
-		Keeper = GameObject.Find("NumberKeeper").GetComponent<NumberKeeper> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (startUp) {
-			randomLevel = Random.Range (1, 9);
+			randomLevel = Random.Range (1, 8);
 			Application.LoadLevel (randomLevel);
 			numOfRounds -= 1;
 			Keeper.numberOfRounds = numOfRounds;
@@ -43,8 +44,10 @@ public class GameManager : MonoBehaviour {
 		}
 		numOfRounds = Keeper.numberOfRounds;
 		if (ifDied && numOfRounds > 0) {
-			randomLevel = Random.Range (1, 9);
+			Debug.Log (Keeper.P1WINS);
+			randomLevel = Random.Range (1, 8);
 			Application.LoadLevel (randomLevel);
+			Debug.Log (Keeper.P1WINS);
 			Player1W = Keeper.P1WINS;
 			Player2W = Keeper.P2WINS;
 			numOfRounds -= 1;
@@ -52,13 +55,30 @@ public class GameManager : MonoBehaviour {
 			ifDied = false;
 		} 
 		else if (ifDied && numOfRounds <= 0) {
+			if (Keeper.P2WINS == 1) {
+				firstWins.text = "Player 1: " + Keeper.P1WINS + " wins" +
+				" Player 2: " + Keeper.P2WINS + " win";
+			} 
+			else if (Keeper.P1WINS == 1) {
+				firstWins.text = "Player 1: " + Keeper.P1WINS + " win" +
+				" Player 2: " + Keeper.P2WINS + " wins";
+			} 
+			else {
+				firstWins.text = "Player 1: " + Keeper.P1WINS + " wins" +
+				" Player 2: " + Keeper.P2WINS + " wins";
+			}
+			P1exists = false;
+			P2exists = false;
+			dontChange = false;
 			WinScreen.SetActive (true);
 		}
-		if (p1 != null) {
-			P1exists = true;
-		}
-		if (p2 != null) {
-			P2exists = true;
+		if (dontChange) {
+			if (p1 != null) {
+				P1exists = true;
+			}
+			if (p2 != null) {
+				P2exists = true;
+			}
 		}
 		if (P1exists) {
 			if (p1 != null && p1.hp == 0) {
@@ -111,7 +131,6 @@ public class GameManager : MonoBehaviour {
 					Keeper.P2WINS = Player2W;
 					P2exists = false;
 					Keeper.hasHit = false;
-					Debug.Log ("this is Player2 wins " + Keeper.P2WINS);
 				} 
 			}
 		}
@@ -168,7 +187,7 @@ public class GameManager : MonoBehaviour {
 		Keeper.P1WINS = 0;
 		Keeper.P2WINS = 0;
 		Keeper.numberOfRounds = Keeper.previousRounds;
-		randomLevel = Random.Range (1, 9);
+		randomLevel = Random.Range (1, 8);
 		Application.LoadLevel (randomLevel);
 
 	}
