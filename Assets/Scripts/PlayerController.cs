@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour
     public RockScript rock;
     public bool nearRock = false;
     public PlayerWeaponScript weapon;
+
+    public Stack weapons;
+
     private bool holdingWeapon = false;
     public Vector2 speed = new Vector2(50, 50);
     public string name;
@@ -219,6 +222,7 @@ public class PlayerController : MonoBehaviour
             if (weapon != null && weapon.CanAttack)
             {
                 holdingWeapon = false;
+                weapon = (PlayerWeaponScript)weapons.Pop();
                 weapon.Attack(aimX, aimY);
             }
         }

@@ -57,9 +57,7 @@ public class PlayerWeaponScript : MonoBehaviour
                         atCaster = false;
                         Vector3 movement = new Vector3((speed.x / 2) * X, (speed.y / 2) * Y, 0);
                         movement *= Time.deltaTime;
-                        this.transform.Translate(movement);
-
-                    
+                        this.transform.Translate(movement);                   
                 }
 
                 else
