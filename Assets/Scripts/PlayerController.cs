@@ -205,21 +205,24 @@ public class PlayerController : MonoBehaviour
         float inputY = MultiInput.GetAxis("Vertical","",name);
         inputY = MultiInput.GetAxis("LeftJoystickY","",name);
 
-        //bool shoot = Input.GetButtonDown("Shoot_P1");
-        bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
-        //shoot = Input.GetButtonDown("X");
-        bool grab = MultiInput.GetButtonDown("Grab","",name);
-        //grab = Input.GetButtonDown("Y");
+        float aimX = MultiInput.GetAxis("RightJoystickX", "", name);
+        float aimY = MultiInput.GetAxis("RightJoystickY", "", name);
 
-        if (shoot)
+        //bool shoot = Input.GetButtonDown("Shoot_P1");
+        //bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
+        float shoot = MultiInput.GetAxis("RightTrigger","",name);
+        //bool grab = MultiInput.GetButtonDown("Grab","",name);
+        float grab = MultiInput.GetAxis("LeftTrigger","",name);
+
+        if (shoot > 0)
         {
             if (weapon != null && weapon.CanAttack)
             {
                 holdingWeapon = false;
-                weapon.Attack();
+                weapon.Attack(aimX, aimY);
             }
         }
-        if (grab && !holdingWeapon)
+        if (grab > 0 && !holdingWeapon)
         {
             if (inFountain)
             {

@@ -16,7 +16,7 @@ public class PlayerWeaponScript : MonoBehaviour
     private float sizeX;
 
     public Vector2 speed = new Vector2(0f, 0f);
-    public Vector2 direction = new Vector2(1, 0);
+    public Vector2 direction = new Vector2(1, 1);
 
     public bool hasShot { get; set; }
     public bool fire = false;
@@ -81,10 +81,10 @@ public class PlayerWeaponScript : MonoBehaviour
 
                 hasShot = false;
 
-                Vector3 movement = new Vector3(speed.x * direction.x, 0, 0);
+                Vector3 movement = new Vector3(speed.x * direction.x, -(speed.y * direction.y), 0);
                 if (shotType.Equals("rock"))
                 {
-                    movement = new Vector3(speed.x * direction.x * 1.5f, 0, 0);
+                    movement = new Vector3(speed.x * direction.x * 1.5f,0 , 0);
                     speed.x -= 0.2f;
                 }
                 movement *= Time.deltaTime;
@@ -158,7 +158,7 @@ public class PlayerWeaponScript : MonoBehaviour
                     Vector3 movement = new Vector3(speed.x * direction.x, 0, 0);
                     if (shotType.Equals("rock"))
                     {
-                        movement = new Vector3(speed.x * direction.x * 1.5f, 0, 0);
+                        movement = new Vector3(speed.x * direction.x * 1.5f, speed.y * direction.y *1.5f, 0);
                         speed.x -= 0.5f;
                     }
                     movement *= Time.deltaTime;
@@ -199,8 +199,10 @@ public class PlayerWeaponScript : MonoBehaviour
         }
     }
 
-    public void Attack()
+    public void Attack(float X, float Y)
     {
+        direction.x = X;
+        direction.y = Y;
         if (hasShot)
         {
             fire = true;
