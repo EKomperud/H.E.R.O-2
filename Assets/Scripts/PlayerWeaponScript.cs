@@ -50,14 +50,18 @@ public class PlayerWeaponScript : MonoBehaviour
 
 
                 float X = caster.transform.position.x - this.transform.position.x;
+                
                 float Y = caster.transform.position.y - this.transform.position.y;
-                if ((X > 2 || X < -2) || (Y > 0.1 || Y < -0.1))
+                if (!rock && (X > 2 || X < -2) || (Y > 0.1 || Y < -0.1))
                 {
-                    atCaster = false;
-                    Vector3 movement = new Vector3((speed.x / 2) * X, (speed.y / 2) * Y, 0);
-                    movement *= Time.deltaTime;
-                    this.transform.Translate(movement);
+                        atCaster = false;
+                        Vector3 movement = new Vector3((speed.x / 2) * X, (speed.y / 2) * Y, 0);
+                        movement *= Time.deltaTime;
+                        this.transform.Translate(movement);
+
+                    
                 }
+
                 else
                 {
                     hasShot = true;
@@ -81,7 +85,7 @@ public class PlayerWeaponScript : MonoBehaviour
                 if (shotType.Equals("rock"))
                 {
                     movement = new Vector3(speed.x * direction.x * 1.5f, 0, 0);
-                    Destroy(gameObject, 0.25f);
+                    speed.x -= 0.2f;
                 }
                 movement *= Time.deltaTime;
                 transform.Translate(movement);
@@ -129,11 +133,13 @@ public class PlayerWeaponScript : MonoBehaviour
                     }
 
 
-                    float X = caster.transform.position.x - this.transform.position.x;
+                    float Xrock = (caster.transform.position.x + (1 * direction.x)) - this.transform.position.x;
                     float Y = caster.transform.position.y - this.transform.position.y;
-                    if ((X > 1 || X < -1) || (Y > 0.3 || Y < -0.3))
+                    if ((Xrock > 1.5 || Xrock < -1.5) || (Y > 0.1 || Y < -0.1))
                     {
-                        Vector3 movement = new Vector3((speed.x / 2) * X, (speed.y / 2) * Y, 0);
+
+                        atCaster = false;
+                        Vector3 movement = new Vector3((speed.x / 2) * Xrock, (speed.y / 2) * Y, 0);
                         movement *= Time.deltaTime;
                         this.transform.Translate(movement);
                     }
@@ -144,7 +150,7 @@ public class PlayerWeaponScript : MonoBehaviour
                 }
 
                 // Weapon has been fired
-                if (fire)
+                if (fire && speed.x > 0)
                 {
 
                     hasShot = false;
@@ -153,7 +159,7 @@ public class PlayerWeaponScript : MonoBehaviour
                     if (shotType.Equals("rock"))
                     {
                         movement = new Vector3(speed.x * direction.x * 1.5f, 0, 0);
-                        Destroy(gameObject, 0.25f);
+                        speed.x -= 0.5f;
                     }
                     movement *= Time.deltaTime;
                     transform.Translate(movement);
@@ -163,15 +169,22 @@ public class PlayerWeaponScript : MonoBehaviour
                 // Shot connected
                 if (connected)
                 {
-                    if (shotType.Equals("fire"))
+                    if (shotType.Equals("rock"))
                     {
-                        if (transform.localScale.x < (4 * sizeX))
-                        {
-                            transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
-                        }
-                        else
-                            Destroy(gameObject);
+                        fire = false;
+                        connected = false;
+                        hasShot = false;
                     }
+                }
+
+                // Rock has stopped
+                if (speed.x <= 0)
+                {
+                    fire = false;
+                    connected = false;
+                    hasShot = false;
+                    speed.x = 20;
+                    caster = null;
                 }
             }
         }

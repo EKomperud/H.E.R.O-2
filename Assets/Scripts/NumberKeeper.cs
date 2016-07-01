@@ -7,7 +7,8 @@ public class NumberKeeper : MonoBehaviour {
 	public int previousRounds = 0;
 	public int P1WINS = 0;
 	public int P2WINS = 0;
-	public bool hasHit = false;
+	public bool hasHit1 = false;
+	public bool hasHit2 = false;
 
 
 	// Use this for initialization

@@ -3,8 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
-    public HealthScript p1;
-    public Health2Script p2;
+    public HealthScript p;
 	public SpikeScript spikes;
 	public GameObject WinScreen;
 	public bool MainMenuSlide = false;
@@ -18,8 +17,8 @@ public class GameManager : MonoBehaviour {
 	private bool P1exists = false;
 	private bool P2exists = false;
 	public NumberKeeper Keeper;
-	private int Player1W = 0;
-	private int Player2W = 0;
+	public int Player1W = 0;
+	public int Player2W = 0;
 	public Text firstWins;
 	private bool dontChange = true;
 
@@ -29,8 +28,7 @@ public class GameManager : MonoBehaviour {
 		if (this.gameObject.tag == "Player" | this.gameObject.tag == "Player2") {
 			firstWins.text = "";
 		}
-        p1 = gameObject.GetComponent<HealthScript>();
-        p2 = gameObject.GetComponent<Health2Script>();
+        p = gameObject.GetComponent<HealthScript>();
 	}
 	
 	// Update is called once per frame
@@ -72,67 +70,61 @@ public class GameManager : MonoBehaviour {
 			dontChange = false;
 			WinScreen.SetActive (true);
 		}
-		if (dontChange) {
-			if (p1 != null) {
+		if (dontChange && p != null) {
+			if (this.gameObject.tag == "Player") {
 				P1exists = true;
 			}
-			if (p2 != null) {
+			if (this.gameObject.tag == "Player2") {
 				P2exists = true;
 			}
 		}
 		if (P1exists) {
-			if (p1 != null && p1.hp == 0) {
+			if (p != null && p.death2) {
 				ifDied = true;
-				if (this.gameObject.tag == "Player") {
-					Player2W += 1;
-					Keeper.P2WINS = Player2W;
-					P1exists = false;
-				}
+				Player1W += 1;
+				Keeper.P1WINS = Player1W;
+				P1exists = false;
+				p.death2 = false;
 			}
-			if (p2 == null) {
-				if (p1.shotsHaveFired) {
-					ifDied = true;
-					Player1W += 1;
-					Keeper.P1WINS = Player1W;
-					p1.shotsHaveFired = false;
-					P1exists = false;
-				}
-				if (Keeper.hasHit) {
-					ifDied = true;
-					Player1W += 1;
-					Keeper.P1WINS = Player1W;
-					P1exists = false;
-					Keeper.hasHit = false;
+			else if (p.shotsHaveFired && p.death2) {
+				ifDied = true;
+				Player1W += 1;
+				Keeper.P1WINS = Player1W;
+				p.shotsHaveFired = false;
+				P1exists = false;
+				p.death2 = false;
+			}
+			else if (Keeper.hasHit2) {
+				ifDied = true;
+				Player1W += 1;
+				Keeper.P1WINS = Player1W;
+				P1exists = false;
+				Keeper.hasHit2 = false;
 
-				}
 			}
 		}
 		else if (P2exists) {
-			if (p2 != null && p2.hp == 0) {
+			if (p != null && p.death) {
 				ifDied = true;
-				if (this.gameObject.tag == "Player2") {
-					Player1W += 1;
-					Keeper.P1WINS = Player1W;
-					P2exists = false;
-				}
+				Player2W += 1;
+				Keeper.P2WINS = Player2W;
+				P1exists = false;
+				p.death = false;
+			}
+			else if (p.shotsHaveFired2 && p.death) {
+				ifDied = true;
+				Player2W += 1;
+				Keeper.P2WINS = Player2W;
+				p.shotsHaveFired2 = false;
 				P2exists = false;
 			}
-			if (p1 == null) {
-				if (p2.shotsHaveFired) {
-					ifDied = true;
-					Player2W += 1;
-					Keeper.P2WINS = Player2W;
-					p2.shotsHaveFired = false;
-					P2exists = false;
-				}
-				if (Keeper.hasHit) {
-					ifDied = true;
-					Player2W += 1;
-					Keeper.P2WINS = Player2W;
-					P2exists = false;
-					Keeper.hasHit = false;
-				} 
-			}
+			else if (Keeper.hasHit1) {
+				ifDied = true;
+				Player2W += 1;
+				Keeper.P2WINS = Player2W;
+				P2exists = false;
+				Keeper.hasHit1 = false;
+			} 
 		}
 	}
 
