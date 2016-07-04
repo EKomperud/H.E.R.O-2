@@ -1,0 +1,299 @@
+fileFormatVersion: 2
+guid: 0691bd35e9d5e8540a3364fd641dc230
+timeCreated: 1467622266
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: air attack animation_0
+    21300002: air attack animation_1
+    21300004: air attack animation_2
+    21300006: air attack animation_3
+    21300008: air attack animation_4
+    21300010: air attack animation_5
+    21300012: air attack animation_6
+    21300014: air attack animation_7
+    21300016: air attack animation_8
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 300
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: air attack animation_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 38, y: -53}
+        - {x: -109, y: -112}
+        - {x: -110, y: -112}
+        - {x: -110, y: -125}
+        - {x: -95, y: -138}
+        - {x: 114, y: -138}
+        - {x: 133, y: -134}
+        - {x: 133, y: -68}
+        - {x: 116, y: -53}
+    - name: air attack animation_1
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 28, y: 59}
+        - {x: -25, y: 31}
+        - {x: -10, y: -77}
+        - {x: -104, y: -123}
+        - {x: -104, y: -131}
+        - {x: -47, y: -139}
+        - {x: 91, y: -139}
+        - {x: 117, y: -134}
+        - {x: 149, y: -119}
+        - {x: 149, y: 0}
+        - {x: 102, y: 59}
+    - name: air attack animation_2
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 20, y: 82}
+        - {x: 1, y: 82}
+        - {x: -2, y: 81}
+        - {x: -1, y: 76}
+        - {x: -55, y: -55}
+        - {x: -110, y: -102}
+        - {x: -110, y: -135}
+        - {x: -83, y: -143}
+        - {x: 103, y: -143}
+        - {x: 135, y: -123}
+        - {x: 135, y: -31}
+        - {x: 62, y: 66}
+    - name: air attack animation_3
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 140, y: 7}
+        - {x: 24, y: 126}
+        - {x: 7, y: 131}
+        - {x: -18, y: 131}
+        - {x: -29, y: -28}
+        - {x: -115, y: -103}
+        - {x: -115, y: -127}
+        - {x: -114, y: -129}
+        - {x: -85, y: -144}
+        - {x: -56, y: -147}
+        - {x: 71, y: -147}
+        - {x: 104, y: -144}
+        - {x: 133, y: -125}
+        - {x: 140, y: -103}
+    - name: air attack animation_4
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -110, y: 149}
+        - {x: -110, y: 143}
+        - {x: -107, y: 138}
+        - {x: 16, y: 32}
+        - {x: -29, y: 43}
+        - {x: -50, y: 24}
+        - {x: -69, y: -10}
+        - {x: -110, y: -67}
+        - {x: -110, y: -132}
+        - {x: -80, y: -144}
+        - {x: 46, y: -144}
+        - {x: 132, y: -119}
+        - {x: 138, y: -81}
+        - {x: 138, y: 18}
+        - {x: 12, y: 149}
+      - - {x: 101, y: 16}
+        - {x: 100, y: 13}
+        - {x: 103, y: 10}
+        - {x: 108, y: 8}
+        - {x: 111, y: 8}
+        - {x: 112, y: 9}
+        - {x: 112, y: 13}
+        - {x: 106, y: 16}
+    - name: air attack animation_5
+      rect:
+        serializedVersion: 2
+        x: 1500
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 24, y: 126}
+        - {x: -104, y: 126}
+        - {x: -124, y: 108}
+        - {x: -124, y: 74}
+        - {x: 54, y: 50}
+        - {x: -15, y: 5}
+        - {x: -57, y: -99}
+        - {x: -34, y: -137}
+        - {x: 139, y: -137}
+        - {x: 150, y: -132}
+        - {x: 150, y: -29}
+        - {x: 97, y: 91}
+    - name: air attack animation_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 480
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 130, y: -32}
+        - {x: 102, y: -26}
+        - {x: 23, y: -26}
+        - {x: 8, y: -67}
+        - {x: 8, y: -123}
+        - {x: 22, y: -133}
+        - {x: 84, y: -133}
+        - {x: 122, y: -115}
+        - {x: 133, y: -106}
+        - {x: 133, y: -46}
+      - - {x: 70, y: 90}
+        - {x: 46, y: 112}
+        - {x: -5, y: 131}
+        - {x: -54, y: 131}
+        - {x: -80, y: 119}
+        - {x: -80, y: 116}
+        - {x: -79, y: 114}
+        - {x: 73, y: 7}
+        - {x: 75, y: 7}
+        - {x: 79, y: 9}
+        - {x: 82, y: 19}
+        - {x: 82, y: 57}
+    - name: air attack animation_7
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 480
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 30, y: -35}
+        - {x: 11, y: -51}
+        - {x: 0, y: -87}
+        - {x: 0, y: -110}
+        - {x: 59, y: -110}
+        - {x: 92, y: -100}
+        - {x: 92, y: -67}
+        - {x: 72, y: -35}
+      - - {x: -96, y: 133}
+        - {x: -96, y: 116}
+        - {x: 8, y: 72}
+        - {x: 18, y: 72}
+        - {x: 18, y: 88}
+        - {x: -1, y: 133}
+    - name: air attack animation_8
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 480
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 26, y: -46}
+        - {x: 3, y: -67}
+        - {x: 3, y: -90}
+        - {x: 4, y: -91}
+        - {x: 29, y: -103}
+        - {x: 53, y: -103}
+        - {x: 65, y: -99}
+        - {x: 65, y: -46}
+      - - {x: -88, y: 117}
+        - {x: -87, y: 115}
+        - {x: -81, y: 116}
+        - {x: -14, y: 102}
+        - {x: 12, y: 102}
+        - {x: 12, y: 120}
+        - {x: -15, y: 142}
+        - {x: -67, y: 142}
+        - {x: -88, y: 133}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
