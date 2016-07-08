@@ -89,6 +89,14 @@ public class PlayerController : MonoBehaviour
             fireCooldown -= Time.deltaTime;
         }
         Vector3 velocity = _controller.velocity;
+		if (_controller.isGrounded && _controller.ground != null && _controller.ground.tag == "MovingPlatform") {
+			this.transform.parent = _controller.ground.transform;
+		}
+		else {
+			if (this.transform.parent != null) {
+				this.transform.parent = null;
+			}
+		}
 
         // Gravity: pull player down
         if (!Bounce)
