@@ -5,66 +5,98 @@ using Prime31;
 public class PlayerController : MonoBehaviour
 {
 
+    // Balance numbers
+    public float airFireRate = 2f;
+    private float airCooldown;
+    public float fireRate = 0.3f;
+    private float fireCooldown;
     public float walkSpeed = 3;
     public float gravity = -35;
     public float jumpHeight = 2;
     public float maxHeight = 20;
     public float RunArrowStrength = 75;
 
+    // Character objects
     private CharacterController2D _controller;
     private AnimationController2D _animator;
-    private AudioSource audio;
     public AudioClip DeathScreamWhenYouDie;
-    public ArrayList fountains = new ArrayList();
-
+    private AudioSource audio;
+    public Transform defaultShot;
     public HealthScript health;
     public FountainScript fountain;
-    public bool inFountain = false;
-    public RockScript rock;
-    public bool nearRock = false;
     public PlayerWeaponScript weapon;
-
+    public RockScript rock;
     public Stack weapons;
-
-    private bool holdingWeapon = false;
     public Vector2 speed = new Vector2(50, 50);
+
+    // Operation booleans
+    public bool nearRock = false;
+    public bool inFountain = false;
     public string name;
+    public bool pushed = false;
     public bool faceRight = false;
     private bool Bounce = false;
-    private bool doubleJump = false;            // Allows the player to double jump
-    private bool doubleJumped = false;          // Records if the player has double jumped
+    private bool doubleJump = false;
+    private bool doubleJumped = false;
     private bool slide = false;
     private bool RunRight = false;
     private bool RunLeft = false;
-    private bool RunArrows = false;
+    public bool RunArrows = false;
     private bool AirControl = true;
-	public bool fallDeath = false;
+    public bool fallDeath = false;
+    private bool oldTrigger;
+    private bool newTrigger = true;
 
     // Use this for initialization
     void Start()
     {
+        airCooldown = 0;
         health = gameObject.GetComponent<HealthScript>();
         _controller = gameObject.GetComponent<CharacterController2D>();
         _animator = gameObject.GetComponent<AnimationController2D>();
+        weapons = new Stack();
     }
 
     void Awake()
     {
-
-        //weapons = GetComponentsInChildren<WeaponScript> ();
+        var shot = Instantiate(defaultShot) as Transform;
+        shot.position = transform.position;
+        PlayerWeaponScript shotScript = shot.gameObject.GetComponent<PlayerWeaponScript>();
+        weapon = shotScript;
+        shotScript.caster = this;
+        shotScript.MoveToCaster();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (airCooldown > 0)
+        {
+            airCooldown -= Time.deltaTime;
+        }
+        if (airCooldown <= 0 && weapon == null && !(weapons.Count >0) )
+        {
+            Debug.Log("spawn air");
+            var shot = Instantiate(defaultShot) as Transform;
+            shot.position = transform.position;
+            PlayerWeaponScript shotScript = shot.gameObject.GetComponent<PlayerWeaponScript>();
+            weapon = shotScript;
+            shotScript.caster = this;
+            shotScript.MoveToCaster();
+        }
+        if (fireCooldown > 0)
+        {
+            fireCooldown -= Time.deltaTime;
+        }
         Vector3 velocity = _controller.velocity;
 
+        // Gravity: pull player down
         if (!Bounce)
         {
             velocity.y += gravity * Time.deltaTime;
         }
 
+        // Player is bouncing
         else if (Bounce)
         {
             if (velocity.y > 0)
@@ -86,9 +118,9 @@ public class PlayerController : MonoBehaviour
             Bounce = false;
         }
 
-        if (MultiInput.GetAxis("Horizontal","",name) < 0 || MultiInput.GetAxis("LeftJoystickX","",name) < 0)
+        // Player is moving horizontally
+        if (MultiInput.GetAxis("Horizontal", "", name) < 0 || MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
         {
-
             if (slide)
             {
                 if (velocity.x > 0)
@@ -120,8 +152,7 @@ public class PlayerController : MonoBehaviour
             _animator.setFacing("Left");
             faceRight = false;
         }
-
-        else if (MultiInput.GetAxis("Horizontal","",name) > 0 || MultiInput.GetAxis("LeftJoystickX","",name) > 0)
+        else if (MultiInput.GetAxis("Horizontal", "", name) > 0 || MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
         {
             if (slide)
             {
@@ -196,53 +227,25 @@ public class PlayerController : MonoBehaviour
             AirControl = false;
         }
 
-        if ((MultiInput.GetAxis("Vertical","",name) < 0 || MultiInput.GetAxis("LeftJoystickY","",name) > 0) && !_controller.isGrounded)
+        if (pushed)
+        {
+            if (RunRight)
+            {
+                velocity.x += RunArrowStrength;
+                velocity.y += 3;
+            }
+            else if (RunLeft)
+            {
+                velocity.x -= RunArrowStrength;
+                velocity.y += 3;
+            }
+            pushed = false;
+        }
+
+        if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
         {
             velocity.y += gravity * Time.deltaTime * 4;
         }
-
-        if (weapon == null)
-            holdingWeapon = false;
-        float inputX = MultiInput.GetAxis("Horizontal","",name);
-        inputX = MultiInput.GetAxis("LeftJoystickX","",name);
-        float inputY = MultiInput.GetAxis("Vertical","",name);
-        inputY = MultiInput.GetAxis("LeftJoystickY","",name);
-
-        float aimX = MultiInput.GetAxis("RightJoystickX", "", name);
-        float aimY = MultiInput.GetAxis("RightJoystickY", "", name);
-
-        //bool shoot = Input.GetButtonDown("Shoot_P1");
-        //bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
-        float shoot = MultiInput.GetAxis("RightTrigger","",name);
-        //bool grab = MultiInput.GetButtonDown("Grab","",name);
-        float grab = MultiInput.GetAxis("LeftTrigger","",name);
-
-        if (shoot > 0)
-        {
-            if (weapon != null && weapon.CanAttack)
-            {
-                holdingWeapon = false;
-                weapon = (PlayerWeaponScript)weapons.Pop();
-                weapon.Attack(aimX, aimY);
-            }
-        }
-        if (grab > 0 && !holdingWeapon)
-        {
-            if (inFountain)
-            {
-                fountain.CreateShot(this);
-                holdingWeapon = true;
-            }
-            else if (nearRock)
-            {
-                weapon = rock.gameObject.GetComponent<PlayerWeaponScript>();
-                weapon.rockScript.caster = this;
-                holdingWeapon = true;
-                weapon.caster = this;
-            }
-
-        }
-
         velocity.x *= 0.85f;
 
         if (!_controller.isGrounded && !doubleJumped)
@@ -257,7 +260,8 @@ public class PlayerController : MonoBehaviour
         }
 
         // Double jump
-        if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("Jump","",name) || MultiInput.GetButtonDown("A","",name)))
+        if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name)
+            || MultiInput.GetButtonDown("LeftBumper", "", name)))
         {
             velocity.y = 0;
             velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
@@ -266,7 +270,8 @@ public class PlayerController : MonoBehaviour
         }
 
         // First jump
-        else if ((MultiInput.GetButtonDown("Jump","",name) || MultiInput.GetButtonDown("A","",name)) && _controller.isGrounded)
+        else if ((MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name) 
+            || MultiInput.GetButtonDown("LeftBumper", "", name)) && _controller.isGrounded)
         {
             velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
             doubleJump = true;
@@ -280,6 +285,80 @@ public class PlayerController : MonoBehaviour
         {
             AirControl = true;
         }
+
+
+        float inputX = MultiInput.GetAxis("Horizontal", "", name);
+        inputX = MultiInput.GetAxis("LeftJoystickX", "", name);
+        float inputY = MultiInput.GetAxis("Vertical", "", name);
+        inputY = MultiInput.GetAxis("LeftJoystickY", "", name);
+
+        float aimX = MultiInput.GetAxis("RightJoystickX", "", name);
+        float aimY = MultiInput.GetAxis("RightJoystickY", "", name);
+
+        //bool shoot = Input.GetButtonDown("Shoot_P1");
+        //bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
+        float shoot = MultiInput.GetAxis("RightTrigger", "", name);
+        newTrigger = shoot > 0f;
+        //bool grab = MultiInput.GetButtonDown("Grab","",name);
+        float grab = MultiInput.GetAxis("LeftTrigger", "", name);
+
+        if (shoot > 0f && fireCooldown <= 0)
+        {
+            fireCooldown = fireRate;
+            if (weapon != null && weapon.CanAttack)
+            {
+                if (weapon.shotType.Equals("air") && airCooldown <= 0)
+                {
+                    airCooldown = airFireRate;
+                    if (aimX != 0 || aimY != 0) weapon.Attack(aimX, aimY);
+                    else weapon.Attack(1, 0);
+                    
+                    weapon = null;
+                }
+                else
+                {
+                    if (aimX != 0 || aimY != 0) weapon.Attack(aimX, aimY);
+                    else weapon.Attack(1, 0);
+                    if (weapons.Count > 0)
+                    {
+                        Debug.Log("weapon pop");
+                        weapon = (PlayerWeaponScript)weapons.Pop();
+                    }
+                    else weapon = null;
+                }
+            }
+        }
+        if (grab > 0)
+        {
+            if (inFountain)
+            {
+                if (weapon != null && weapon.shotType.Equals("air"))
+                {
+                    Destroy(weapon.gameObject);
+                }
+                fountain.CreateShot(this);
+
+            }
+            else if (nearRock)
+            {
+                if (weapon != null && weapon.shotType.Equals("air"))
+                {
+                    Destroy(weapon.gameObject);
+                }
+                while (weapons.Count > 0)
+                {
+                    weapon = (PlayerWeaponScript)weapons.Pop();
+                    Destroy(weapon.gameObject);
+                }
+                weapon = rock.gameObject.GetComponent<PlayerWeaponScript>();
+                weapon.rockScript.caster = this;
+                weapon.caster = this;
+                weapon.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
+            }
+
+        }
+
+
     }
 
     void Flip()
@@ -303,7 +382,7 @@ public class PlayerController : MonoBehaviour
             }
             catch (MissingReferenceException e) { }
             audio.PlayOneShot(DeathScreamWhenYouDie, 1f);
-			fallDeath = true;
+            fallDeath = true;
             Destroy(gameObject, 2);
         }
         else if (collider.tag == "Bounce")
