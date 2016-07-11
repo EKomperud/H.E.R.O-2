@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
 
     // Balance numbers
+    public float freezeTime = 4f;
+    public float freezeWarmup;
     public float airFireRate = 2f;
     private float airCooldown;
     public float fireRate = 0.3f;
@@ -44,8 +46,7 @@ public class PlayerController : MonoBehaviour
     public bool RunArrows = false;
     private bool AirControl = true;
     public bool fallDeath = false;
-    private bool oldTrigger;
-    private bool newTrigger = true;
+    public bool frozen = false;
 
     // Use this for initialization
     void Start()
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviour
         weapon = shotScript;
         shotScript.caster = this;
         shotScript.MoveToCaster();
+        frozen = false;
     }
 
     // Update is called once per frame
@@ -126,74 +128,75 @@ public class PlayerController : MonoBehaviour
             Bounce = false;
         }
 
-        // Player is moving horizontally
-        if (MultiInput.GetAxis("Horizontal", "", name) < 0 || MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
+        if (!frozen)
         {
-            if (slide)
+            // Player is moving horizontally
+            if (MultiInput.GetAxis("Horizontal", "", name) < 0 || MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
             {
-                if (velocity.x > 0)
+                if (slide)
                 {
-                    velocity.x += -walkSpeed * 0.002f;
+                    if (velocity.x > 0)
+                    {
+                        velocity.x += -walkSpeed * 0.002f;
+                    }
+                    else
+                    {
+                        velocity.x += -walkSpeed * 0.11f;
+                    }
+                }
+                else if (RunLeft | RunRight)
+                {
+                    RunArrows = true;
+
                 }
                 else
                 {
-                    velocity.x += -walkSpeed * 0.11f;
+                    velocity.x = -walkSpeed;
                 }
-            }
-            else if (RunLeft | RunRight)
-            {
-                RunArrows = true;
-
-            }
-            else
-            {
-                velocity.x = -walkSpeed;
-            }
-            if (!_controller.isGrounded)
-            {
-                _animator.setAnimation("Jump");
-            }
-            else
-            {
-                _animator.setAnimation("Cyborg");
-            }
-            _animator.setFacing("Left");
-            faceRight = false;
-        }
-        else if (MultiInput.GetAxis("Horizontal", "", name) > 0 || MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
-        {
-            if (slide)
-            {
-                if (velocity.x < 0)
+                if (!_controller.isGrounded)
                 {
-                    velocity.x += walkSpeed * 0.002f;
+                    _animator.setAnimation("Jump");
                 }
                 else
                 {
-                    velocity.x += walkSpeed * 0.11f;
+                    _animator.setAnimation("Cyborg");
                 }
+                _animator.setFacing("Left");
+                faceRight = false;
             }
-            else if (RunLeft | RunRight)
+            else if (MultiInput.GetAxis("Horizontal", "", name) > 0 || MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
             {
-                RunArrows = true;
+                if (slide)
+                {
+                    if (velocity.x < 0)
+                    {
+                        velocity.x += walkSpeed * 0.002f;
+                    }
+                    else
+                    {
+                        velocity.x += walkSpeed * 0.11f;
+                    }
+                }
+                else if (RunLeft | RunRight)
+                {
+                    RunArrows = true;
 
+                }
+                else
+                {
+                    velocity.x = walkSpeed;
+                }
+                if (!_controller.isGrounded)
+                {
+                    _animator.setAnimation("Jump");
+                }
+                else
+                {
+                    _animator.setAnimation("Cyborg");
+                }
+                _animator.setFacing("Right");
+                faceRight = true;
             }
-            else
-            {
-                velocity.x = walkSpeed;
-            }
-            if (!_controller.isGrounded)
-            {
-                _animator.setAnimation("Jump");
-            }
-            else
-            {
-                _animator.setAnimation("Cyborg");
-            }
-            _animator.setFacing("Right");
-            faceRight = true;
-        }
-
         else if (!_controller.isGrounded)
         {
             _animator.setAnimation("Jump");
@@ -215,6 +218,18 @@ public class PlayerController : MonoBehaviour
                 velocity.x = 0;
             }
         }
+        }
+        else if (frozen)
+        {
+            freezeWarmup -= Time.deltaTime;
+            if (freezeWarmup <= 0)
+            {
+                frozen = false;
+                jumpHeight = 2;
+            }
+        }
+
+
         if (RunLeft | RunRight)
         {
             RunArrows = true;
@@ -306,7 +321,6 @@ public class PlayerController : MonoBehaviour
         //bool shoot = Input.GetButtonDown("Shoot_P1");
         //bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
         float shoot = MultiInput.GetAxis("RightTrigger", "", name);
-        newTrigger = shoot > 0f;
         //bool grab = MultiInput.GetButtonDown("Grab","",name);
         float grab = MultiInput.GetAxis("LeftTrigger", "", name);
 
@@ -318,14 +332,26 @@ public class PlayerController : MonoBehaviour
                 if (weapon.shotType.Equals("air") && airCooldown <= 0)
                 {
                     airCooldown = airFireRate;
-                    if (aimX != 0 || aimY != 0) weapon.Attack(aimX, aimY);
+                    if (aimX != 0 || aimY != 0)
+                    {
+                        weapon.gameObject.transform.Rotate(0,0,aimX+aimY, Space.Self);
+                        weapon.Attack(aimX, aimY);                       
+                    }
                     else weapon.Attack(1, 0);
                     
                     weapon = null;
                 }
                 else
                 {
-                    if (aimX != 0 || aimY != 0) weapon.Attack(aimX, aimY);
+                    if (aimX != 0 || aimY != 0)
+                    {
+                        float x = aimX * 10;
+                        float y = aimY * 10;
+                        float z = -(Mathf.Atan2(y, x) * 57.2958f);
+                        Debug.Log("" + z);
+                        weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
+                        weapon.Attack(aimX, aimY);
+                    }
                     else weapon.Attack(1, 0);
                     if (weapons.Count > 0)
                     {

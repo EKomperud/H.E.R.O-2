@@ -24,10 +24,10 @@ public class FountainScript : MonoBehaviour {
         }
     }
 
-	void OnTriggerEnter2D (Collider2D collider) {
+	void OnTriggerEnter2D (Collider2D collider) {        
 		PlayerController player = collider.gameObject.GetComponent<PlayerController> ();
 		if (player != null) {
-			player.fountain = this;
+            player.fountain = this;
 			player.inFountain = true;
 			Players.Add (player);
 		}
@@ -78,6 +78,15 @@ public class FountainScript : MonoBehaviour {
                 shotScript1.MoveToCaster();
                 shotScript2.MoveToCaster();
                 shotScript3.MoveToCaster();
+            }
+            else if (fountainType.Equals("water"))
+            {
+                var shot = Instantiate(shotPrefab) as Transform;
+                shot.position = transform.position;
+                PlayerWeaponScript shotScript = shot.gameObject.GetComponent<PlayerWeaponScript>();
+                player.weapon = shotScript;
+                shotScript.caster = player;
+                shotScript.MoveToCaster();
             }
         }
 	}

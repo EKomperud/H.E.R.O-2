@@ -79,6 +79,9 @@ public class PlayerWeaponScript : MonoBehaviour
                     if (shotType.Equals("plasma"))
                         animator.setAnimation("plasmaShoot");
 
+                    if (shotType.Equals("water"))
+                        animator.setAnimation("waterShoot");
+
                     hasShot = false;
 
                     Vector3 movement = new Vector3(speed.x * direction.x, -(speed.y * direction.y), 0);
@@ -209,6 +212,14 @@ public class PlayerWeaponScript : MonoBehaviour
             if (shotType.Equals("air"))
             {
                 player.pushed = true;
+            }
+            if (shotType.Equals("water"))
+            {
+                animator.setAnimation("waterFreeze");
+                player.jumpHeight = 0.25f;
+                player.frozen = true;
+                player.freezeWarmup = player.freezeTime;
+                Destroy(gameObject);
             }
         }
     }
