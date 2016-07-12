@@ -203,9 +203,21 @@ public class PlayerWeaponScript : MonoBehaviour
     {
         PlayerWeaponScript projectile = collider.gameObject.GetComponent<PlayerWeaponScript>();
         PlayerController player = collider.gameObject.GetComponent<PlayerController>();
-        if (projectile != null && shotType.Equals("rock") && !projectile.caster.Equals(this.caster))
+        if (projectile != null)// && shotType.Equals("rock") && !projectile.caster.Equals(this.caster))
         {
-            Destroy(collider.gameObject);
+            if (shotType.Equals("rock"))
+            {
+                Destroy(collider.gameObject);
+            }
+            if (shotType.Equals("air"))
+            {
+                if (projectile.shotType.Equals("fire") || projectile.shotType.Equals("water"))
+                {
+                    projectile.direction.x *= -1;
+                    projectile.direction.y *= -1;
+                }
+                Destroy(gameObject);
+            }
         }
         else if (player != null && !caster.Equals(player))
         {

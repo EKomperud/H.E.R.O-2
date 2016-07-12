@@ -72,13 +72,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (airCooldown > 0)
+        if (airCooldown > 0 && weapon == null)
         {
             airCooldown -= Time.deltaTime;
         }
         if (airCooldown <= 0 && weapon == null && !(weapons.Count >0) )
         {
-            Debug.Log("spawn air");
             var shot = Instantiate(defaultShot) as Transform;
             shot.position = transform.position;
             PlayerWeaponScript shotScript = shot.gameObject.GetComponent<PlayerWeaponScript>();
@@ -205,18 +204,19 @@ public class PlayerController : MonoBehaviour
         else
         {
             _animator.setAnimation("Idle");
-            if (slide)
-            {
-                velocity.x += velocity.x * 0.05f;
-            }
-            else if (RunArrows)
-            {
-                velocity.x += velocity.x * 3;
-            }
-            else if (_controller.isGrounded)
-            {
-                velocity.x = 0;
-            }
+                if (slide)
+                {
+                    velocity.x += velocity.x * 0.05f;
+                }
+                else if (RunArrows)
+                {
+                    velocity.x += velocity.x * 3;
+                }
+                else if (pushed) velocity.x += velocity.x * 1.2f;
+                else if (_controller.isGrounded)
+                {
+                    velocity.x = 0;
+                }
         }
         }
         else if (frozen)
@@ -230,7 +230,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if (RunLeft | RunRight)
+        if (RunLeft || RunRight)
         {
             RunArrows = true;
         }
@@ -240,26 +240,26 @@ public class PlayerController : MonoBehaviour
             if (RunRight)
             {
                 velocity.x += RunArrowStrength;
-                velocity.y += 3;
+                velocity.y += 10;
             }
             else if (RunLeft)
             {
                 velocity.x -= RunArrowStrength;
-                velocity.y += 3;
+                velocity.y += 10;
             }
             AirControl = false;
         }
 
         if (pushed)
         {
-            if (RunRight)
+            if (!faceRight)
             {
-                velocity.x += RunArrowStrength;
+                velocity.x += (RunArrowStrength/2);
                 velocity.y += 3;
             }
-            else if (RunLeft)
+            else if (faceRight)
             {
-                velocity.x -= RunArrowStrength;
+                velocity.x -= (RunArrowStrength/2);
                 velocity.y += 3;
             }
             pushed = false;
@@ -361,6 +361,7 @@ public class PlayerController : MonoBehaviour
                     else weapon = null;
                 }
             }
+            airCooldown += 0.75f;
         }
         if (grab > 0)
         {
