@@ -1,0 +1,149 @@
+fileFormatVersion: 2
+guid: 94748bf07561f3b44988673435640383
+timeCreated: 1468353926
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Cyborg Double Jump_0
+    21300002: Cyborg Double Jump_1
+    21300004: Cyborg Double Jump_2
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 350
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Cyborg Double Jump_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 72, y: -89}
+        - {x: 96, y: -36}
+        - {x: 96, y: 108}
+        - {x: 58, y: 164}
+        - {x: 36, y: 175}
+        - {x: -47, y: 175}
+        - {x: -82, y: 142}
+        - {x: -89, y: 115}
+        - {x: -111, y: 27}
+        - {x: -111, y: -37}
+        - {x: -80, y: -86}
+        - {x: -77, y: -123}
+        - {x: -57, y: -133}
+        - {x: -41, y: -134}
+        - {x: 56, y: -134}
+        - {x: 82, y: -123}
+        - {x: 81, y: -114}
+        - {x: 65, y: -104}
+    - name: Cyborg Double Jump_1
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 97, y: -38}
+        - {x: 97, y: -7}
+        - {x: 87, y: 30}
+        - {x: 97, y: 53}
+        - {x: 97, y: 108}
+        - {x: 59, y: 164}
+        - {x: 37, y: 175}
+        - {x: -46, y: 175}
+        - {x: -81, y: 142}
+        - {x: -88, y: 115}
+        - {x: -96, y: 16}
+        - {x: -108, y: 1}
+        - {x: -110, y: -9}
+        - {x: -110, y: -28}
+        - {x: -84, y: -87}
+        - {x: -73, y: -146}
+        - {x: -21, y: -158}
+        - {x: 23, y: -158}
+        - {x: 60, y: -151}
+        - {x: 83, y: -123}
+        - {x: 80, y: -113}
+        - {x: 71, y: -107}
+      - - {x: 169, y: -79}
+        - {x: 167, y: -81}
+        - {x: 167, y: -84}
+        - {x: 169, y: -86}
+        - {x: 173, y: -86}
+        - {x: 175, y: -84}
+        - {x: 175, y: -81}
+        - {x: 173, y: -79}
+    - name: Cyborg Double Jump_2
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 153, y: -106}
+        - {x: 156, y: -106}
+        - {x: 158, y: -105}
+        - {x: 158, y: -100}
+        - {x: 157, y: -98}
+        - {x: 154, y: -98}
+        - {x: 152, y: -99}
+        - {x: 152, y: -104}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
