@@ -48,8 +48,7 @@ public class PlayerController : MonoBehaviour
     private bool RunRight = false;
     private bool RunLeft = false;
     public bool RunArrows = false;
-    private bool AirControl = true;
-    public bool fallDeath = false;
+	private bool AirControl = true;
     public bool frozen = false;
 
     // Use this for initialization
@@ -428,7 +427,6 @@ public class PlayerController : MonoBehaviour
             }
             catch (MissingReferenceException e) { }
             audio.PlayOneShot(DeathScreamWhenYouDie, 1f);
-            fallDeath = true;
             Destroy(gameObject, 2);
         }
         else if (collider.tag == "Bounce")
