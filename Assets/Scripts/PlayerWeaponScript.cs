@@ -116,6 +116,14 @@ public class PlayerWeaponScript : MonoBehaviour
                             transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
                         }
                     }
+                    else if (shotType.Equals("air"))
+                    {
+                        Destroy(gameObject);
+                    }
+                    else if (shotType.Equals("water"))
+                    {
+                        Destroy(gameObject);
+                    }
                 }
             }
             else
@@ -207,19 +215,35 @@ public class PlayerWeaponScript : MonoBehaviour
         {
             if (shotType.Equals("rock"))
             {
-                Destroy(collider.gameObject);
+                if (!projectile.shotType.Equals("plasma"))
+                    Destroy(collider.gameObject);
             }
             if (shotType.Equals("air"))
             {
-                if (projectile.shotType.Equals("fire") || projectile.shotType.Equals("water"))
+                if (fire)
                 {
-                    projectile.direction.x *= -1;
-                    projectile.direction.y *= -1;
+                    if (projectile.shotType.Equals("fire") || projectile.shotType.Equals("water"))
+                    {
+                        projectile.direction.x *= -1;
+                        projectile.direction.y *= -1;
+                    }
+                    Destroy(gameObject);
                 }
-                Destroy(gameObject);
+            }
+            if (shotType.Equals("fire"))
+            {
+                if (projectile.shotType.Equals("water"))
+                {
+                    Destroy(projectile.gameObject);
+                    Destroy(gameObject);
+                }
+            }
+            if (shotType.Equals("water"))
+            {
+            
             }
         }
-        else if (player != null && !caster.Equals(player))
+        else if (player != null && !caster.Equals(player) && fire)
         {
             if (shotType.Equals("air"))
             {
@@ -232,6 +256,14 @@ public class PlayerWeaponScript : MonoBehaviour
                 player.frozen = true;
                 player.freezeWarmup = player.freezeTime;
                 Destroy(gameObject);
+            }
+            if (shotType.Equals("fire"))
+            {
+                if (!player.burning)
+                {
+                    player.burning = true;
+                    player.burnDown = player.burnTime;
+                }
             }
         }
     }

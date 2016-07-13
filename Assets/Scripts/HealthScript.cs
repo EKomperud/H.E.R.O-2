@@ -18,7 +18,7 @@ public class HealthScript : MonoBehaviour {
 		//player = gameObject.GetComponent<PlayerScript>();
 		PlayerWeaponScript shot = collider.gameObject.GetComponent<PlayerWeaponScript> ();
         
-        if (shot != null ) {
+        if (shot != null && shot.fire) {
             PlayerController target = shot.caster;
             if (!target.Equals(player))
             {
@@ -53,4 +53,22 @@ public class HealthScript : MonoBehaviour {
             }	
 		}
 	}
+
+    public void Death()
+    {
+        hp = 0;
+        if (this.gameObject.tag == "Player")
+        {
+            death = true;
+        }
+        if (this.gameObject.tag == "Player2")
+        {
+            death2 = true;
+        }
+        if (player.weapon != null)
+        {
+            Destroy(player.weapon);
+        }
+        Destroy(gameObject);
+    }
 }
