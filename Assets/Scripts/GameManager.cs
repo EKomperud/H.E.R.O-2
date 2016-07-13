@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour {
 	public int Player2W = 0;
 	public Text firstWins;
 	private bool dontChange = true;
+	public bool death = false;
+	public bool death2 = false;
 
 	// Use this for initialization
 	void Start () {
@@ -79,20 +81,20 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 		if (P1exists) {
-			if (p != null && p.death2) {
+			if (death2) {
 				ifDied = true;
 				Player1W += 1;
 				Keeper.P1WINS = Player1W;
 				P1exists = false;
-				p.death2 = false;
+				death2 = false;
 			}
-			else if (p.shotsHaveFired && p.death2) {
+			else if (p.shotsHaveFired && death2) {
 				ifDied = true;
 				Player1W += 1;
 				Keeper.P1WINS = Player1W;
 				p.shotsHaveFired = false;
 				P1exists = false;
-				p.death2 = false;
+				death2 = false;
 			}
 			else if (Keeper.hasHit2) {
 				ifDied = true;
@@ -104,19 +106,20 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 		else if (P2exists) {
-			if (p != null && p.death) {
+			if (death) {
 				ifDied = true;
 				Player2W += 1;
 				Keeper.P2WINS = Player2W;
 				P1exists = false;
-				p.death = false;
+				death = false;
 			}
-			else if (p.shotsHaveFired2 && p.death) {
+			else if (p.shotsHaveFired2 && death) {
 				ifDied = true;
 				Player2W += 1;
 				Keeper.P2WINS = Player2W;
 				p.shotsHaveFired2 = false;
 				P2exists = false;
+				death = false;
 			}
 			else if (Keeper.hasHit1) {
 				ifDied = true;

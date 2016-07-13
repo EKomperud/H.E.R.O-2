@@ -7,21 +7,37 @@ public class HealthScript : MonoBehaviour {
 	public bool shotsHaveFired = false;
 	public bool shotsHaveFired2 = false;
 	private PlayerController player; 
-	public bool death = false;
-	public bool death2 = false;
+	public GameManager Manager;
 
 	void Awake () {
 		player = gameObject.GetComponent<PlayerController> ();
+		Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
 	}
 
 	void OnTriggerEnter2D (Collider2D collider) {
 		//player = gameObject.GetComponent<PlayerScript>();
 		PlayerWeaponScript shot = collider.gameObject.GetComponent<PlayerWeaponScript> ();
-        
+		if (hp <= 0)
+		{
+			if (this.gameObject.tag == "Player")
+			{
+				Manager.death = true;
+			}
+			if (this.gameObject.tag == "Player2")
+			{
+				Manager.death2 = true;
+			}
+			if (player.weapon != null)
+			{
+				Destroy(player.weapon);
+			}
+			Destroy(gameObject);
+		}
         if (shot != null ) {
             PlayerController target = shot.caster;
             if (!target.Equals(player))
             {
+				Debug.Log ("the code gets here");
                 if (this.gameObject.tag == "Player")
                 {
                     shotsHaveFired = true;
@@ -34,22 +50,6 @@ public class HealthScript : MonoBehaviour {
                 System.Threading.Thread d = new System.Threading.Thread(() => shot.Destroy());
                 d.Start();
                 //Destroy (shot.gameObject);
-                if (hp <= 0)
-                {
-                    if (this.gameObject.tag == "Player")
-                    {
-                        death = true;
-                    }
-                    if (this.gameObject.tag == "Player2")
-                    {
-                        death2 = true;
-                    }
-                    if (player.weapon != null)
-                    {
-                        Destroy(player.weapon);
-                    }
-                    Destroy(gameObject);
-                }
             }	
 		}
 	}
