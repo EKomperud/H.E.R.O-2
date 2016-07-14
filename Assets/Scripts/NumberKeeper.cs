@@ -9,6 +9,8 @@ public class NumberKeeper : MonoBehaviour {
 	public int P2WINS = 0;
 	public bool hasHit1 = false;
 	public bool hasHit2 = false;
+	public bool death = false;
+	public bool death2 = false;
 
 
 	// Use this for initialization
