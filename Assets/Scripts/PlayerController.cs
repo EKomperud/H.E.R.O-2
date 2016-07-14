@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
 
     // Balance numbers
+    public float burnTime = 3f;
+    public float burnDown;
     public float freezeTime = 4f;
     public float freezeWarmup;
     public float airFireRate = 2f;
@@ -32,9 +34,11 @@ public class PlayerController : MonoBehaviour
     public Vector2 speed = new Vector2(50, 50);
 
     // Operation booleans
+    public bool burning = false;
     public bool nearRock = false;
     public bool inFountain = false;
     public string name;
+    public string character;
     public bool pushed = false;
     public bool faceRight = false;
     private bool Bounce = false;
@@ -88,6 +92,14 @@ public class PlayerController : MonoBehaviour
         {
             fireCooldown -= Time.deltaTime;
         }
+
+        if (burning)
+        {
+            burnDown -= Time.deltaTime;
+            if (burnDown <= 0f)
+                health.Death();
+        }
+
         Vector3 velocity = _controller.velocity;
 		if (_controller.isGrounded && _controller.ground != null && _controller.ground.tag == "MovingPlatform") {
 			this.transform.parent = _controller.ground.transform;
@@ -153,11 +165,11 @@ public class PlayerController : MonoBehaviour
                 }
                 if (!_controller.isGrounded)
                 {
-                    _animator.setAnimation("Jump");
+                    _animator.setAnimation(character+" Jump");
                 }
                 else
                 {
-                    _animator.setAnimation("Cyborg");
+                    _animator.setAnimation(character + " Walk");
                 }
                 _animator.setFacing("Left");
                 faceRight = false;
@@ -186,23 +198,23 @@ public class PlayerController : MonoBehaviour
                 }
                 if (!_controller.isGrounded)
                 {
-                    _animator.setAnimation("Jump");
+                    _animator.setAnimation(character + " Jump");
                 }
                 else
                 {
-                    _animator.setAnimation("Cyborg");
+                    _animator.setAnimation(character + " Walk");
                 }
                 _animator.setFacing("Right");
                 faceRight = true;
             }
         else if (!_controller.isGrounded)
         {
-            _animator.setAnimation("Jump");
+            _animator.setAnimation(character + " Jump");
         }
 
         else
         {
-            _animator.setAnimation("Idle");
+            _animator.setAnimation(character + " Idle");
                 if (slide)
                 {
                     velocity.x += velocity.x * 0.05f;
@@ -333,7 +345,7 @@ public class PlayerController : MonoBehaviour
                     airCooldown = airFireRate;
                     if (aimX != 0 || aimY != 0)
                     {
-                        weapon.gameObject.transform.Rotate(0,0,aimX+aimY, Space.Self);
+                        //weapon.gameObject.transform.Rotate(0,0,aimX+aimY, Space.Self);
                         weapon.Attack(aimX, aimY);                       
                     }
                     else weapon.Attack(1, 0);
@@ -347,9 +359,8 @@ public class PlayerController : MonoBehaviour
                         float x = aimX * 10;
                         float y = aimY * 10;
                         float z = -(Mathf.Atan2(y, x) * 57.2958f);
-                        Debug.Log("" + z);
                         weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
-                        weapon.Attack(aimX, aimY);
+                        weapon.Attack(1, 0);
                     }
                     else weapon.Attack(1, 0);
                     if (weapons.Count > 0)
@@ -371,7 +382,10 @@ public class PlayerController : MonoBehaviour
                     Destroy(weapon.gameObject);
                 }
                 fountain.CreateShot(this);
-
+                if (weapon.shotType.Equals("water"))
+                {
+                    burning = false;
+                }
             }
             else if (nearRock)
             {
@@ -389,10 +403,7 @@ public class PlayerController : MonoBehaviour
                 weapon.caster = this;
                 weapon.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
             }
-
         }
-
-
     }
 
     void Flip()
