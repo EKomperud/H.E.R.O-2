@@ -11,6 +11,7 @@ public class HealthScript : MonoBehaviour {
 
 	void Awake () {
 		player = gameObject.GetComponent<PlayerController> ();
+		Keeper = GameObject.Find("NumberKeeper").GetComponent<NumberKeeper> ();
 	}
 
 	void OnTriggerEnter2D (Collider2D collider) {
@@ -21,9 +22,11 @@ public class HealthScript : MonoBehaviour {
 		{
 			if (this.gameObject.tag == "Player")
 			{
+				Keeper.death = true;
 			}
 			if (this.gameObject.tag == "Player2")
 			{
+				Keeper.death2 = true;
 			}
 			if (player.weapon != null)
 			{
