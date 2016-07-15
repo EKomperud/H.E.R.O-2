@@ -367,6 +367,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (aimX != 0 || aimY != 0)
                     {
+                        Debug.Log("use aim");
                         float x = aimX * 10;
                         float y = aimY * 10;
                         float z = -(Mathf.Atan2(y, x) * 57.2958f);
@@ -375,6 +376,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
+                        Debug.Log("default aim");
                         if (faceRight)
                             weapon.Attack(1, 0);
                         else                        
