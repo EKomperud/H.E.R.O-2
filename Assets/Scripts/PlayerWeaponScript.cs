@@ -54,7 +54,7 @@ public class PlayerWeaponScript : MonoBehaviour
                     float X = caster.transform.position.x - this.transform.position.x;
 
                     float Y = caster.transform.position.y - this.transform.position.y;
-                    if (!rock && (X > 2 || X < -2) || (Y > 0.1 || Y < -0.1))
+                    if ((X > 2 || X < -2) || (Y > 0.1 || Y < -0.1))
                     {
                         atCaster = false;
                         Vector3 movement = new Vector3((speed.x / 2) * X, (speed.y / 2) * Y, 0);
@@ -85,6 +85,7 @@ public class PlayerWeaponScript : MonoBehaviour
                     hasShot = false;
 
                     Vector3 movement = new Vector3(speed.x * direction.x, -(speed.y * direction.y), 0);
+                    //Debug.Log("" + direction.x);
                     if (shotType.Equals("rock"))
                     {
                         movement = new Vector3(speed.x * direction.x * 1.5f, 0, 0);

@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
         {
             burnDown -= Time.deltaTime;
             if (burnDown <= 0f)
-                health.Death();
+                health.hp=0;
         }
 
         Vector3 velocity = _controller.velocity;
@@ -278,7 +278,7 @@ public class PlayerController : MonoBehaviour
 
         if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
         {
-            velocity.y += gravity * Time.deltaTime * 4;
+            velocity.y += gravity * Time.deltaTime * (MultiInput.GetAxis("LeftJoystickY","",name)*4);
         }
         velocity.x *= 0.85f;
 
@@ -346,9 +346,15 @@ public class PlayerController : MonoBehaviour
                     if (aimX != 0 || aimY != 0)
                     {
                         //weapon.gameObject.transform.Rotate(0,0,aimX+aimY, Space.Self);
-                        weapon.Attack(aimX, aimY);                       
+                        weapon.Attack(aimX, aimY);
                     }
-                    else weapon.Attack(1, 0);
+                    else
+                    {
+                        if (faceRight)                        
+                            weapon.Attack(1, 0);                       
+                        else                       
+                            weapon.Attack(-1, 0);                        
+                    }
                     
                     weapon = null;
                 }
@@ -362,7 +368,13 @@ public class PlayerController : MonoBehaviour
                         weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
                         weapon.Attack(1, 0);
                     }
-                    else weapon.Attack(1, 0);
+                    else
+                    {
+                        if (faceRight)
+                            weapon.Attack(1, 0);
+                        else                        
+                            weapon.Attack(-1, 0);
+                    }
                     if (weapons.Count > 0)
                     {
                         Debug.Log("weapon pop");
@@ -377,14 +389,18 @@ public class PlayerController : MonoBehaviour
         {
             if (inFountain)
             {
-                if (weapon != null && weapon.shotType.Equals("air"))
+                if (weapon != null && weapon.shotType.Equals("air") && weapons.Count == 0)
                 {
                     Destroy(weapon.gameObject);
+                    fountain.CreateShot(this);
                 }
-                fountain.CreateShot(this);
-                if (weapon.shotType.Equals("water"))
+                else if (weapon == null)
                 {
-                    burning = false;
+                    fountain.CreateShot(this);
+                    if (weapon.shotType.Equals("water"))
+                    {
+                        burning = false;
+                    }
                 }
             }
             else if (nearRock)
