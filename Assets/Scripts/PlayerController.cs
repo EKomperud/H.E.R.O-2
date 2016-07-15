@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 2;
     public float maxHeight = 20;
     public float RunArrowStrength = 75;
+    public float AirPushVelocity;
 
     // Character objects
     private CharacterController2D _controller;
@@ -265,12 +266,13 @@ public class PlayerController : MonoBehaviour
         {
             if (!faceRight)
             {
-                velocity.x += (RunArrowStrength/2);
+                Debug.Log("" + AirPushVelocity);
+                velocity.x += (AirPushVelocity);
                 velocity.y += 3;
             }
             else if (faceRight)
             {
-                velocity.x -= (RunArrowStrength/2);
+                velocity.x -= (AirPushVelocity);
                 velocity.y += 3;
             }
             pushed = false;
@@ -345,8 +347,11 @@ public class PlayerController : MonoBehaviour
                     airCooldown = airFireRate;
                     if (aimX != 0 || aimY != 0)
                     {
-                        //weapon.gameObject.transform.Rotate(0,0,aimX+aimY, Space.Self);
-                        weapon.Attack(aimX, aimY);
+                        float x = aimX * 10;
+                        float y = aimY * 10;
+                        float z = -(Mathf.Atan2(y, x) * 57.2958f);
+                        weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
+                        weapon.Attack(1, 0);
                     }
                     else
                     {

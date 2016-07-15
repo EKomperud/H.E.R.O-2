@@ -49,12 +49,19 @@ public class PlayerWeaponScript : MonoBehaviour
                     {
                         direction.x = -1;
                     }
+                    float inputX = MultiInput.GetAxis("RightJoystickX", "", caster.name);
+                    float inputY = MultiInput.GetAxis("RightJoystickY", "", caster.name);
+                    Vector2 mag = new Vector2(inputX, inputY);
+                    if (mag.magnitude < 0.15f)
+                    {
+                        inputX = 0;
+                        inputY = 0;
+                    }
 
-
-                    float X = caster.transform.position.x - this.transform.position.x;
-
-                    float Y = caster.transform.position.y - this.transform.position.y;
-                    if ((X > 2 || X < -2) || (Y > 0.1 || Y < -0.1))
+                    float X = caster.transform.position.x - this.transform.position.x + inputX;
+                    float Y = caster.transform.position.y - this.transform.position.y - inputY;
+                    
+                    if ((X > 0.1 || X < -0.1) || (Y > 0.1 || Y < -0.1))
                     {
                         atCaster = false;
                         Vector3 movement = new Vector3((speed.x / 2) * X, (speed.y / 2) * Y, 0);
@@ -148,13 +155,19 @@ public class PlayerWeaponScript : MonoBehaviour
                     {
                         direction.x = -1;
                     }
+                    float inputX = MultiInput.GetAxis("RightJoystickX", "", caster.name);
+                    float inputY = MultiInput.GetAxis("RightJoystickY", "", caster.name);
+                    Vector2 mag = new Vector2(inputX, inputY);
+                    if (mag.magnitude < 0.1f)
+                    {
+                        inputX = 0;
+                        inputY = 0;
+                    }
 
-
-                    float Xrock = (caster.transform.position.x + (1 * direction.x)) - this.transform.position.x;
-                    float Y = caster.transform.position.y - this.transform.position.y;
+                    float Xrock = (caster.transform.position.x + (1 * direction.x)) - this.transform.position.x + inputX;
+                    float Y = caster.transform.position.y - this.transform.position.y - inputY;
                     if ((Xrock > 1.5 || Xrock < -1.5) || (Y > 0.1 || Y < -0.1))
                     {
-
                         atCaster = false;
                         Vector3 movement = new Vector3((speed.x / 2) * Xrock, (speed.y / 2) * Y, 0);
                         movement *= Time.deltaTime;
@@ -216,7 +229,7 @@ public class PlayerWeaponScript : MonoBehaviour
         {
             if (shotType.Equals("rock"))
             {
-                if (!projectile.shotType.Equals("plasma"))
+                if (!projectile.shotType.Equals("plasma") && !projectile.shotType.Equals("rock"))
                     Destroy(collider.gameObject);
             }
             if (shotType.Equals("air"))
@@ -249,6 +262,9 @@ public class PlayerWeaponScript : MonoBehaviour
             if (shotType.Equals("air"))
             {
                 player.pushed = true;
+                Debug.Log(speed.x);
+                player.AirPushVelocity = speed.x;
+                
             }
             if (shotType.Equals("water"))
             {
