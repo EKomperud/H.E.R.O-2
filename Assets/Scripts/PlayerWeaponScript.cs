@@ -5,6 +5,7 @@ public class PlayerWeaponScript : MonoBehaviour
 {
     private AnimationController2D animator;
     public RockScript rockScript;
+    private Rigidbody2D rb2d;
 
     // ShotScript code
     public PlayerController caster;
@@ -22,11 +23,13 @@ public class PlayerWeaponScript : MonoBehaviour
     public bool fire = false;
     private bool connected = false;
     public bool rock = false;
+    private float airTime;
 
     void Start()
     {
         rockScript = gameObject.GetComponent<RockScript>();
         animator = gameObject.GetComponent<AnimationController2D>();
+        rb2d = GetComponent<Rigidbody2D>();
         sizeX = transform.localScale.x;
         hasShot = false;
     }
@@ -66,7 +69,7 @@ public class PlayerWeaponScript : MonoBehaviour
                         atCaster = false;
                         Vector3 movement = new Vector3((speed.x / 2) * X, (speed.y / 2) * Y, 0);
                         movement *= Time.deltaTime;
-                        this.transform.Translate(movement);
+                        transform.Translate(movement);
                     }
 
                     else
@@ -77,31 +80,34 @@ public class PlayerWeaponScript : MonoBehaviour
                 }
 
                 // Weapon has been fired
-                if (fire && !connected)
-                {
+                //if (fire && !connected)
+                //{
+                    
+                //    if (shotType.Equals("fire"))
+                //        animator.setAnimation("Fireball Shoot");
 
-                    if (shotType.Equals("fire"))
-                        animator.setAnimation("Fireball Shoot");
+                //    if (shotType.Equals("plasma"))
+                //        animator.setAnimation("plasmaShoot");
 
-                    if (shotType.Equals("plasma"))
-                        animator.setAnimation("plasmaShoot");
+                //    if (shotType.Equals("water"))
+                //        animator.setAnimation("waterShoot");
 
-                    if (shotType.Equals("water"))
-                        animator.setAnimation("waterShoot");
+                //    if (shotType.Equals("air"))
+                //        airTime += Time.deltaTime;
 
-                    hasShot = false;
+                //    hasShot = false;
 
-                    Vector3 movement = new Vector3(speed.x * direction.x, -(speed.y * direction.y), 0);
-                    //Debug.Log("" + direction.x);
-                    if (shotType.Equals("rock"))
-                    {
-                        movement = new Vector3(speed.x * direction.x * 1.5f, 0, 0);
-                        speed.x -= 0.2f;
-                    }
-                    movement *= Time.deltaTime;
-                    transform.Translate(movement);
+                //    Vector2 movement = new Vector3(speed.x * direction.x, -(speed.y * direction.y));
+                //    //Debug.Log("" + direction.x);
+                //    if (shotType.Equals("rock"))
+                //    {
+                //        movement = new Vector3(speed.x * direction.x * 1.5f, 0, 0);
+                //        speed.x -= 0.2f;
+                //    }
+                //    movement *= Time.deltaTime;
+                //    GetComponent<Rigidbody2D>().MovePosition(movement);
 
-                }
+                //}
 
                 // Shot connected
                 if (connected)
@@ -171,7 +177,7 @@ public class PlayerWeaponScript : MonoBehaviour
                         atCaster = false;
                         Vector3 movement = new Vector3((speed.x / 2) * Xrock, (speed.y / 2) * Y, 0);
                         movement *= Time.deltaTime;
-                        this.transform.Translate(movement);
+                        transform.Translate(movement);
                     }
                     else
                     {
@@ -180,21 +186,20 @@ public class PlayerWeaponScript : MonoBehaviour
                 }
 
                 // Weapon has been fired
-                if (fire && speed.x > 0)
-                {
-                    gameObject.GetComponent<Rigidbody2D>().gravityScale = 7;
-                    hasShot = false;
+                //if (fire && speed.x > 0)
+                //{
+                //    gameObject.GetComponent<Rigidbody2D>().gravityScale = 7;
+                //    hasShot = false;
 
-                    Vector3 movement = new Vector3(speed.x * direction.x, 0, 0);
-                    if (shotType.Equals("rock"))
-                    {
-                        movement = new Vector3(speed.x * direction.x * 1.5f, speed.y * direction.y * 1.5f, 0);
-                        speed.x -= 0.5f;
-                    }
-                    movement *= Time.deltaTime;
-                    transform.Translate(movement);
-
-                }
+                //    Vector3 movement = new Vector3(speed.x * direction.x, 0, 0);
+                //    if (shotType.Equals("rock"))
+                //    {
+                //        movement = new Vector3(speed.x * direction.x * 1.5f, speed.y * direction.y * 1.5f, 0);
+                //        speed.x -= 0.5f;
+                //    }
+                //    movement *= Time.deltaTime;
+                //    rb2d.MovePosition(movement);
+                //}
 
                 // Shot connected
                 if (connected)
@@ -216,16 +221,68 @@ public class PlayerWeaponScript : MonoBehaviour
                     caster = null;
                 }
             }
-        }
-        
+        }       
+    }
 
+    void FixedUpdate()
+    {
+        if (rock)
+        {
+            // Weapon has been fired
+            if (fire && speed.x > 0)
+            {
+                gameObject.GetComponent<Rigidbody2D>().gravityScale = 7;
+                hasShot = false;
+
+                Vector2 movement = new Vector3(speed.x * direction.x, 0);
+                if (shotType.Equals("rock"))
+                {
+                    movement = new Vector3(speed.x * direction.x * 1.5f, speed.y * direction.y * 1.5f, 0);
+                    speed.x -= 0.5f;
+                }
+                movement *= Time.deltaTime;
+                rb2d.MovePosition(rb2d.position + movement);
+
+            }
+        }
+        else
+        {
+            if (fire && !connected)
+            {
+
+                if (shotType.Equals("fire"))
+                    animator.setAnimation("Fireball Shoot");
+
+                if (shotType.Equals("plasma"))
+                    animator.setAnimation("plasmaShoot");
+
+                if (shotType.Equals("water"))
+                    animator.setAnimation("waterShoot");
+
+                if (shotType.Equals("air"))
+                    airTime += Time.deltaTime;
+
+                hasShot = false;
+
+                Vector2 movement = new Vector3(speed.x * direction.x, -(speed.y * direction.y));
+                //Debug.Log("" + direction.x);
+                if (shotType.Equals("rock"))
+                {
+                    movement = new Vector3(speed.x * direction.x * 1.5f, 0, 0);
+                    speed.x -= 0.2f;
+                }
+                movement *= Time.deltaTime;
+                rb2d.MovePosition(rb2d.position + movement * Time.fixedDeltaTime);
+
+            }
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collider)
     {
         PlayerWeaponScript projectile = collider.gameObject.GetComponent<PlayerWeaponScript>();
         PlayerController player = collider.gameObject.GetComponent<PlayerController>();
-        if (projectile != null)// && shotType.Equals("rock") && !projectile.caster.Equals(this.caster))
+        if (projectile != null && !projectile.caster.Equals(this.caster))
         {
             if (shotType.Equals("rock"))
             {
@@ -261,10 +318,10 @@ public class PlayerWeaponScript : MonoBehaviour
         {
             if (shotType.Equals("air"))
             {
+                float apv = speed.magnitude;
+                Debug.Log("5 / airTime = "+ 5/airTime);
+                player.AirPushVelocity = (5 / airTime) * direction.x;
                 player.pushed = true;
-                Debug.Log(speed.x);
-                player.AirPushVelocity = speed.x;
-                
             }
             if (shotType.Equals("water"))
             {
@@ -282,6 +339,18 @@ public class PlayerWeaponScript : MonoBehaviour
                     player.burnDown = player.burnTime;
                 }
             }
+        }
+
+    }
+
+    void RaycastTrigger(Collider2D collider)
+    {
+        Debug.Log("this is happening");
+        WallScript wall = collider.gameObject.GetComponent<WallScript>();
+        if (wall != null && !wall.bounceConstraint)
+        {
+            direction.x *= -1;
+            direction.y *= -1;
         }
     }
 

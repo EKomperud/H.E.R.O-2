@@ -5,6 +5,11 @@ public class RockScript : MonoBehaviour {
 
 	public PlayerController caster;
 
+    void Start()
+    {
+        GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+    }
+
 	void OnTriggerEnter2D (Collider2D collider) {
 		caster = collider.gameObject.GetComponent<PlayerController> ();
 		if (caster != null) {

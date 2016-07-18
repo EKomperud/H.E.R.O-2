@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 2;
     public float maxHeight = 20;
     public float RunArrowStrength = 75;
-    public float AirPushVelocity;
+    public float AirPushVelocity { get; set; }
 
     // Character objects
     private CharacterController2D _controller;
@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log("AirPushVelocity = " + AirPushVelocity);
         if (airCooldown > 0 && weapon == null)
         {
             airCooldown -= Time.deltaTime;
@@ -142,7 +143,8 @@ public class PlayerController : MonoBehaviour
         if (!frozen)
         {
             // Player is moving horizontally
-            if (MultiInput.GetAxis("Horizontal", "", name) < 0 || MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
+            //if (MultiInput.GetAxis("Horizontal", "", name) < 0 || MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
+            if (MultiInput.GetAxis("LeftJoystickX","",name)<0)
             {
                 if (slide)
                 {
@@ -175,7 +177,8 @@ public class PlayerController : MonoBehaviour
                 _animator.setFacing("Left");
                 faceRight = false;
             }
-            else if (MultiInput.GetAxis("Horizontal", "", name) > 0 || MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
+            //else if (MultiInput.GetAxis("Horizontal", "", name) > 0 || MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
+            else if (MultiInput.GetAxis("LeftJoystickX","",name)>0)
             {
                 if (slide)
                 {
@@ -266,19 +269,21 @@ public class PlayerController : MonoBehaviour
         {
             if (!faceRight)
             {
-                Debug.Log("" + AirPushVelocity);
-                velocity.x += (AirPushVelocity);
+                Debug.Log("AirPushVelocity = " + AirPushVelocity);
+                velocity.x += AirPushVelocity;
                 velocity.y += 3;
             }
             else if (faceRight)
             {
-                velocity.x -= (AirPushVelocity);
+                Debug.Log("AirPushVelocity = " + AirPushVelocity);
+                velocity.x -= AirPushVelocity;
                 velocity.y += 3;
             }
             pushed = false;
         }
 
-        if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
+        //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
+        if (MultiInput.GetAxis("LeftJoystickY","",name)>0 && !_controller.isGrounded)
         {
             velocity.y += gravity * Time.deltaTime * (MultiInput.GetAxis("LeftJoystickY","",name)*4);
         }
@@ -296,7 +301,9 @@ public class PlayerController : MonoBehaviour
         }
 
         // Double jump
-        if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name)
+        //if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name)
+        //    || MultiInput.GetButtonDown("LeftBumper", "", name)))
+        if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("A", "", name)
             || MultiInput.GetButtonDown("LeftBumper", "", name)))
         {
             velocity.y = 0;
@@ -306,7 +313,9 @@ public class PlayerController : MonoBehaviour
         }
 
         // First jump
-        else if ((MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name) 
+        //else if ((MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name) 
+        //    || MultiInput.GetButtonDown("LeftBumper", "", name)) && _controller.isGrounded)
+        else if ((MultiInput.GetButtonDown("A", "", name)
             || MultiInput.GetButtonDown("LeftBumper", "", name)) && _controller.isGrounded)
         {
             velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
@@ -323,10 +332,10 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        float inputX = MultiInput.GetAxis("Horizontal", "", name);
-        inputX = MultiInput.GetAxis("LeftJoystickX", "", name);
-        float inputY = MultiInput.GetAxis("Vertical", "", name);
-        inputY = MultiInput.GetAxis("LeftJoystickY", "", name);
+        //float inputX = MultiInput.GetAxis("Horizontal", "", name);
+        float inputX = MultiInput.GetAxis("LeftJoystickX", "", name);
+        //float inputY = MultiInput.GetAxis("Vertical", "", name);
+        float inputY = MultiInput.GetAxis("LeftJoystickY", "", name);
 
         float aimX = MultiInput.GetAxis("RightJoystickX", "", name);
         float aimY = MultiInput.GetAxis("RightJoystickY", "", name);
