@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 2;
     public float maxHeight = 20;
     public float RunArrowStrength = 75;
+	public float AirPushVelocity { get; set; }
 
     // Character objects
     private CharacterController2D _controller;

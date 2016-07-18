@@ -329,7 +329,7 @@ public class PlayerWeaponScript : MonoBehaviour
             {
                 float apv = speed.magnitude;
                 Debug.Log("5 / airTime = "+ 5/airTime);
-                player.AirPushVelocity = (5 / airTime) * direction.x;
+				player.AirPushVelocity = (5 / airTime) * direction.x;
                 player.pushed = true;
             }
             if (shotType.Equals("water"))
