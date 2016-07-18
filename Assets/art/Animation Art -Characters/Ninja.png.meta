@@ -1,0 +1,190 @@
+fileFormatVersion: 2
+guid: ce48e791089082a41878ef788a5d87de
+timeCreated: 1468567324
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Ninja_0
+    21300002: Ninja_1
+    21300004: Ninja_2
+    21300006: Ninja_3
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 350
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Ninja_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 111, y: -99}
+        - {x: 88, y: -51}
+        - {x: 111, y: -1}
+        - {x: 111, y: 72}
+        - {x: 93, y: 113}
+        - {x: 52, y: 146}
+        - {x: 32, y: 153}
+        - {x: -40, y: 153}
+        - {x: -90, y: 121}
+        - {x: -109, y: 74}
+        - {x: -109, y: 10}
+        - {x: -95, y: -21}
+        - {x: -104, y: -84}
+        - {x: -92, y: -123}
+        - {x: -45, y: -150}
+        - {x: -23, y: -150}
+        - {x: -21, y: -148}
+        - {x: -18, y: -120}
+        - {x: 83, y: -117}
+      - - {x: -89, y: -126}
+        - {x: -86, y: -125}
+        - {x: -86, y: -122}
+        - {x: -89, y: -121}
+        - {x: -91, y: -123}
+    - name: Ninja_1
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 64, y: -152}
+        - {x: 89, y: -111}
+        - {x: 96, y: -31}
+        - {x: 110, y: 7}
+        - {x: 110, y: 88}
+        - {x: 68, y: 136}
+        - {x: 46, y: 153}
+        - {x: -49, y: 153}
+        - {x: -70, y: 138}
+        - {x: -110, y: 87}
+        - {x: -110, y: 10}
+        - {x: -96, y: -21}
+        - {x: -100, y: -84}
+        - {x: -97, y: -105}
+        - {x: -94, y: -118}
+        - {x: -57, y: -152}
+        - {x: -33, y: -152}
+        - {x: -31, y: -150}
+        - {x: -19, y: -130}
+        - {x: 21, y: -152}
+    - name: Ninja_2
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 105, y: 1}
+        - {x: 110, y: 13}
+        - {x: 110, y: 73}
+        - {x: 108, y: 90}
+        - {x: 69, y: 140}
+        - {x: 41, y: 150}
+        - {x: 28, y: 155}
+        - {x: -40, y: 155}
+        - {x: -88, y: 121}
+        - {x: -110, y: 79}
+        - {x: -110, y: 13}
+        - {x: -107, y: -6}
+        - {x: -94, y: -19}
+        - {x: -93, y: -117}
+        - {x: -90, y: -118}
+        - {x: 21, y: -151}
+        - {x: 45, y: -151}
+        - {x: 67, y: -118}
+        - {x: 64, y: -53}
+        - {x: 89, y: -27}
+    - name: Ninja_3
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 48, y: -153}
+        - {x: 81, y: -108}
+        - {x: 86, y: -89}
+        - {x: 88, y: -30}
+        - {x: 105, y: -2}
+        - {x: 109, y: 8}
+        - {x: 109, y: 87}
+        - {x: 67, y: 135}
+        - {x: 40, y: 147}
+        - {x: 27, y: 152}
+        - {x: -44, y: 152}
+        - {x: -90, y: 119}
+        - {x: -111, y: 72}
+        - {x: -111, y: 8}
+        - {x: -100, y: -23}
+        - {x: -104, y: -132}
+        - {x: -58, y: -153}
+        - {x: -29, y: -153}
+        - {x: -32, y: -119}
+        - {x: 21, y: -152}
+        - {x: 30, y: -153}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

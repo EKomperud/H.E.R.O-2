@@ -7,7 +7,7 @@ public class FountainScript : MonoBehaviour {
     public string fountainType;
 
     public float cooldownRate = 3f;
-    private float cooldown;
+    public float cooldown;
 
 	public ArrayList Players = new ArrayList();
 
