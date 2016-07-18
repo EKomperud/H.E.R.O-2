@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour {
 	public bool MainMenuSlide = false;
 	public bool playBack = false;
 	public bool setTimer = false;
-    public bool ifDied = false;
 	public int buttonCountFirst = 0;
 	private int numOfRounds = 0;
 	private int randomLevel = 0;
@@ -19,6 +18,7 @@ public class GameManager : MonoBehaviour {
 	public NumberKeeper Keeper;
 	public int Player1W = 0;
 	public int Player2W = 0;
+	public int pNum = 0;
 	public Text firstWins;
 	private bool dontChange = true;
 
@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (startUp) {
+			pNum = Keeper.numOfP;
 			randomLevel = Random.Range (1, 8);
 			Application.LoadLevel (randomLevel);
 			numOfRounds -= 1;
@@ -41,18 +42,36 @@ public class GameManager : MonoBehaviour {
 			startUp = false;
 		}
 		numOfRounds = Keeper.numberOfRounds;
-		if (ifDied && numOfRounds > 0) {
-			Debug.Log (Keeper.P1WINS);
+		if (Keeper.p2Input && Keeper.p1Input) {
+			Debug.Log ("here");
 			randomLevel = Random.Range (1, 8);
 			Application.LoadLevel (randomLevel);
-			Debug.Log (Keeper.P1WINS);
-			Player1W = Keeper.P1WINS;
-			Player2W = Keeper.P2WINS;
 			numOfRounds -= 1;
 			Keeper.numberOfRounds = numOfRounds;
-			ifDied = false;
+			Keeper.numOfP = Keeper.preNumOfP;
+			Keeper.ifDied = false;
+			Keeper.p1Input = false;
+			Keeper.p2Input = false;
+		}
+		if (Keeper.ifDied && numOfRounds > 0) {
+			if (this.gameObject.tag == "Player" && Keeper.p1Input != true) {
+				Player1W = Keeper.P1WINS;
+				Keeper.p1Input = true;
+				Debug.Log (Keeper.P1WINS + " P1");
+				if (Keeper.numOfP == 1) {
+					Keeper.p2Input = true;
+				}
+			}
+			if (this.gameObject.tag == "Player2" && Keeper.p2Input != true) {
+				Player2W = Keeper.P2WINS;
+				Keeper.p2Input = true;
+				Debug.Log (Keeper.P2WINS + " P2");
+				if (Keeper.numOfP == 1) {
+					Keeper.p1Input = true;
+				}
+			}
 		} 
-		else if (ifDied && numOfRounds <= 0) {
+		else if (Keeper.ifDied && numOfRounds <= 0) {
 			if (Keeper.P2WINS == 1) {
 				firstWins.text = "Player 1: " + Keeper.P1WINS + " wins" +
 				" Player 2: " + Keeper.P2WINS + " win";
@@ -80,51 +99,57 @@ public class GameManager : MonoBehaviour {
 		}
 		if (P1exists) {
 			if (Keeper.death2) {
-				ifDied = true;
+				Keeper.ifDied = true;
 				Player1W += 1;
 				Keeper.P1WINS = Player1W;
 				P1exists = false;
 				Keeper.death2 = false;
+				Keeper.numOfP -= 1;
 			}
 			else if (p.shotsHaveFired && Keeper.death2) {
-				ifDied = true;
+				Keeper.ifDied = true;
 				Player1W += 1;
 				Keeper.P1WINS = Player1W;
 				p.shotsHaveFired = false;
 				P1exists = false;
 				Keeper.death2 = false;
+				Keeper.numOfP -= 1;
 			}
 			else if (Keeper.hasHit2) {
-				ifDied = true;
+				Keeper.ifDied = true;
 				Player1W += 1;
 				Keeper.P1WINS = Player1W;
 				P1exists = false;
 				Keeper.hasHit2 = false;
+				Keeper.numOfP -= 1;
 
 			}
 		}
 		else if (P2exists) {
 			if (Keeper.death) {
-				ifDied = true;
+				Keeper.ifDied = true;
 				Player2W += 1;
 				Keeper.P2WINS = Player2W;
 				P1exists = false;
 				Keeper.death = false;
+				Keeper.numOfP -= 1;
 			}
 			else if (p.shotsHaveFired2 && Keeper.death) {
-				ifDied = true;
+				Keeper.ifDied = true;
 				Player2W += 1;
 				Keeper.P2WINS = Player2W;
 				p.shotsHaveFired2 = false;
 				P2exists = false;
 				Keeper.death = false;
+				Keeper.numOfP -= 1;
 			}
 			else if (Keeper.hasHit1) {
-				ifDied = true;
+				Keeper.ifDied = true;
 				Player2W += 1;
 				Keeper.P2WINS = Player2W;
 				P2exists = false;
 				Keeper.hasHit1 = false;
+				Keeper.numOfP -= 1;
 			} 
 		}
 	}
@@ -136,6 +161,9 @@ public class GameManager : MonoBehaviour {
 	public void ExitLevel (){
 		Keeper.P1WINS = 0;
 		Keeper.P2WINS = 0;
+		Keeper.preNumOfP = 0;
+		Keeper.previousRounds = 0;
+		startUp = false;
 		Application.LoadLevel (0);
 	}
 
@@ -160,28 +188,37 @@ public class GameManager : MonoBehaviour {
 		numOfRounds = 3;
 		Keeper.previousRounds = 3;
 		startUp = true;
+		Keeper.numOfP = 2;
+		Keeper.preNumOfP = Keeper.numOfP;
 	}
 	public void Five() {
 		numOfRounds = 5;
 		Keeper.previousRounds = 5;
 		startUp = true;
+		Keeper.numOfP = 2;
+		Keeper.preNumOfP = Keeper.numOfP;
 	}
 	public void Seven() {
 		numOfRounds = 7;
 		Keeper.previousRounds = 7;
 		startUp = true;
+		Keeper.numOfP = 2;
+		Keeper.preNumOfP = Keeper.numOfP;
 	}
 	public void Ten() {
 		numOfRounds = 10;
 		Keeper.previousRounds = 10;
 		startUp = true;
+		Keeper.numOfP = 2;
+		Keeper.preNumOfP = Keeper.numOfP;
 	}
 	public void RedoRounds() {
 		Keeper.P1WINS = 0;
 		Keeper.P2WINS = 0;
-		Keeper.numberOfRounds = Keeper.previousRounds;
 		randomLevel = Random.Range (1, 8);
 		Application.LoadLevel (randomLevel);
-
+		Keeper.numberOfRounds = Keeper.previousRounds - 1;
+		Keeper.numOfP = Keeper.preNumOfP;
+		Keeper.ifDied = false;
 	}
 }
