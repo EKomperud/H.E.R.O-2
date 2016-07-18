@@ -12,7 +12,7 @@ public class PlayerWeaponScript : MonoBehaviour
     private bool atCaster = false;
     private bool right = true;
     public string shotType = "default";
-
+    private float destroyCountdown = 0.25f;
     public int damage = 1;
     private float sizeX;
 
@@ -136,7 +136,13 @@ public class PlayerWeaponScript : MonoBehaviour
                     }
                     else if (shotType.Equals("water"))
                     {
-                        Destroy(gameObject);
+                        animator.setAnimation("waterFreeze");
+                        if (destroyCountdown >=0)
+                        {
+                            destroyCountdown -= Time.deltaTime;
+                        }
+                        else
+                            Destroy(gameObject);
                     }
                 }
             }
@@ -241,7 +247,7 @@ public class PlayerWeaponScript : MonoBehaviour
                     speed.x -= 0.5f;
                 }
                 movement *= Time.deltaTime;
-                rb2d.MovePosition(rb2d.position + movement);
+                rb2d.MovePosition(rb2d.position + (movement*50) * Time.fixedDeltaTime);
 
             }
         }
@@ -260,7 +266,10 @@ public class PlayerWeaponScript : MonoBehaviour
                     animator.setAnimation("waterShoot");
 
                 if (shotType.Equals("air"))
+                {
+                    animator.setAnimation("airShoot");
                     airTime += Time.deltaTime;
+                }
 
                 hasShot = false;
 
@@ -272,7 +281,7 @@ public class PlayerWeaponScript : MonoBehaviour
                     speed.x -= 0.2f;
                 }
                 movement *= Time.deltaTime;
-                rb2d.MovePosition(rb2d.position + movement * Time.fixedDeltaTime);
+                rb2d.MovePosition(rb2d.position + (movement*50) * Time.fixedDeltaTime);
 
             }
         }
@@ -311,7 +320,7 @@ public class PlayerWeaponScript : MonoBehaviour
             }
             if (shotType.Equals("water"))
             {
-            
+                
             }
         }
         else if (player != null && !caster.Equals(player) && fire)
@@ -329,7 +338,7 @@ public class PlayerWeaponScript : MonoBehaviour
                 player.jumpHeight = 0.25f;
                 player.frozen = true;
                 player.freezeWarmup = player.freezeTime;
-                Destroy(gameObject);
+                Destroy();
             }
             if (shotType.Equals("fire"))
             {
