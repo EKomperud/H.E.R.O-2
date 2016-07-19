@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Prime31;
-
 public class PlayerController : MonoBehaviour
 {
 
@@ -49,7 +48,7 @@ public class PlayerController : MonoBehaviour
     private bool RunRight = false;
     private bool RunLeft = false;
     public bool RunArrows = false;
-	private bool AirControl = true;
+    private bool AirControl = true;
     public bool frozen = false;
 
     // Use this for initialization
@@ -82,7 +81,7 @@ public class PlayerController : MonoBehaviour
         {
             airCooldown -= Time.deltaTime;
         }
-        if (airCooldown <= 0 && weapon == null && !(weapons.Count >0) )
+        if (airCooldown <= 0 && weapon == null && !(weapons.Count > 0))
         {
             var shot = Instantiate(defaultShot) as Transform;
             shot.position = transform.position;
@@ -100,18 +99,21 @@ public class PlayerController : MonoBehaviour
         {
             burnDown -= Time.deltaTime;
             if (burnDown <= 0f)
-                health.hp=0;
+                health.hp = 0;
         }
 
         Vector3 velocity = _controller.velocity;
-		if (_controller.isGrounded && _controller.ground != null && _controller.ground.tag == "MovingPlatform") {
-			this.transform.parent = _controller.ground.transform;
-		}
-		else {
-			if (this.transform.parent != null) {
-				this.transform.parent = null;
-			}
-		}
+        if (_controller.isGrounded && _controller.ground != null && _controller.ground.tag == "MovingPlatform")
+        {
+            this.transform.parent = _controller.ground.transform;
+        }
+        else
+        {
+            if (this.transform.parent != null)
+            {
+                this.transform.parent = null;
+            }
+        }
 
         // Gravity: pull player down
         if (!Bounce)
@@ -145,7 +147,7 @@ public class PlayerController : MonoBehaviour
         {
             // Player is moving horizontally
             //if (MultiInput.GetAxis("Horizontal", "", name) < 0 || MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
-            if (MultiInput.GetAxis("LeftJoystickX","",name)<0)
+            if (MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
             {
                 if (slide)
                 {
@@ -169,7 +171,7 @@ public class PlayerController : MonoBehaviour
                 }
                 if (!_controller.isGrounded)
                 {
-                    _animator.setAnimation(character+" Jump");
+                    _animator.setAnimation(character + " Jump");
                 }
                 else
                 {
@@ -179,7 +181,7 @@ public class PlayerController : MonoBehaviour
                 faceRight = false;
             }
             //else if (MultiInput.GetAxis("Horizontal", "", name) > 0 || MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
-            else if (MultiInput.GetAxis("LeftJoystickX","",name)>0)
+            else if (MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
             {
                 if (slide)
                 {
@@ -212,14 +214,14 @@ public class PlayerController : MonoBehaviour
                 _animator.setFacing("Right");
                 faceRight = true;
             }
-        else if (!_controller.isGrounded)
-        {
-            _animator.setAnimation(character + " Jump");
-        }
+            else if (!_controller.isGrounded)
+            {
+                _animator.setAnimation(character + " Jump");
+            }
 
-        else
-        {
-            _animator.setAnimation(character + " Idle");
+            else
+            {
+                _animator.setAnimation(character + " Idle");
                 if (slide)
                 {
                     velocity.x += velocity.x * 0.05f;
@@ -233,7 +235,7 @@ public class PlayerController : MonoBehaviour
                 {
                     velocity.x = 0;
                 }
-        }
+            }
         }
         else if (frozen)
         {
@@ -284,9 +286,9 @@ public class PlayerController : MonoBehaviour
         }
 
         //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
-        if (MultiInput.GetAxis("LeftJoystickY","",name)>0 && !_controller.isGrounded)
+        if (MultiInput.GetAxis("LeftJoystickY", "", name) > 0 && !_controller.isGrounded)
         {
-            velocity.y += gravity * Time.deltaTime * (MultiInput.GetAxis("LeftJoystickY","",name)*4);
+            velocity.y += gravity * Time.deltaTime * (MultiInput.GetAxis("LeftJoystickY", "", name) * 4);
         }
         velocity.x *= 0.85f;
 
@@ -378,9 +380,9 @@ public class PlayerController : MonoBehaviour
                         {
                             weapon.gameObject.transform.Rotate(180, 0, 180, Space.Self);
                             weapon.Attack(-1, 0);
-                        }                      
+                        }
                     }
-                    
+
                     weapon = null;
                 }
                 else
@@ -400,7 +402,7 @@ public class PlayerController : MonoBehaviour
                     {
                         if (faceRight)
                             weapon.Attack(1, 0);
-                        else                        
+                        else
                             weapon.Attack(-1, 0);
                     }
                     if (weapons.Count > 0)
