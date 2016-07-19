@@ -332,6 +332,9 @@ public class PlayerWeaponScript : MonoBehaviour
                 {
                     player.burning = true;
                     player.burnDown = player.burnTime;
+                    Transform burnParticles = player.transform.GetChild(0);
+                    ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
+                    nbaJamOnFireEdition.Play();
                 }
             }
             if (shotType.Equals("rock"))

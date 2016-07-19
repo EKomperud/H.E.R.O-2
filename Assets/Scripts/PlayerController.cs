@@ -309,10 +309,14 @@ public class PlayerController : MonoBehaviour
         if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("A", "", name)
             || MultiInput.GetButtonDown("LeftBumper", "", name)))
         {
+            Debug.Log("do the double jump");
             velocity.y = 0;
             velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
             doubleJump = false;
             doubleJumped = true;
+            Transform djParticle = transform.GetChild(1);
+            ParticleSystem dj = djParticle.GetComponent<ParticleSystem>();
+            dj.Play();
         }
 
         // First jump
@@ -347,6 +351,7 @@ public class PlayerController : MonoBehaviour
         //bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
         float shoot = MultiInput.GetAxis("RightTrigger", "", name);
         //bool grab = MultiInput.GetButtonDown("Grab","",name);
+        
         float grab = MultiInput.GetAxis("LeftTrigger", "", name);
 
         if (shoot > 0f && fireCooldown <= 0)
@@ -416,6 +421,7 @@ public class PlayerController : MonoBehaviour
         }
         if (grab > 0)
         {
+            Debug.Log("LeftTrigger" + name);
             if (nearRock)
             {
                 Debug.Log("this is happening");
