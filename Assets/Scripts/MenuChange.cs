@@ -7,9 +7,14 @@ public class MenuChange : MonoBehaviour {
 	public GameObject CharSel;
 	public GameObject Selection;
 	public GameObject Rounds;
+	public GameObject picOne;
+	public GameObject picTwo;
+	public GameObject picThree;
+	public GameObject picFour;
 	//public GameObject LevelSelect;
 	public GameObject door;
 	private GameManager Menu;
+
 
 	// Use this for initialization
 	void Start () {

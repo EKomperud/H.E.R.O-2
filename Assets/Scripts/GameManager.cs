@@ -288,11 +288,14 @@ public class GameManager : MonoBehaviour {
 	public void twoPlayers () {
 		Keeper.numOfP = 2;
 		Keeper.preNumOfP = Keeper.numOfP;
+		Keeper.death3 = true;
+		Keeper.death4 = true;
 		Next ();
 	}
 	public void threePlayers () {
 		Keeper.numOfP = 3;
 		Keeper.preNumOfP = Keeper.numOfP;
+		Keeper.death4 = true;
 		Next ();
 	}
 	public void fourPlayers () {
