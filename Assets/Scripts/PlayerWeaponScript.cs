@@ -32,6 +32,22 @@ public class PlayerWeaponScript : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         sizeX = transform.localScale.x;
         hasShot = false;
+        switch (shotType)
+        {
+            case "air":
+                animator.setAnimation("mostlyBlank");
+                break;
+            case "water":
+                animator.setAnimation("waterIdle");
+                break;
+            case "fire":
+                animator.setAnimation("fireIdle");
+                break;
+            case "plasma":
+                animator.setAnimation("plasmaIdle");
+                break;
+        }
+
     }
 
     void Update()
@@ -54,6 +70,7 @@ public class PlayerWeaponScript : MonoBehaviour
                     }
                     float inputX = MultiInput.GetAxis("RightJoystickX", "", caster.name);
                     float inputY = MultiInput.GetAxis("RightJoystickY", "", caster.name);
+                    float z = -(Mathf.Atan2(inputY, inputX) * 57.2958f);
                     Vector2 mag = new Vector2(inputX, inputY);
                     if (mag.magnitude < 0.15f)
                     {
@@ -63,53 +80,37 @@ public class PlayerWeaponScript : MonoBehaviour
 
                     float X = caster.transform.position.x - this.transform.position.x + inputX;
                     float Y = caster.transform.position.y - this.transform.position.y - inputY;
-                    
+                    float Z = (Mathf.Atan2(Y, X) * 57.2958f);
+
                     if ((X > 0.1 || X < -0.1) || (Y > 0.1 || Y < -0.1))
                     {
+                        if (shotType.Equals("water")) {
+                            if (mag.magnitude >= 0.5)
+                            {
+                                    gameObject.transform.rotation = Quaternion.Euler(0, 0, z);
+                            }
+                            else
+                            {
+                                gameObject.transform.rotation = Quaternion.Euler(0, 0, Z);
+                            }
+                        }
                         atCaster = false;
                         Vector3 movement = new Vector3((speed.x / 2) * X, (speed.y / 2) * Y, 0);
                         movement *= Time.deltaTime;
-                        transform.Translate(movement);
+                        transform.Translate(movement, Space.World);
                     }
 
                     else
                     {
                         hasShot = true;
                         atCaster = true;
+                        if (!caster.faceRight)
+                        {
+                            transform.rotation = Quaternion.Euler(180, 0, 180);
+                        }
                     }
                 }
 
-                // Weapon has been fired
-                //if (fire && !connected)
-                //{
-                    
-                //    if (shotType.Equals("fire"))
-                //        animator.setAnimation("Fireball Shoot");
-
-                //    if (shotType.Equals("plasma"))
-                //        animator.setAnimation("plasmaShoot");
-
-                //    if (shotType.Equals("water"))
-                //        animator.setAnimation("waterShoot");
-
-                //    if (shotType.Equals("air"))
-                //        airTime += Time.deltaTime;
-
-                //    hasShot = false;
-
-                //    Vector2 movement = new Vector3(speed.x * direction.x, -(speed.y * direction.y));
-                //    //Debug.Log("" + direction.x);
-                //    if (shotType.Equals("rock"))
-                //    {
-                //        movement = new Vector3(speed.x * direction.x * 1.5f, 0, 0);
-                //        speed.x -= 0.2f;
-                //    }
-                //    movement *= Time.deltaTime;
-                //    GetComponent<Rigidbody2D>().MovePosition(movement);
-
-                //}
-
-                // Shot connected
                 if (connected)
                 {
                     if (shotType.Equals("fire"))
@@ -191,34 +192,8 @@ public class PlayerWeaponScript : MonoBehaviour
                     }
                 }
 
-                // Weapon has been fired
-                //if (fire && speed.x > 0)
-                //{
-                //    gameObject.GetComponent<Rigidbody2D>().gravityScale = 7;
-                //    hasShot = false;
-
-                //    Vector3 movement = new Vector3(speed.x * direction.x, 0, 0);
-                //    if (shotType.Equals("rock"))
-                //    {
-                //        movement = new Vector3(speed.x * direction.x * 1.5f, speed.y * direction.y * 1.5f, 0);
-                //        speed.x -= 0.5f;
-                //    }
-                //    movement *= Time.deltaTime;
-                //    rb2d.MovePosition(movement);
-                //}
-
                 // Shot connected
                 if (connected)
-                {
-                    fire = false;
-                    connected = false;
-                    hasShot = false;
-                    speed.x = 20;
-                    caster = null;
-                }
-
-                // Rock has stopped
-                if (speed.x <= 0)
                 {
                     fire = false;
                     connected = false;
@@ -235,20 +210,30 @@ public class PlayerWeaponScript : MonoBehaviour
         if (rock)
         {
             // Weapon has been fired
-            if (fire && speed.x > 0)
+            if (fire && speed.x >= 1)
             {
-                gameObject.GetComponent<Rigidbody2D>().gravityScale = 7;
+                gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
                 hasShot = false;
 
-                Vector2 movement = new Vector3(speed.x * direction.x, 0);
+                Vector2 movement = new Vector3(speed.x * direction.x, speed.y * direction.y);
                 if (shotType.Equals("rock"))
                 {
                     movement = new Vector3(speed.x * direction.x * 1.5f, speed.y * direction.y * 1.5f, 0);
-                    speed.x -= 0.5f;
+                    speed.x = (speed.x - speed.x * 0.075f);
+                    //speed.x -= 0.05f;
                 }
                 movement *= Time.deltaTime;
                 rb2d.MovePosition(rb2d.position + (movement*50) * Time.fixedDeltaTime);
-
+                //rb2d.AddForce((movement * 500)); // * Time.fixedDeltaTime);
+            }
+            else if (speed.x < 1)
+            {
+                caster = null;
+                fire = false;
+                connected = false;
+                hasShot = false;
+                speed.x = 15;
+                gameObject.GetComponent<Rigidbody2D>().gravityScale = 6;
             }
         }
         else
@@ -267,19 +252,21 @@ public class PlayerWeaponScript : MonoBehaviour
 
                 if (shotType.Equals("air"))
                 {
-                    animator.setAnimation("airShoot");
+                    if (animator.getAnimation().Equals("mostlyBlank"))
+                    {
+                        Destroy(gameObject);
+                    }
+                    //animator.setAnimation("airShoot");
                     airTime += Time.deltaTime;
                 }
 
                 hasShot = false;
 
+                //Debug.Log("direction.x = " + direction.x);
+                //Debug.Log("speed.y * direction.y = " + speed.y*direction.y);
+
                 Vector2 movement = new Vector3(speed.x * direction.x, -(speed.y * direction.y));
                 //Debug.Log("" + direction.x);
-                if (shotType.Equals("rock"))
-                {
-                    movement = new Vector3(speed.x * direction.x * 1.5f, 0, 0);
-                    speed.x -= 0.2f;
-                }
                 movement *= Time.deltaTime;
                 rb2d.MovePosition(rb2d.position + (movement*50) * Time.fixedDeltaTime);
 
@@ -328,7 +315,6 @@ public class PlayerWeaponScript : MonoBehaviour
             if (shotType.Equals("air"))
             {
                 float apv = speed.magnitude;
-                Debug.Log("5 / airTime = "+ 5/airTime);
                 player.AirPushVelocity = (5 / airTime) * direction.x;
                 player.pushed = true;
             }
@@ -348,13 +334,16 @@ public class PlayerWeaponScript : MonoBehaviour
                     player.burnDown = player.burnTime;
                 }
             }
+            if (shotType.Equals("rock"))
+            {
+
+            }
         }
 
     }
 
     void RaycastTrigger(Collider2D collider)
     {
-        Debug.Log("this is happening");
         WallScript wall = collider.gameObject.GetComponent<WallScript>();
         if (wall != null && !wall.bounceConstraint)
         {
@@ -365,12 +354,17 @@ public class PlayerWeaponScript : MonoBehaviour
 
     public void Attack(float X, float Y)
     {
+        if (rock)
+        {
+            caster = null;
+        }
         direction.x = X;
         direction.y = Y;
         if (hasShot)
         {
             fire = true;
         }
+        animator.setAnimation(shotType+"Shoot");
     }
 
     public bool CanAttack

@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
         _controller = gameObject.GetComponent<CharacterController2D>();
         _animator = gameObject.GetComponent<AnimationController2D>();
         weapons = new Stack();
+
     }
 
     void Awake()
@@ -351,6 +352,8 @@ public class PlayerController : MonoBehaviour
             fireCooldown = fireRate;
             if (weapon != null && weapon.CanAttack)
             {
+                if (weapon.rock)
+                    weapon.gameObject.GetComponent<Rigidbody2D>().gravityScale = 6;
                 if (weapon.shotType.Equals("air") && airCooldown <= 0)
                 {
                     airCooldown = airFireRate;
@@ -359,15 +362,23 @@ public class PlayerController : MonoBehaviour
                         float x = aimX * 10;
                         float y = aimY * 10;
                         float z = -(Mathf.Atan2(y, x) * 57.2958f);
-                        weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
-                        weapon.Attack(1, 0);
+                        if (aimX < 0)
+                            weapon.gameObject.transform.Rotate(180, 0, -z, Space.Self);
+                        else
+                            weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
+                        weapon.Attack(aimX, aimY);
                     }
                     else
                     {
-                        if (faceRight)                        
-                            weapon.Attack(1, 0);                       
-                        else                       
-                            weapon.Attack(-1, 0);                        
+                        if (faceRight)
+                        {
+                            weapon.Attack(1, 0);
+                        }
+                        else
+                        {
+                            weapon.gameObject.transform.Rotate(180, 0, 180, Space.Self);
+                            weapon.Attack(-1, 0);
+                        }                      
                     }
                     
                     weapon = null;
@@ -376,16 +387,17 @@ public class PlayerController : MonoBehaviour
                 {
                     if (aimX != 0 || aimY != 0)
                     {
-                        Debug.Log("use aim");
                         float x = aimX * 10;
                         float y = aimY * 10;
                         float z = -(Mathf.Atan2(y, x) * 57.2958f);
-                        weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
-                        weapon.Attack(1, 0);
+                        //if (aimX < 0)
+                        //    weapon.gameObject.transform.Rotate(180, 0, -z, Space.Self);
+                        //else
+                        //    weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
+                        weapon.Attack(aimX, aimY);
                     }
                     else
                     {
-                        Debug.Log("default aim");
                         if (faceRight)
                             weapon.Attack(1, 0);
                         else                        
@@ -393,7 +405,6 @@ public class PlayerController : MonoBehaviour
                     }
                     if (weapons.Count > 0)
                     {
-                        Debug.Log("weapon pop");
                         weapon = (PlayerWeaponScript)weapons.Pop();
                     }
                     else weapon = null;
@@ -403,7 +414,25 @@ public class PlayerController : MonoBehaviour
         }
         if (grab > 0)
         {
-            if (inFountain)
+            if (nearRock)
+            {
+                Debug.Log("this is happening");
+                if (weapon != null && weapon.shotType.Equals("air"))
+                {
+                    Destroy(weapon.gameObject);
+                }
+                while (weapons.Count > 0)
+                {
+                    weapon = (PlayerWeaponScript)weapons.Pop();
+                    Destroy(weapon.gameObject);
+                }
+                weapon = rock.gameObject.GetComponentInParent<PlayerWeaponScript>();
+                //weapon.rockScript.player = this;
+                weapon.caster = this;
+                weapon.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
+            }
+
+            else if (inFountain)
             {
                 if (weapon != null && weapon.shotType.Equals("air") && weapons.Count == 0)
                 {
@@ -418,22 +447,6 @@ public class PlayerController : MonoBehaviour
                         burning = false;
                     }
                 }
-            }
-            else if (nearRock)
-            {
-                if (weapon != null && weapon.shotType.Equals("air"))
-                {
-                    Destroy(weapon.gameObject);
-                }
-                while (weapons.Count > 0)
-                {
-                    weapon = (PlayerWeaponScript)weapons.Pop();
-                    Destroy(weapon.gameObject);
-                }
-                weapon = rock.gameObject.GetComponent<PlayerWeaponScript>();
-                weapon.rockScript.caster = this;
-                weapon.caster = this;
-                weapon.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
             }
         }
     }
