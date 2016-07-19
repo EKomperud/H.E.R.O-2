@@ -15,6 +15,15 @@ public class GameManager : MonoBehaviour {
 	private bool startUp = false;
 	private bool P1exists = false;
 	private bool P2exists = false;
+	public bool firstLayer = false;
+	public bool secondLayer = false;
+	public bool thirdLayer = false;
+	public bool fourthLayer = false;
+	public bool fifthLayer = false;
+	public bool sixthLayer = false;
+	public bool doorDown = false;
+	public bool doorUp = false;
+	public bool firstTime = true;
 	public NumberKeeper Keeper;
 	public int Player1W = 0;
 	public int Player2W = 0;
@@ -34,6 +43,7 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		Debug.Log (Keeper.numberOfRounds);
 		if (startUp) {
 			pNum = Keeper.numOfP;
 			randomLevel = Random.Range (1, 8);
@@ -170,48 +180,105 @@ public class GameManager : MonoBehaviour {
 //	public void PlayGame() {
 //		Application.LoadLevel (8);
 //	}
-
 	public void ExitGame() {
 		Application.Quit ();
 	}
 	public void MainMenu() {
-		MainMenuSlide = true;
-		playBack = false;
-		setTimer = true;
+		if (firstTime) {
+			MainMenuSlide = true;
+			playBack = false;
+			setTimer = true;
+			firstLayer = true;
+		}
 	}
 	public void GoBack() {
 		playBack = true;
 		MainMenuSlide = false;
 		setTimer = true;
+		if (secondLayer) {
+			firstLayer = true;
+			secondLayer = false;
+		} 
+		else if (thirdLayer) {
+			secondLayer = true;
+			thirdLayer = false;
+		} 
+		else if (fourthLayer) {
+			thirdLayer = true;
+			fourthLayer = false;
+		} 
+		else if (fifthLayer) {
+			fourthLayer = true;
+			fifthLayer = false;
+		} 
+		else if (sixthLayer) {
+			fifthLayer = true;
+			sixthLayer = false;
+		}
+	}
+	public void Next() {
+		playBack = true;
+		MainMenuSlide = false;
+		setTimer = true;
+		if (secondLayer) {
+			thirdLayer = true;
+			secondLayer = false;
+		} 
+		else if (thirdLayer) {
+			fourthLayer = true;
+			thirdLayer = false;
+		} 
+		else if (fourthLayer) {
+			fifthLayer = true;
+			fourthLayer = false;
+		} 
+		else if (fifthLayer) {
+			sixthLayer = true;
+			fifthLayer = false;
+		} 
+	}
+	public void twoPlayers () {
+		Keeper.numOfP = 2;
+		Keeper.preNumOfP = Keeper.numOfP;
+		Next ();
+	}
+	public void threePlayers () {
+		Keeper.numOfP = 3;
+		Keeper.preNumOfP = Keeper.numOfP;
+		Next ();
+	}
+	public void fourPlayers () {
+		Keeper.numOfP = 4;
+		Keeper.preNumOfP = Keeper.numOfP;
+		Next ();
+	}
+	public void PlayButton () {
+		playBack = true;
+		MainMenuSlide = false;
+		firstLayer = false;
+		secondLayer = true;
+		setTimer = true;
+
 	}
 	public void Three() {
 		numOfRounds = 3;
 		Keeper.previousRounds = 3;
-		Debug.Log (numOfRounds);
 		startUp = true;
-		Keeper.numOfP = 2;
-		Keeper.preNumOfP = Keeper.numOfP;
 	}
 	public void Five() {
 		numOfRounds = 5;
 		Keeper.previousRounds = 5;
 		startUp = true;
-		Keeper.numOfP = 2;
-		Keeper.preNumOfP = Keeper.numOfP;
 	}
 	public void Seven() {
 		numOfRounds = 7;
 		Keeper.previousRounds = 7;
 		startUp = true;
-		Keeper.numOfP = 2;
-		Keeper.preNumOfP = Keeper.numOfP;
 	}
 	public void Ten() {
 		numOfRounds = 10;
 		Keeper.previousRounds = 10;
 		startUp = true;
-		Keeper.numOfP = 2;
-		Keeper.preNumOfP = Keeper.numOfP;
 	}
 	public void RedoRounds() {
 		Keeper.P1WINS = 0;
@@ -220,5 +287,8 @@ public class GameManager : MonoBehaviour {
 		Keeper.numOfP = Keeper.preNumOfP;
 		startUp = true;
 		Keeper.ifDied = false;
+	}
+	public void Tutorial() {
+		Application.LoadLevel (5);
 	}
 }
