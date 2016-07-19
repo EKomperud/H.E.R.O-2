@@ -14,8 +14,16 @@ public class SpikeScript : MonoBehaviour {
 				hasHit.hasHit1 = true;
 				Destroy (Player.gameObject);
 			} 
-			else if (Player.gameObject.tag == "Player2") {
+			if (Player.gameObject.tag == "Player2") {
 				hasHit.hasHit2 = true;
+				Destroy (Player.gameObject);
+			} 
+			if (Player.gameObject.tag == "Player3") {
+				hasHit.hasHit3 = true;
+				Destroy (Player.gameObject);
+			}
+			if (Player.gameObject.tag == "Player4") {
+				hasHit.hasHit4 = true;
 				Destroy (Player.gameObject);
 			}
 		}
