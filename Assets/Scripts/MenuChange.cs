@@ -54,6 +54,18 @@ public class MenuChange : MonoBehaviour {
 			CharSel.SetActive (true);
 			Selection.SetActive (false);
 			Rounds.SetActive (false);
+			if (Menu.Keeper.numOfP == 2) {
+				picThree.SetActive (false);
+				picFour.SetActive (false);
+			}
+			else if (Menu.Keeper.numOfP == 3) {
+				picThree.SetActive (true);
+				picFour.SetActive (false);
+			} 
+			else {
+				picThree.SetActive (true);
+				picFour.SetActive (true);
+			}
 			//LevelSelect.SetActive (false);
 		}
 		else if (Menu.fourthLayer && Menu.doorDown) {
