@@ -48,10 +48,16 @@ public class HealthScript : MonoBehaviour {
 					shotsHaveFired2 = true;
 				}
 				hp -= shot.damage;
-				System.Threading.Thread d = new System.Threading.Thread(() => shot.Destroy());
-				d.Start();
+				//System.Threading.Thread d = new System.Threading.Thread(() => shot.connected);
+				//d.Start();
 				//Destroy (shot.gameObject);
 			}	
 		}
 	}
+
+    public void ManualDamage (int d)
+    {
+        hp -= d;
+        OnTriggerEnter2D(null);
+    }
 }

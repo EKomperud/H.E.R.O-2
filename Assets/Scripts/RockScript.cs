@@ -13,6 +13,7 @@ public class RockScript : MonoBehaviour {
     }
 
 	void OnTriggerEnter2D (Collider2D collider) {
+        PlayerWeaponScript projectile = collider.gameObject.GetComponent<PlayerWeaponScript>();
         if (player == null)
         {
             player = collider.gameObject.GetComponent<PlayerController>();

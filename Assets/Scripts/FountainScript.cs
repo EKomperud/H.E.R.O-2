@@ -71,7 +71,6 @@ public class FountainScript : MonoBehaviour {
                 player.weapons.Push(shotScript2);
                 player.weapons.Push(shotScript3);
                 shotScript1.caster = shotScript2.caster = shotScript3.caster = player;
-                Debug.Log("caster set");
                 //shotScript1.caster = player;
                 //shotScript2.caster = player;
                 //shotScript3.caster = player;

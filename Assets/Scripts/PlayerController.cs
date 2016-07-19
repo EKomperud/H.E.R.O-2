@@ -309,7 +309,6 @@ public class PlayerController : MonoBehaviour
         if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("A", "", name)
             || MultiInput.GetButtonDown("LeftBumper", "", name)))
         {
-            Debug.Log("do the double jump");
             velocity.y = 0;
             velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
             doubleJump = false;
@@ -357,10 +356,13 @@ public class PlayerController : MonoBehaviour
         if (shoot > 0f && fireCooldown <= 0)
         {
             fireCooldown = fireRate;
-            if (weapon != null && weapon.CanAttack)
+            if (weapon != null && weapon.hasShot)
             {
                 if (weapon.rock)
+                {
                     weapon.gameObject.GetComponent<Rigidbody2D>().gravityScale = 6;
+
+                }
                 if (weapon.shotType.Equals("air") && airCooldown <= 0)
                 {
                     airCooldown = airFireRate;
@@ -387,7 +389,6 @@ public class PlayerController : MonoBehaviour
                             weapon.Attack(-1, 0);
                         }
                     }
-
                     weapon = null;
                 }
                 else
@@ -397,11 +398,8 @@ public class PlayerController : MonoBehaviour
                         float x = aimX * 10;
                         float y = aimY * 10;
                         float z = -(Mathf.Atan2(y, x) * 57.2958f);
-                        //if (aimX < 0)
-                        //    weapon.gameObject.transform.Rotate(180, 0, -z, Space.Self);
-                        //else
-                        //    weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
                         weapon.Attack(aimX, aimY);
+                        Debug.Log("this is happening");
                     }
                     else
                     {
@@ -410,21 +408,20 @@ public class PlayerController : MonoBehaviour
                         else
                             weapon.Attack(-1, 0);
                     }
-                    if (weapons.Count > 0)
-                    {
-                        weapon = (PlayerWeaponScript)weapons.Pop();
-                    }
-                    else weapon = null;
+                    // Post weapon firing
+                        if (weapons.Count > 0)
+                        {
+                            weapon = (PlayerWeaponScript)weapons.Pop();
+                        }
+                        else weapon = null;
                 }
             }
             airCooldown += 0.75f;
         }
         if (grab > 0)
         {
-            Debug.Log("LeftTrigger" + name);
             if (nearRock)
             {
-                Debug.Log("this is happening");
                 if (weapon != null && weapon.shotType.Equals("air"))
                 {
                     Destroy(weapon.gameObject);
