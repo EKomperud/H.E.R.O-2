@@ -21,7 +21,7 @@ public class PlayerWeaponScript : MonoBehaviour
 
     public bool hasShot { get; set; }
     public bool fire = false;
-    private bool connected = false;
+    public bool connected = false;
     public bool rock = false;
     private float airTime;
 

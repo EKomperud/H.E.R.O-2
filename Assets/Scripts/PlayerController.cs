@@ -450,6 +450,9 @@ public class PlayerController : MonoBehaviour
                     if (weapon.shotType.Equals("water"))
                     {
                         burning = false;
+                        Transform burnParticles = transform.GetChild(0);
+                        ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
+                        nbaJamOnFireEdition.Stop();
                     }
                 }
             }

@@ -21,6 +21,14 @@ public class FountainScript : MonoBehaviour {
         if (cooldown > 0)
         {
             cooldown -= Time.deltaTime;
+            if (cooldown <=0)
+            {
+                Transform particles = transform.GetChild(0);
+                ParticleSystem p = particles.GetComponent<ParticleSystem>();
+                p.Play();
+                AnimationController2D anim = GetComponent<AnimationController2D>();
+                anim.setAnimation(fountainType + "Norm");
+            }
         }
     }
 
@@ -86,7 +94,17 @@ public class FountainScript : MonoBehaviour {
                 player.weapon = shotScript;
                 shotScript.caster = player;
                 shotScript.MoveToCaster();
+                if (player.burning)
+                {
+                    player.burning = false;
+                    Destroy(shotScript.gameObject);
+                }
             }
+            Transform particles = transform.GetChild(0);
+            ParticleSystem p = particles.GetComponent<ParticleSystem>();
+            p.Stop();
+            AnimationController2D anim = GetComponent<AnimationController2D>();
+            anim.setAnimation(fountainType + "Despawn");
         }
 	}
 		
