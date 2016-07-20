@@ -23,16 +23,20 @@ public class MenuChange : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Menu.firstLayer && Menu.doorDown) {
+
+		if (Menu.layer == 1 && Menu.doorDown) {
+            Debug.Log("option one");
 			MainScreen.SetActive (true);
 			NumOFP.SetActive (false);
 			CharSel.SetActive (false);
 			Selection.SetActive (false);
 			Rounds.SetActive (false);
 			//LevelSelect.SetActive (false);
-		} 
-		else if (Menu.firstLayer && Menu.firstTime) {
-			MainScreen.SetActive (true);
+		}
+        
+		else if (Menu.layer == 1 && Menu.firstTime) {
+            Debug.Log("option two");
+            MainScreen.SetActive (true);
 			NumOFP.SetActive (false);
 			CharSel.SetActive (false);
 			Selection.SetActive (false);
@@ -40,7 +44,7 @@ public class MenuChange : MonoBehaviour {
 			//LevelSelect.SetActive (false);
 			Menu.firstTime = false;
 		}
-		else if (Menu.secondLayer && Menu.doorDown) {
+		else if (Menu.layer == 2 && Menu.doorDown) {
 			MainScreen.SetActive (false);
 			NumOFP.SetActive (true);
 			CharSel.SetActive (false);
@@ -48,7 +52,7 @@ public class MenuChange : MonoBehaviour {
 			Rounds.SetActive (false);
 			//LevelSelect.SetActive (false);
 		}
-		else if (Menu.thirdLayer && Menu.doorDown) {
+		else if (Menu.layer == 3 && Menu.doorDown) {
 			MainScreen.SetActive (false);
 			NumOFP.SetActive (false);
 			CharSel.SetActive (true);
@@ -68,7 +72,7 @@ public class MenuChange : MonoBehaviour {
 			}
 			//LevelSelect.SetActive (false);
 		}
-		else if (Menu.fourthLayer && Menu.doorDown) {
+		else if (Menu.layer == 4 && Menu.doorDown) {
 			MainScreen.SetActive (false);
 			NumOFP.SetActive (false);
 			CharSel.SetActive (false);
@@ -76,7 +80,7 @@ public class MenuChange : MonoBehaviour {
 			Rounds.SetActive (false);
 			//LevelSelect.SetActive (false);
 		}
-		else if (Menu.fifthLayer && Menu.doorDown) {
+		else if (Menu.layer == 5 && Menu.doorDown) {
 			MainScreen.SetActive (false);
 			NumOFP.SetActive (false);
 			CharSel.SetActive (false);
@@ -84,7 +88,7 @@ public class MenuChange : MonoBehaviour {
 			Rounds.SetActive (true);
 			//LevelSelect.SetActive (false);
 		}
-		else if (Menu.sixthLayer && Menu.doorDown) {
+		else if (Menu.layer == 6 && Menu.doorDown) {
 			MainScreen.SetActive (false);
 			NumOFP.SetActive (false);
 			CharSel.SetActive (false);

@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
         {
             burnDown -= Time.deltaTime;
             if (burnDown <= 0f)
-                health.hp = 0;
+                health.ManualDamage(health.hp) ;
         }
 
         Vector3 velocity = _controller.velocity;

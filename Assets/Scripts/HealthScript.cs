@@ -8,32 +8,18 @@ public class HealthScript : MonoBehaviour {
 	public bool shotsHaveFired2 = false;
 	private PlayerController player; 
 	public NumberKeeper Keeper;
+    private GameManager manager;
 
 	void Awake () {
 		player = gameObject.GetComponent<PlayerController> ();
 		Keeper = GameObject.Find("NumberKeeper").GetComponent<NumberKeeper> ();
+        manager = GameObject.Find("GameManager").GetComponent<GameManager>(); ;
 	}
 
 	void OnTriggerEnter2D (Collider2D collider) {
 		//player = gameObject.GetComponent<PlayerScript>();
 		PlayerWeaponScript shot = collider.gameObject.GetComponent<PlayerWeaponScript> ();
-
-		if (hp <= 0)
-		{
-			if (this.gameObject.tag == "Player")
-			{
-				Keeper.death = true;
-			}
-			if (this.gameObject.tag == "Player2")
-			{
-				Keeper.death2 = true;
-			}
-			if (player.weapon != null)
-			{
-				Destroy(player.weapon);
-			}
-			Destroy(gameObject);
-		}
+        GameObject killz = collider.gameObject;
 		if (shot != null ) {
 			PlayerController target = shot.caster;
 			if (!target.Equals(player))
@@ -48,16 +34,43 @@ public class HealthScript : MonoBehaviour {
 					shotsHaveFired2 = true;
 				}
 				hp -= shot.damage;
-				//System.Threading.Thread d = new System.Threading.Thread(() => shot.connected);
-				//d.Start();
-				//Destroy (shot.gameObject);
-			}	
+                if (hp <= 0)
+                {
+                    manager.KillPlayer(player.name);
+                    if (player.weapon != null)
+                    {
+                        Destroy(player.weapon);
+                    }
+                    Destroy(gameObject);
+                }
+            }	
 		}
+        if (killz.gameObject.tag.Equals("KillZ") || killz.gameObject.tag.Equals("Spikes"))
+        {
+            hp = 0;
+            manager.KillPlayer(player.name);
+            if (player.weapon != null)
+            {
+                Destroy(player.weapon);
+            }
+            Destroy(gameObject);
+        }
 	}
 
     public void ManualDamage (int d)
     {
-        hp -= d;
-        OnTriggerEnter2D(null);
+        if (hp > 0)
+        {
+            hp -= d;
+            if (hp <= 0)
+            {
+                manager.KillPlayer(player.name);
+                if (player.weapon != null)
+                {
+                    Destroy(player.weapon);
+                }
+                Destroy(gameObject);
+            }
+        }
     }
 }
