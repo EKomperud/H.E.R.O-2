@@ -1,0 +1,368 @@
+fileFormatVersion: 2
+guid: 278fa08b730dd9e4b82f86aa4eba7db2
+timeCreated: 1468994546
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: MENU BUTTON Dark_0
+    21300002: MENU BUTTON Dark_1
+    21300004: MENU BUTTON Dark_2
+    21300006: MENU BUTTON Dark_3
+    21300008: MENU BUTTON Dark_4
+    21300010: MENU BUTTON Dark_5
+    21300012: MENU BUTTON Dark_6
+    21300014: MENU BUTTON Dark_7
+    21300016: MENU BUTTON Dark_8
+    21300018: MENU BUTTON Dark_9
+    21300020: MENU BUTTON Dark_10
+    21300022: MENU BUTTON Dark_11
+    21300024: MENU BUTTON Dark_12
+    21300026: MENU BUTTON Dark_13
+    21300028: MENU BUTTON Dark_14
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 18000
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: MENU BUTTON Dark_0
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 918
+        width: 557
+        height: 252
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 268.375, y: 123.05005}
+        - {x: -267.625, y: 123.05005}
+        - {x: -270.625, y: 120.05005}
+        - {x: -270.625, y: 119.05005}
+        - {x: -271.625, y: 118.05005}
+        - {x: -271.625, y: -118.94995}
+        - {x: -268.625, y: -121.94995}
+        - {x: -267.625, y: -121.94995}
+        - {x: -266.625, y: -122.94995}
+        - {x: 268.375, y: -122.94995}
+        - {x: 272.375, y: -119.94995}
+        - {x: 272.375, y: 119.05005}
+    - name: MENU BUTTON Dark_1
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 1006
+        width: 117
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -35.899963, y: 56.350037}
+        - {x: -56.899963, y: 41.350037}
+        - {x: -56.899963, y: -36.649963}
+        - {x: -36.899963, y: -54.649963}
+        - {x: 44.100037, y: -54.649963}
+        - {x: 58.100037, y: -43.649963}
+        - {x: 58.100037, y: 43.350037}
+        - {x: 54.100037, y: 56.350037}
+    - name: MENU BUTTON Dark_2
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 1006
+        width: 115
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -36.25, y: 56.850037}
+        - {x: -48.25, y: 34.850037}
+        - {x: -56.25, y: 19.850037}
+        - {x: -56.25, y: -24.149963}
+        - {x: -48.25, y: -33.149963}
+        - {x: -36.25, y: -55.149963}
+        - {x: 40.75, y: -55.149963}
+        - {x: 56.75, y: -51.149963}
+        - {x: 56.75, y: 37.850037}
+        - {x: 43.75, y: 56.850037}
+    - name: MENU BUTTON Dark_3
+      rect:
+        serializedVersion: 2
+        x: 1283
+        y: 1006
+        width: 117
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -32.57495, y: 56.850037}
+        - {x: -56.57495, y: 34.850037}
+        - {x: -56.57495, y: -14.149963}
+        - {x: -46.57495, y: -55.149963}
+        - {x: 34.42505, y: -55.149963}
+        - {x: 58.42505, y: -27.149963}
+        - {x: 58.42505, y: 29.850037}
+        - {x: 36.42505, y: 56.850037}
+    - name: MENU BUTTON Dark_4
+      rect:
+        serializedVersion: 2
+        x: 1575
+        y: 1003
+        width: 123
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -59.875, y: -30.574951}
+        - {x: -50.875, y: -56.57495}
+        - {x: 40.125, y: -56.57495}
+        - {x: 61.125, y: -44.57495}
+        - {x: 61.125, y: 45.42505}
+        - {x: 46.125, y: 58.42505}
+        - {x: -44.875, y: 58.42505}
+        - {x: -59.875, y: 54.42505}
+    - name: MENU BUTTON Dark_5
+      rect:
+        serializedVersion: 2
+        x: 1928
+        y: 2
+        width: 43
+        height: 1198
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -18.699951, y: 585.45}
+        - {x: -20.699951, y: 582.45}
+        - {x: -20.699951, y: -529.55}
+        - {x: -8.699951, y: -577.55}
+        - {x: -4.699951, y: -583.55}
+        - {x: 10.300049, y: -583.55}
+        - {x: 22.300049, y: -543.55}
+        - {x: 22.300049, y: 584.45}
+        - {x: 19.300049, y: 585.45}
+    - name: MENU BUTTON Dark_6
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 633
+        width: 557
+        height: 252
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 269.475, y: 122.17499}
+        - {x: 268.475, y: 122.17499}
+        - {x: 267.475, y: 123.17499}
+        - {x: -266.525, y: 123.17499}
+        - {x: -271.525, y: 118.17499}
+        - {x: -271.525, y: -117.82501}
+        - {x: -266.525, y: -122.82501}
+        - {x: 268.475, y: -122.82501}
+        - {x: 272.475, y: -118.82501}
+        - {x: 272.475, y: 119.17499}
+    - name: MENU BUTTON Dark_7
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 692
+        width: 104
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -22.875, y: 75.70001}
+        - {x: -50.875, y: 52.700012}
+        - {x: -50.875, y: -24.299988}
+        - {x: -26.875, y: -74.29999}
+        - {x: 13.125, y: -74.29999}
+        - {x: 16.125, y: -73.29999}
+        - {x: 51.125, y: -15.299988}
+        - {x: 51.125, y: 28.700012}
+        - {x: 27.125, y: 75.70001}
+    - name: MENU BUTTON Dark_8
+      rect:
+        serializedVersion: 2
+        x: 978
+        y: 692
+        width: 104
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -21.449951, y: 75.70001}
+        - {x: -50.44995, y: 38.700012}
+        - {x: -50.44995, y: -41.299988}
+        - {x: -44.44995, y: -50.299988}
+        - {x: -15.449951, y: -74.29999}
+        - {x: 18.550049, y: -74.29999}
+        - {x: 26.550049, y: -72.29999}
+        - {x: 51.55005, y: -45.299988}
+        - {x: 51.55005, y: 19.700012}
+        - {x: 31.550049, y: 75.70001}
+    - name: MENU BUTTON Dark_9
+      rect:
+        serializedVersion: 2
+        x: 1212
+        y: 628
+        width: 557
+        height: 252
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -267.29993, y: 123.29999}
+        - {x: -269.29993, y: 121.29999}
+        - {x: -271.29993, y: 118.29999}
+        - {x: -271.29993, y: -118.70001}
+        - {x: -267.29993, y: -122.70001}
+        - {x: 268.70007, y: -122.70001}
+        - {x: 272.70007, y: -118.70001}
+        - {x: 272.70007, y: 120.29999}
+        - {x: 269.70007, y: 123.29999}
+    - name: MENU BUTTON Dark_10
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 332
+        width: 557
+        height: 252
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -271.525, y: 124.20001}
+        - {x: -271.525, y: -117.79999}
+        - {x: -266.525, y: -122.79999}
+        - {x: 267.475, y: -122.79999}
+        - {x: 272.475, y: -117.79999}
+        - {x: 272.475, y: 124.20001}
+    - name: MENU BUTTON Dark_11
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 332
+        width: 557
+        height: 252
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 269.675, y: 124.20001}
+        - {x: -267.325, y: 124.20001}
+        - {x: -271.325, y: 120.20001}
+        - {x: -271.325, y: -117.79999}
+        - {x: -267.325, y: -122.79999}
+        - {x: 269.675, y: -122.79999}
+        - {x: 272.675, y: -118.79999}
+        - {x: 272.675, y: 120.20001}
+    - name: MENU BUTTON Dark_12
+      rect:
+        serializedVersion: 2
+        x: 1212
+        y: 332
+        width: 556
+        height: 252
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 269.20007, y: 124.20001}
+        - {x: -267.79993, y: 124.20001}
+        - {x: -270.79993, y: 121.20001}
+        - {x: -270.79993, y: -118.79999}
+        - {x: -267.79993, y: -122.79999}
+        - {x: 269.20007, y: -122.79999}
+        - {x: 272.20007, y: -118.79999}
+        - {x: 272.20007, y: 120.20001}
+    - name: MENU BUTTON Dark_13
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 19
+        width: 557
+        height: 252
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 267.475, y: 124.025}
+        - {x: -267.525, y: 124.025}
+        - {x: -271.525, y: 119.025}
+        - {x: -271.525, y: -117.975}
+        - {x: -266.525, y: -122.975}
+        - {x: 268.475, y: -122.975}
+        - {x: 272.475, y: -118.975}
+        - {x: 272.475, y: 119.025}
+    - name: MENU BUTTON Dark_14
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 16
+        width: 557
+        height: 252
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 269.625, y: 124.1}
+        - {x: -266.375, y: 124.1}
+        - {x: -271.375, y: 120.1}
+        - {x: -271.375, y: -117.9}
+        - {x: -266.375, y: -122.9}
+        - {x: 269.625, y: -122.9}
+        - {x: 272.625, y: -119.9}
+        - {x: 272.625, y: 122.1}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
