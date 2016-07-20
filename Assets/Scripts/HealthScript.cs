@@ -12,28 +12,42 @@ public class HealthScript : MonoBehaviour {
 	void Awake () {
 		player = gameObject.GetComponent<PlayerController> ();
 		Keeper = GameObject.Find("NumberKeeper").GetComponent<NumberKeeper> ();
-	}
+    }
 
-	void OnTriggerEnter2D (Collider2D collider) {
+    void Update()
+    {
+        if (hp <= 0)
+        {
+            Debug.Log("here");
+            if (this.gameObject.tag == "Player")
+            {
+                Keeper.death = true;
+            }
+            if (this.gameObject.tag == "Player2")
+            {
+                Keeper.death2 = true;
+            }
+            if (this.gameObject.tag == "Player3")
+            {
+                Keeper.death3 = true;
+            }
+            if (this.gameObject.tag == "Player4")
+            {
+                Keeper.death4 = true;
+            }
+            if (player.weapon != null)
+            {
+                Destroy(player.weapon);
+            }
+            Destroy(gameObject);
+        }
+    }
+
+
+    void OnTriggerEnter2D (Collider2D collider) {
 		//player = gameObject.GetComponent<PlayerScript>();
 		PlayerWeaponScript shot = collider.gameObject.GetComponent<PlayerWeaponScript> ();
 
-		if (hp <= 0)
-		{
-			if (this.gameObject.tag == "Player")
-			{
-				Keeper.death = true;
-			}
-			if (this.gameObject.tag == "Player2")
-			{
-				Keeper.death2 = true;
-			}
-			if (player.weapon != null)
-			{
-				Destroy(player.weapon);
-			}
-			Destroy(gameObject);
-		}
 		if (shot != null ) {
 			PlayerController target = shot.caster;
 			if (!target.Equals(player))
