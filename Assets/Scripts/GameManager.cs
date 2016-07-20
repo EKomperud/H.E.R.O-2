@@ -81,7 +81,8 @@ public class GameManager : MonoBehaviour {
 
 		if (startUp) {
 			//pNum = Keeper.numOfP;
-			randomLevel = Random.Range (1, 8);
+			//randomLevel = Random.Range (1, 8);
+			randomLevel = Random.Range (1, 11);
 			Application.LoadLevel (randomLevel);
 			//numOfRounds -= 1;
 			//Keeper.numberOfRounds = numOfRounds;
@@ -123,6 +124,7 @@ public class GameManager : MonoBehaviour {
             Application.LoadLevel(randomLevel);
             levelLoadup = false;
             l = 1f;
+
 
         }
         if (winner != null && !winnerShown)

@@ -14,9 +14,10 @@ public class HealthScript : MonoBehaviour {
 		player = gameObject.GetComponent<PlayerController> ();
 		Keeper = GameObject.Find("NumberKeeper").GetComponent<NumberKeeper> ();
         manager = GameObject.Find("GameManager").GetComponent<GameManager>(); ;
-	}
+    }
 
-	void OnTriggerEnter2D (Collider2D collider) {
+
+    void OnTriggerEnter2D (Collider2D collider) {
 		//player = gameObject.GetComponent<PlayerScript>();
 		PlayerWeaponScript shot = collider.gameObject.GetComponent<PlayerWeaponScript> ();
         GameObject killz = collider.gameObject;
