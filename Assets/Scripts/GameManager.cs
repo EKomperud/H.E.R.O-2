@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 		if (startUp) {
 			pNum = Keeper.numOfP;
-			randomLevel = Random.Range (1, 8);
+			randomLevel = Random.Range (1, 11);
 			Application.LoadLevel (randomLevel);
 			numOfRounds -= 1;
 			Keeper.numberOfRounds = numOfRounds;
@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour {
 		}
 		numOfRounds = Keeper.numberOfRounds;
 		if (Keeper.p2Input && Keeper.p1Input && Keeper.p3Input && Keeper.p4Input) {
-			randomLevel = Random.Range (1, 8);
+			randomLevel = Random.Range (1, 11);
 			Application.LoadLevel (randomLevel);
 			numOfRounds -= 1;
 			Keeper.numberOfRounds = numOfRounds;
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour {
 			dontChange = false;
 			WinScreen.SetActive (true);
 		}
-		if (dontChange && p != null) {
+        if (dontChange && p != null) {
 			if (this.gameObject.tag == "Player") {
 				P1exists = true;
 			}
@@ -163,7 +163,7 @@ public class GameManager : MonoBehaviour {
 				P4exists = true;
 			}
 		}
-		if (P1exists) {
+        if (P1exists) {
 			if (Keeper.numOfP == 1 && Keeper.death2 && Keeper.death3 && Keeper.death4) {
 				Keeper.ifDied = true;
 				Player1W += 1;
