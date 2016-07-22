@@ -241,6 +241,7 @@ public class PlayerWeaponScript : MonoBehaviour
                 fire = false;
                 connected = false;
                 hasShot = false;
+                caster = null;
                 speed.x = 15;
                 speed.y = 10;
                 gameObject.GetComponent<Rigidbody2D>().gravityScale = 6;
@@ -282,11 +283,12 @@ public class PlayerWeaponScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
+
         PlayerWeaponScript projectile = collider.gameObject.GetComponent<PlayerWeaponScript>();
         PlayerController player = collider.gameObject.GetComponent<PlayerController>();
 
         // Collided with another projectile
-        if (projectile != null && !projectile.caster.Equals(this.caster))
+        if (projectile != null  && caster != null && !projectile.caster.Equals(this.caster))
         {
             if (shotType.Equals("air"))
             {
@@ -313,45 +315,49 @@ public class PlayerWeaponScript : MonoBehaviour
                 
             }
         }
-
         // Collided with a player
-        else if (player != null && !caster.Equals(player) && fire)
+        else if (player != null && fire)
         {
-            if (shotType.Equals("air"))
+            if (shotType.Equals("rock") && speed.x > 1 && (caster == null || !caster.Equals(player)))
             {
-                float apv = speed.magnitude;
-				player.AirPushVelocity = (5 / airTime) * direction.x;
-                player.pushed = true;
-                connected = true;
+                Debug.Log("rock collision");
+                float mag = speed.magnitude;
+                HealthScript h = player.GetComponent<HealthScript>();
+                h.ManualDamage(1);
             }
-            if (shotType.Equals("water"))
+            if (!caster.Equals(player))
             {
-                animator.setAnimation("waterFreeze");
-                player.jumpHeight = 0.25f;
-                player.frozen = true;
-                player.freezeWarmup = player.freezeTime;
-                connected = true;
-                speed = new Vector2(2, 2);
-            }
-            if (shotType.Equals("fire"))
-            {
-                if (!player.burning)
+                if (shotType.Equals("air"))
                 {
-                    player.burning = true;
-                    player.burnDown = player.burnTime;
-                    Transform burnParticles = player.transform.GetChild(0);
-                    ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
-                    nbaJamOnFireEdition.Play();
+                    float apv = speed.magnitude;
+                    player.AirPushVelocity = (5 / airTime) * direction.x;
+                    player.pushed = true;
                     connected = true;
                 }
-            }
-            if (shotType.Equals("rock"))
-            {
-                float mag = speed.magnitude;
-                if (mag >= 3)
+                if (shotType.Equals("water"))
                 {
-                    HealthScript h = player.GetComponent<HealthScript>();
-                    h.ManualDamage(1);
+                    animator.setAnimation("waterFreeze");
+                    player.jumpHeight = 0.25f;
+                    player.frozen = true;
+                    player.freezeWarmup = player.freezeTime;
+                    connected = true;
+                    speed = new Vector2(2, 2);
+                }
+                if (shotType.Equals("fire"))
+                {
+                    if (!player.burning)
+                    {
+                        player.burning = true;
+                        player.burnDown = player.burnTime;
+                        Transform burnParticles = player.transform.GetChild(0);
+                        ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
+                        nbaJamOnFireEdition.Play();
+                        connected = true;
+                    }
+                }
+                if (shotType.Equals("plasma"))
+                {
+                    connected = true;
                 }
             }
         }
@@ -370,10 +376,6 @@ public class PlayerWeaponScript : MonoBehaviour
 
     public void Attack(float X, float Y)
     {
-            if (rock)
-            {
-                caster = null;
-            }
             direction.x = X;
             direction.y = Y;
             if (hasShot)

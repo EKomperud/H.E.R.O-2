@@ -3,10 +3,11 @@ using System.Collections;
 
 public class RockCollider : MonoBehaviour {
     private CircleCollider2D objectCollider;
+    public PlayerController caster;
 
     // Use this for initialization
     void Start () {
-        GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        //GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         objectCollider = gameObject.GetComponent<CircleCollider2D>();
     }
 

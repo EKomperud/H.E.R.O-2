@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
+    private static GameManager managerInstance;
     public HealthScript p;
 	public SpikeScript spikes;
 	public GameObject WinScreen;
@@ -59,21 +60,33 @@ public class GameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        WinScreen = GameObject.Find("Canvas").transform.GetChild(1).gameObject;
-        Keeper = GameObject.Find("NumberKeeper").GetComponent<NumberKeeper>();
-        if (this.gameObject.tag == "Player" | this.gameObject.tag == "Player2" | this.gameObject.tag == "Player3" | this.gameObject.tag == "Player4") {
-            firstWins.text = "";
-        }
-        p = gameObject.GetComponent<HealthScript>();
-        layer = 0;
-        playerStatuses = new bool[4];
-        winCounts = new int[4];
-        for (int i=0; i<4; i++)
+        try
         {
-            playerStatuses[i] = false;
-            winCounts[i] = 0;
+            WinScreen = GameObject.Find("Canvas").transform.GetChild(1).gameObject;
         }
-        DontDestroyOnLoad(this);
+        finally
+        {
+            Keeper = GameObject.Find("NumberKeeper").GetComponent<NumberKeeper>();
+            //if (this.gameObject.tag == "Player" | this.gameObject.tag == "Player2" | this.gameObject.tag == "Player3" | this.gameObject.tag == "Player4") {
+            //    firstWins.text = "";
+            //}
+            p = gameObject.GetComponent<HealthScript>();
+            layer = 0;
+            playerStatuses = new bool[4];
+            winCounts = new int[4];
+            for (int i = 0; i < 4; i++)
+            {
+                playerStatuses[i] = false;
+                winCounts[i] = 0;
+            }
+            DontDestroyOnLoad(this);
+            if (managerInstance == null)
+            {
+                managerInstance = this;
+            }
+            else
+                Destroy(gameObject);
+        }
     }
 	
 	// Update is called once per frame
@@ -87,8 +100,11 @@ public class GameManager : MonoBehaviour {
 			//numOfRounds -= 1;
 			//Keeper.numberOfRounds = numOfRounds;
 			startUp = false;
+            Debug.Log("total players upon startup: " + totalPlayers);
             activePlayers = totalPlayers;
             levelLoadup = false;
+            GameObject canvas2 = GameObject.Find("Canvas2");
+            canvas2.SetActive(false);
 		}
         if (!levelLoadup)
         {
@@ -97,7 +113,7 @@ public class GameManager : MonoBehaviour {
             if (l <=0)
             {
                 WinScreen = GameObject.Find("Canvas").transform.GetChild(1).gameObject;
-                levelLoadup = true;
+                levelLoadup = true;;
             }
         }
 
@@ -111,7 +127,7 @@ public class GameManager : MonoBehaviour {
             randomLevel = Random.Range(1, 8);
             Application.LoadLevel(randomLevel);
             levelLoadup = false;
-            l = 1f;
+            l = 1.5f;
         }
         if (winner != null && !winnerShown)
         {
@@ -121,6 +137,10 @@ public class GameManager : MonoBehaviour {
             //    firstWins.text += "Player " + (i + 1) + ": " + winCounts[i] + " wins ";
             //}
             WinScreen.SetActive(true);
+            Button playAgainButton = WinScreen.transform.GetChild(2).gameObject.GetComponent<Button>();
+            playAgainButton.onClick.AddListener(() => RedoRounds());
+            Button menuButton = WinScreen.transform.GetChild(1).gameObject.GetComponent<Button>();
+            menuButton.onClick.AddListener(() => ExitLevel());
         }
     }
 
@@ -132,16 +152,12 @@ public class GameManager : MonoBehaviour {
 	}
 
     /// <summary>
-    /// Exits to the main menu
+    /// Exits to the main menu from the win screen
     /// </summary>
 	public void ExitLevel (){
-		Keeper.P1WINS = 0;
-		Keeper.P2WINS = 0;
+        layer = 1;
 		Application.LoadLevel (0);
-		Keeper.numberOfRounds = 0;
-		Keeper.preNumOfP = 0;
-		Keeper.previousRounds = 0;
-		Keeper.ifDied = false;
+        MainMenu();
 	}
 
     /// <summary>
@@ -182,7 +198,7 @@ public class GameManager : MonoBehaviour {
 		playBack = true;
 		MainMenuSlide = false;
 		setTimer = true;
-        if (layer < 6)
+        if (layer < 7)
             layer++;
 	}
 
@@ -206,8 +222,6 @@ public class GameManager : MonoBehaviour {
 	public void PlayButton () {
 		playBack = true;
 		MainMenuSlide = false;
-        firstLayer = false;
-        secondLayer = true;
         layer = 2;
 		setTimer = true;
 	}
@@ -220,14 +234,16 @@ public class GameManager : MonoBehaviour {
         numOfRounds = r;
         Keeper.previousRounds = r;
         startUp = true;
+        layer++;
     }
 
     /// <summary>
-    /// Resets the game to where it was on the first round
+    /// Resets the game to where it was on the first round from the win screen
     /// </summary>
 	public void RedoRounds() {
         playerStatuses = new bool[4];
         winCounts = new int[4];
+        Debug.Log("total players upon RedoRoundsCall: " + totalPlayers);
         for (int i = 0; i < totalPlayers; i++)
         {
             playerStatuses[i] = true;
@@ -255,8 +271,8 @@ public class GameManager : MonoBehaviour {
     public void KillPlayer (string player)
     {
         int playerNumber = int.Parse(player[player.Length - 1] + "");
-        activePlayers--;
-        Debug.Log(activePlayers);
+        if (playerNumber <= totalPlayers)
+            activePlayers--;
         playerStatuses[playerNumber - 1] = false;
         if (activePlayers == 1)
         {
@@ -265,6 +281,7 @@ public class GameManager : MonoBehaviour {
                 if (playerStatuses[i])
                 {
                     winCounts[i]++;
+                    Debug.Log("player win count: " + winCounts[i]);
                     if (winCounts[i]==numOfRounds)
                     {
                         winner = "P" + (i + 1);

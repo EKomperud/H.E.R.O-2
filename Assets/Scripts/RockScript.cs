@@ -8,7 +8,7 @@ public class RockScript : MonoBehaviour {
 
     void Start()
     {
-        GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        //GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         pickupCollider = gameObject.GetComponent<CircleCollider2D>();
     }
 
@@ -28,7 +28,7 @@ public class RockScript : MonoBehaviour {
 	void OnTriggerExit2D (Collider2D collider) {
 		PlayerController p = collider.gameObject.GetComponent<PlayerController> ();
 
-		if (player != null) {
+		if (player != null && p != null) {
 
             if (p.Equals(player))
             {

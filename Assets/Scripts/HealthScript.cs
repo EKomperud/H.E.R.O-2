@@ -25,15 +25,6 @@ public class HealthScript : MonoBehaviour {
 			PlayerController target = shot.caster;
 			if (!target.Equals(player))
 			{
-				//Debug.Log ("the code gets here");
-				if (this.gameObject.tag == "Player")
-				{
-					shotsHaveFired = true;
-				}
-				if (this.gameObject.tag == "Player2")
-				{
-					shotsHaveFired2 = true;
-				}
 				hp -= shot.damage;
                 if (hp <= 0)
                 {

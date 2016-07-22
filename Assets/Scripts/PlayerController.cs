@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     public FountainScript fountain;
     public PlayerWeaponScript weapon;
     public RockScript rock;
+    public RockCollider rockCollider;
     public Stack weapons;
     public Vector2 speed = new Vector2(50, 50);
 
