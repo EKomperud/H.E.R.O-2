@@ -1,0 +1,571 @@
+fileFormatVersion: 2
+guid: cdf46b8947ecacd4ba64dfd4d22493a3
+timeCreated: 1469175954
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Plasma Spin Anim_0
+    21300002: Plasma Spin Anim_1
+    21300004: Plasma Spin Anim_2
+    21300006: Plasma Spin Anim_3
+    21300008: Plasma Spin Anim_4
+    21300010: Plasma Spin Anim_5
+    21300012: Plasma Spin Anim_6
+    21300014: Plasma Spin Anim_7
+    21300016: Plasma Spin Anim_8
+    21300018: Plasma Spin Anim_9
+    21300020: Plasma Spin Anim_10
+    21300022: Plasma Spin Anim_11
+    21300024: Plasma Spin Anim_12
+    21300026: Plasma Spin Anim_13
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 300
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Plasma Spin Anim_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 144, y: 63}
+        - {x: 135, y: 45}
+        - {x: 135, y: 0}
+        - {x: 140, y: -12}
+        - {x: 150, y: -12}
+        - {x: 150, y: 63}
+    - name: Plasma Spin Anim_1
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -95, y: -144}
+        - {x: -99, y: -149}
+        - {x: -99, y: -150}
+        - {x: -77, y: -150}
+        - {x: -78, y: -147}
+        - {x: -82, y: -146}
+        - {x: -88, y: -144}
+      - - {x: 149, y: -17}
+        - {x: 146, y: -18}
+        - {x: 136, y: -28}
+        - {x: 134, y: -29}
+        - {x: 133, y: -32}
+        - {x: 129, y: -33}
+        - {x: 122, y: -39}
+        - {x: 114, y: -45}
+        - {x: 112, y: -46}
+        - {x: 105, y: -51}
+        - {x: 114, y: -45}
+        - {x: 115, y: -44}
+        - {x: 123, y: -38}
+        - {x: 130, y: -31}
+        - {x: 132, y: -31}
+        - {x: 134, y: -29}
+        - {x: 140, y: -24}
+        - {x: 143, y: -22}
+        - {x: 150, y: -13}
+        - {x: 150, y: 54}
+        - {x: 137, y: 79}
+        - {x: 124, y: 58}
+        - {x: 121, y: 57}
+        - {x: 121, y: 54}
+        - {x: 121, y: 65}
+        - {x: 127, y: 72}
+        - {x: 84, y: 150}
+        - {x: -118, y: 150}
+        - {x: -147, y: 102}
+        - {x: -150, y: 86}
+        - {x: -150, y: -12}
+        - {x: -148, y: -13}
+        - {x: -142, y: -9}
+        - {x: -139, y: -6}
+        - {x: -150, y: -51}
+        - {x: -150, y: -123}
+        - {x: -79, y: -150}
+        - {x: 130, y: -150}
+        - {x: 149, y: -129}
+        - {x: 150, y: -118}
+        - {x: 150, y: -17}
+    - name: Plasma Spin Anim_2
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 76, y: -117}
+        - {x: 76, y: -115}
+        - {x: 65, y: -115}
+        - {x: 50, y: -113}
+        - {x: 63, y: -114}
+        - {x: 74, y: -115}
+        - {x: 83, y: -116}
+        - {x: 87, y: -116}
+        - {x: 106, y: -115}
+        - {x: 120, y: -112}
+        - {x: 140, y: -103}
+        - {x: 140, y: -83}
+        - {x: 135, y: -81}
+        - {x: 126, y: -84}
+        - {x: 132, y: -81}
+        - {x: 140, y: -76}
+        - {x: 140, y: 75}
+        - {x: 127, y: 140}
+        - {x: 114, y: 150}
+        - {x: -96, y: 150}
+        - {x: -140, y: 138}
+        - {x: -120, y: 104}
+        - {x: -114, y: 95}
+        - {x: -108, y: 93}
+        - {x: -94, y: 98}
+        - {x: -115, y: 83}
+        - {x: -150, y: 40}
+        - {x: -150, y: -12}
+        - {x: -147, y: -11}
+        - {x: -142, y: -7}
+        - {x: -146, y: -10}
+        - {x: -150, y: -14}
+        - {x: -150, y: -96}
+        - {x: -139, y: -137}
+        - {x: -79, y: -150}
+        - {x: 117, y: -150}
+        - {x: 116, y: -134}
+        - {x: 110, y: -119}
+        - {x: 100, y: -116}
+      - - {x: -147, y: 43}
+        - {x: -147, y: 46}
+        - {x: -150, y: 47}
+        - {x: -150, y: 42}
+    - name: Plasma Spin Anim_3
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -36, y: -125}
+        - {x: -46, y: -110}
+        - {x: -40, y: -119}
+        - {x: -32, y: -130}
+        - {x: -20, y: -142}
+        - {x: -11, y: -150}
+        - {x: 70, y: -150}
+        - {x: 150, y: -91}
+        - {x: 150, y: 120}
+        - {x: 116, y: 150}
+        - {x: -14, y: 150}
+        - {x: -10, y: 142}
+        - {x: -1, y: 137}
+        - {x: 25, y: 129}
+        - {x: 25, y: 127}
+        - {x: -13, y: 141}
+        - {x: -22, y: 150}
+        - {x: -53, y: 150}
+        - {x: -150, y: 65}
+        - {x: -150, y: -60}
+        - {x: -147, y: -68}
+        - {x: -138, y: -76}
+        - {x: -134, y: -75}
+        - {x: -134, y: -99}
+        - {x: -119, y: -136}
+        - {x: -100, y: -150}
+        - {x: -15, y: -150}
+        - {x: -15, y: -149}
+        - {x: -19, y: -145}
+        - {x: -29, y: -133}
+      - - {x: 144, y: -83}
+        - {x: 144, y: -98}
+        - {x: 149, y: -101}
+        - {x: 150, y: -101}
+        - {x: 150, y: -79}
+        - {x: 147, y: -80}
+    - name: Plasma Spin Anim_4
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -77, y: -141}
+        - {x: 60, y: -141}
+        - {x: 147, y: -127}
+        - {x: 150, y: -111}
+        - {x: 150, y: 136}
+        - {x: 121, y: 139}
+        - {x: -85, y: 139}
+        - {x: -150, y: 72}
+        - {x: -150, y: -113}
+        - {x: -127, y: -113}
+        - {x: -119, y: -110}
+        - {x: -116, y: -105}
+        - {x: -115, y: -101}
+        - {x: -116, y: -77}
+        - {x: -114, y: -77}
+        - {x: -114, y: -66}
+        - {x: -109, y: -37}
+        - {x: -112, y: -52}
+        - {x: -113, y: -64}
+        - {x: -115, y: -84}
+        - {x: -114, y: -107}
+        - {x: -113, y: -121}
+        - {x: -101, y: -141}
+        - {x: -81, y: -141}
+        - {x: -78, y: -140}
+        - {x: -82, y: -130}
+        - {x: -83, y: -127}
+    - name: Plasma Spin Anim_5
+      rect:
+        serializedVersion: 2
+        x: 1500
+        y: 780
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -150, y: 50}
+        - {x: -150, y: -54}
+        - {x: -144, y: -54}
+        - {x: -123, y: -25}
+        - {x: -123, y: 41}
+        - {x: -148, y: 50}
+      - - {x: -149, y: 62}
+        - {x: -146, y: 63}
+        - {x: -146, y: 67}
+        - {x: -147, y: 70}
+        - {x: -150, y: 70}
+        - {x: -150, y: 62}
+    - name: Plasma Spin Anim_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 480
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 138, y: 2}
+        - {x: 140, y: -10}
+        - {x: 131, y: -18}
+        - {x: 137, y: -1}
+        - {x: 140, y: 21}
+        - {x: 148, y: 87}
+        - {x: 32, y: 150}
+        - {x: -90, y: 150}
+        - {x: -150, y: 110}
+        - {x: -150, y: 15}
+        - {x: -149, y: 15}
+        - {x: -137, y: 27}
+        - {x: -135, y: 27}
+        - {x: -128, y: 33}
+        - {x: -120, y: 41}
+        - {x: -115, y: 42}
+        - {x: -106, y: 48}
+        - {x: -99, y: 53}
+        - {x: -110, y: 46}
+        - {x: -124, y: 36}
+        - {x: -138, y: 24}
+        - {x: -144, y: 20}
+        - {x: -150, y: 11}
+        - {x: -150, y: -29}
+        - {x: -146, y: -28}
+        - {x: -143, y: -26}
+        - {x: -143, y: -23}
+        - {x: -143, y: -27}
+        - {x: -148, y: -32}
+        - {x: -150, y: -33}
+        - {x: -150, y: -70}
+        - {x: -65, y: -145}
+        - {x: -49, y: -140}
+        - {x: -44, y: -138}
+        - {x: -39, y: -134}
+        - {x: -29, y: -150}
+        - {x: 104, y: -150}
+        - {x: 150, y: -138}
+        - {x: 150, y: 10}
+        - {x: 148, y: 13}
+    - name: Plasma Spin Anim_7
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 480
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 71, y: 150}
+        - {x: -103, y: 150}
+        - {x: -114, y: 127}
+        - {x: -108, y: 119}
+        - {x: -103, y: 116}
+        - {x: -99, y: 115}
+        - {x: -75, y: 116}
+        - {x: -75, y: 114}
+        - {x: -49, y: 112}
+        - {x: -73, y: 114}
+        - {x: -82, y: 115}
+        - {x: -105, y: 114}
+        - {x: -118, y: 111}
+        - {x: -128, y: 107}
+        - {x: -139, y: 101}
+        - {x: -140, y: 82}
+        - {x: -134, y: 80}
+        - {x: -125, y: 83}
+        - {x: -132, y: 80}
+        - {x: -143, y: 77}
+        - {x: -150, y: 17}
+        - {x: -150, y: -65}
+        - {x: -98, y: -150}
+        - {x: 106, y: -150}
+        - {x: 141, y: -72}
+        - {x: 141, y: 36}
+        - {x: 129, y: 87}
+      - - {x: 145, y: -8}
+        - {x: 140, y: -19}
+        - {x: 140, y: -43}
+        - {x: 141, y: -45}
+        - {x: 147, y: -51}
+        - {x: 150, y: -51}
+        - {x: 150, y: -8}
+    - name: Plasma Spin Anim_8
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 480
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 34, y: -140}
+        - {x: 58, y: -137}
+        - {x: 85, y: -119}
+        - {x: 103, y: -91}
+        - {x: 132, y: -61}
+        - {x: 147, y: -51}
+        - {x: 150, y: -46}
+        - {x: 150, y: 63}
+        - {x: 142, y: 77}
+        - {x: 135, y: 96}
+        - {x: 116, y: 139}
+        - {x: 103, y: 150}
+        - {x: -51, y: 150}
+        - {x: -68, y: 136}
+        - {x: -110, y: 89}
+        - {x: -138, y: 59}
+        - {x: -139, y: 47}
+        - {x: -150, y: 1}
+        - {x: -150, y: -57}
+        - {x: -145, y: -73}
+        - {x: -131, y: -116}
+        - {x: -114, y: -145}
+        - {x: -89, y: -150}
+        - {x: 13, y: -150}
+        - {x: 8, y: -140}
+        - {x: 1, y: -139}
+        - {x: 9, y: -139}
+      - - {x: 148, y: -74}
+        - {x: 147, y: -76}
+        - {x: 147, y: -81}
+        - {x: 149, y: -82}
+        - {x: 150, y: -82}
+        - {x: 150, y: -74}
+    - name: Plasma Spin Anim_9
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 480
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 127, y: 104}
+        - {x: 115, y: 94}
+        - {x: 117, y: 65}
+        - {x: 115, y: 65}
+        - {x: 113, y: 39}
+        - {x: 115, y: 63}
+        - {x: 116, y: 72}
+        - {x: 116, y: 77}
+        - {x: 115, y: 99}
+        - {x: 104, y: 132}
+        - {x: 91, y: 150}
+        - {x: -131, y: 150}
+        - {x: -150, y: 128}
+        - {x: -150, y: -98}
+        - {x: -137, y: -116}
+        - {x: -104, y: -133}
+        - {x: -94, y: -126}
+        - {x: -94, y: -113}
+        - {x: -105, y: -92}
+        - {x: -102, y: -94}
+        - {x: -86, y: -129}
+        - {x: -41, y: -150}
+        - {x: 82, y: -150}
+        - {x: 150, y: -82}
+        - {x: 150, y: 96}
+      - - {x: -10, y: 150}
+        - {x: -10, y: 147}
+        - {x: 16, y: 131}
+        - {x: 19, y: 130}
+        - {x: 34, y: 130}
+        - {x: 41, y: 141}
+        - {x: 41, y: 147}
+        - {x: 36, y: 150}
+    - name: Plasma Spin Anim_10
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 480
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -138, y: 89}
+        - {x: -145, y: 90}
+        - {x: -150, y: 90}
+        - {x: -150, y: -46}
+        - {x: -146, y: -46}
+        - {x: -138, y: -39}
+        - {x: -123, y: -6}
+        - {x: -123, y: 58}
+    - name: Plasma Spin Anim_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 180
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 1, y: 150}
+        - {x: 1, y: 144}
+        - {x: 23, y: 138}
+        - {x: 43, y: 138}
+        - {x: 50, y: 143}
+        - {x: 50, y: 150}
+    - name: Plasma Spin Anim_12
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 180
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -52, y: 150}
+        - {x: -52, y: 146}
+        - {x: -12, y: 123}
+        - {x: 27, y: 123}
+        - {x: 51, y: 146}
+        - {x: 52, y: 149}
+        - {x: 52, y: 150}
+      - - {x: 64, y: 150}
+        - {x: 64, y: 149}
+        - {x: 65, y: 146}
+        - {x: 69, y: 146}
+        - {x: 72, y: 147}
+        - {x: 72, y: 150}
+    - name: Plasma Spin Anim_13
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 180
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -63, y: 150}
+        - {x: -63, y: 149}
+        - {x: -60, y: 140}
+        - {x: -48, y: 134}
+        - {x: 6, y: 134}
+        - {x: 13, y: 138}
+        - {x: 13, y: 150}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
