@@ -33,6 +33,5 @@ public class NumberKeeper : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log(numOfP);
 	}
 }

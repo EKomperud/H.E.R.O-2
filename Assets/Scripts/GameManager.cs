@@ -80,9 +80,9 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 
 		if (startUp) {
-			//pNum = Keeper.numOfP;
-			//randomLevel = Random.Range (1, 8);
-			randomLevel = Random.Range (1, 11);
+            //pNum = Keeper.numOfP;
+            //randomLevel = Random.Range (1, 8);
+            randomLevel = Random.Range (1, 11);
 			Application.LoadLevel (randomLevel);
 			//numOfRounds -= 1;
 			//Keeper.numberOfRounds = numOfRounds;
@@ -100,19 +100,7 @@ public class GameManager : MonoBehaviour {
                 levelLoadup = true;
             }
         }
-        //numOfRounds = Keeper.numberOfRounds;
-  //      if (Keeper.p2Input && Keeper.p1Input && Keeper.p3Input && Keeper.p4Input) {
-		//	randomLevel = Random.Range (1, 8);
-		//	Application.LoadLevel (randomLevel);
-		//	//numOfRounds -= 1;
-		//	Keeper.numberOfRounds = numOfRounds;
-		//	Keeper.numOfP = Keeper.preNumOfP;
-		//	Keeper.ifDied = false;
-		//	Keeper.p1Input = false;
-		//	Keeper.p2Input = false;
-		//	Keeper.p3Input = false;
-		//	Keeper.p4Input = false;
-		//}
+
         if (activePlayers == 1 && winner == null)
         {
             activePlayers = totalPlayers;
@@ -124,8 +112,6 @@ public class GameManager : MonoBehaviour {
             Application.LoadLevel(randomLevel);
             levelLoadup = false;
             l = 1f;
-
-
         }
         if (winner != null && !winnerShown)
         {
@@ -136,153 +122,18 @@ public class GameManager : MonoBehaviour {
             //}
             WinScreen.SetActive(true);
         }
-        //if (Keeper.ifDied && numOfRounds > 0 && Keeper.numOfP == 1) {
-        //	if (this.gameObject.tag == "Player" && Keeper.p1Input != true) {
-        //		Keeper.P1WINS += Player1W;
-        //		Keeper.p1Input = true;
-        //		Debug.Log (Keeper.P1WINS + " P1");
-        //		if (Keeper.numOfP == 1) {
-        //			Keeper.p2Input = true;
-        //			Keeper.p3Input = true;
-        //			Keeper.p4Input = true;
-        //		}
-        //	}
-        //	if (this.gameObject.tag == "Player2" && Keeper.p2Input != true) {
-        //		Keeper.P2WINS += Player2W;
-        //		Keeper.p2Input = true;
-        //		Debug.Log (Keeper.P2WINS + " P2");
-        //		if (Keeper.numOfP == 1) {
-        //			Keeper.p1Input = true;
-        //			Keeper.p3Input = true;
-        //			Keeper.p4Input = true;
-        //		}
-        //	}
-        //	if (this.gameObject.tag == "Player3" && Keeper.p3Input != true) {
-        //		Keeper.P3WINS += Player3W;
-        //		Keeper.p3Input = true;
-        //		Debug.Log (Keeper.P3WINS + " P3");
-        //		if (Keeper.numOfP == 1) {
-        //			Keeper.p1Input = true;
-        //			Keeper.p2Input = true;
-        //			Keeper.p4Input = true;
-        //		}
-        //	}
-        //	if (this.gameObject.tag == "Player4" && Keeper.p4Input != true) {
-        //		Keeper.P4WINS += Player4W;
-        //		Keeper.p4Input = true;
-        //		Debug.Log (Keeper.P4WINS + " P4");
-        //		if (Keeper.numOfP == 1) {
-        //			Keeper.p1Input = true;
-        //			Keeper.p2Input = true;
-        //			Keeper.p3Input = true;
-        //		}
-        //	}
-        //} 
-        //else if (Keeper.ifDied && numOfRounds <= 0 && (this.gameObject.tag == "Player" | this.gameObject.tag == "Player2" | this.gameObject.tag == "Player3" | this.gameObject.tag == "Player4")) {
-        //	if (winAdd1) {
-        //		Keeper.P1WINS += Player1W;
-        //		Keeper.P2WINS += Player2W;
-        //		Keeper.P3WINS += Player3W;
-        //		Keeper.P4WINS += Player4W;
-        //		winAdd1 = false;
-        //	}
-
-        //if (Keeper.preNumOfP == 4) {
-        //	firstWins.text = "Player 1: " + Keeper.P1WINS + " wins" +
-        //	" Player 2: " + Keeper.P2WINS + " wins" +
-        //	" Player 3: " + Keeper.P3WINS + " wins" +
-        //	" Player 4: " + Keeper.P4WINS + " wins";
-        //} 
-        //else if (Keeper.preNumOfP == 3) {
-        //	firstWins.text = "Player 1: " + Keeper.P1WINS + " wins" +
-        //	" Player 2: " + Keeper.P2WINS + " wins" +
-        //	" Player 3: " + Keeper.P3WINS + " wins";
-        //} 
-        //else if (Keeper.preNumOfP == 2) {
-        //	firstWins.text = "Player 1: " + Keeper.P1WINS + " wins" +
-        //	" Player 2: " + Keeper.P2WINS + " wins";
-        //}
-        //	P1exists = false;
-        //	P2exists = false;
-        //	P3exists = false;
-        //	P4exists = false;
-        //	dontChange = false;
-        //	WinScreen.SetActive (true);
-        //}
-        //if (dontChange && p != null) {
-        //	if (this.gameObject.tag == "Player") {
-        //		P1exists = true;
-        //	}
-        //	if (this.gameObject.tag == "Player2") {
-        //		P2exists = true;
-        //	}
-        //	if (this.gameObject.tag == "Player3") {
-        //		P3exists = true;
-        //	}
-        //	if (this.gameObject.tag == "Player4") {
-        //		P4exists = true;
-        //	}
-        //}
-        //if (P1exists) {
-        //	if (Keeper.numOfP == 1 && Keeper.death2 && Keeper.death3 && Keeper.death4) {
-        //		Keeper.ifDied = true;
-        //		Player1W += 1;
-        //		P1exists = false;
-        //	}
-        //	if (Keeper.numOfP == 1 && Keeper.death2 && Keeper.death3 && Keeper.death4) {
-        //		Keeper.ifDied = true;
-        //		Player1W += 1;
-        //		P1exists = false;
-        //		Keeper.death2 = false;
-        //		Keeper.numOfP -= 1;
-        //	}
-        //	else if (p.shotsHaveFired && Keeper.numOfP == 1 && Keeper.death2 && Keeper.death3 && Keeper.death4) {
-        //		Keeper.ifDied = true;
-        //		Player1W += 1;
-        //		p.shotsHaveFired = false;
-        //		P1exists = false;
-        //		Keeper.death2 = false;
-        //		Keeper.numOfP -= 1;
-        //	}
-        //	else if (Keeper.hasHit2) {
-        //		Keeper.ifDied = true;
-        //		Player1W += 1;
-        //		P1exists = false;
-        //		Keeper.hasHit2 = false;
-        //		Keeper.numOfP -= 1;
-
-        //	}
-        //}
-        //else if (P2exists) {
-        //	if (Keeper.death) {
-        //		Keeper.ifDied = true;
-        //		Player2W += 1;
-        //		P1exists = false;
-        //		Keeper.death = false;
-        //		Keeper.numOfP -= 1;
-        //	}
-        //	else if (p.shotsHaveFired2 && Keeper.death) {
-        //		Keeper.ifDied = true;
-        //		Player2W += 1;
-        //		p.shotsHaveFired2 = false;
-        //		P2exists = false;
-        //		Keeper.death = false;
-        //		Keeper.numOfP -= 1;
-        //	}
-        //	else if (Keeper.hasHit1) {
-        //		Keeper.ifDied = true;
-        //		Player2W += 1;
-        //		P2exists = false;
-        //		Keeper.hasHit1 = false;
-        //		Keeper.numOfP -= 1;
-        //	} 
-        //}
     }
 
+    /// <summary>
+    /// Restarts the level you are on
+    /// </summary>
 	public void RestartLevel() {
 		Application.LoadLevel(Application.loadedLevel);
 	}
 
+    /// <summary>
+    /// Exits to the main menu
+    /// </summary>
 	public void ExitLevel (){
 		Keeper.P1WINS = 0;
 		Keeper.P2WINS = 0;
@@ -293,12 +144,16 @@ public class GameManager : MonoBehaviour {
 		Keeper.ifDied = false;
 	}
 
-//	public void PlayGame() {
-//		Application.LoadLevel (8);
-//	}
+    /// <summary>
+    /// Quits the game entirely
+    /// </summary>
 	public void ExitGame() {
 		Application.Quit ();
 	}
+
+    /// <summary>
+    /// Plays on the first menu click
+    /// </summary>
 	public void MainMenu() {
 		if (firstTime) {
 			MainMenuSlide = true;
@@ -308,99 +163,36 @@ public class GameManager : MonoBehaviour {
             firstLayer = true;
 		}
 	}
+
+    /// <summary>
+    /// Operation when menu goes back on layer
+    /// </summary>
 	public void GoBack() {
 		playBack = true;
 		MainMenuSlide = false;
 		setTimer = true;
-        //if (secondLayer)
-        //{
-        //    firstLayer = true;
-        //    secondLayer = false;
-        //}
-        //else if (thirdLayer)
-        //{
-        //    secondLayer = true;
-        //    thirdLayer = false;
-        //}
-        //else if (fourthLayer)
-        //{
-        //    thirdLayer = true;
-        //    fourthLayer = false;
-        //}
-        //else if (fifthLayer)
-        //{
-        //    fourthLayer = true;
-        //    fifthLayer = false;
-        //}
-        //else if (sixthLayer)
-        //{
-        //    fifthLayer = true;
-        //    sixthLayer = false;
-        //}
-        if (layer > 1)      // Now you just need to check the value of layer
-            layer--;        // instead of individual bools
+        if (layer > 1)      
+            layer--;        
 	}
 
+    /// <summary>
+    /// Operation when menu goes forward one layer
+    /// </summary>
 	public void Next() {
 		playBack = true;
 		MainMenuSlide = false;
 		setTimer = true;
-        //if (secondLayer)
-        //{
-        //    thirdLayer = true;
-        //    secondLayer = false;
-        //}
-        //else if (thirdLayer)
-        //{
-        //    fourthLayer = true;
-        //    thirdLayer = false;
-        //}
-        //else if (fourthLayer)
-        //{
-        //    fifthLayer = true;
-        //    fourthLayer = false;
-        //}
-        //else if (fifthLayer)
-        //{
-        //    sixthLayer = true;
-        //    fifthLayer = false;
-        //}
         if (layer < 6)
             layer++;
 	}
-
-    //public void twoPlayers()
-    //{
-    //    Keeper.numOfP = 2;
-    //    Keeper.preNumOfP = Keeper.numOfP;
-    //    Keeper.death3 = true;
-    //    Keeper.death4 = true;
-    //    Next();
-    //}
-    //public void threePlayers()
-    //{
-    //    Keeper.numOfP = 3;
-    //    Keeper.preNumOfP = Keeper.numOfP;
-    //    Keeper.death4 = true;
-    //    Next();
-    //}
-    //public void fourPlayers()
-    //{
-    //    Keeper.numOfP = 4;
-    //    Keeper.preNumOfP = Keeper.numOfP;
-    //    Next();
-    //}
 
     /// <summary>
     /// Call to set the number of players in a game
     /// </summary>
     public void Players (int p)
     {
-        //Keeper.numOfP = p;
-        //Keeper.preNumOfP = p;
         totalPlayers = p;
         activePlayers = p;
-        Debug.Log(activePlayers);
         for (int i = 0; i < p; i++)
         {
             playerStatuses[i] = true;
@@ -408,6 +200,9 @@ public class GameManager : MonoBehaviour {
         Next();
     }
 
+    /// <summary>
+    /// Clicks the play button
+    /// </summary>
 	public void PlayButton () {
 		playBack = true;
 		MainMenuSlide = false;
@@ -415,33 +210,7 @@ public class GameManager : MonoBehaviour {
         secondLayer = true;
         layer = 2;
 		setTimer = true;
-
 	}
-
-    //public void Three()
-    //{
-    //    numOfRounds = 3;
-    //    Keeper.previousRounds = 3;
-    //    startUp = true;
-    //}
-    //public void Five()
-    //{
-    //    numOfRounds = 5;
-    //    Keeper.previousRounds = 5;
-    //    startUp = true;
-    //}
-    //public void Seven()
-    //{
-    //    numOfRounds = 7;
-    //    Keeper.previousRounds = 7;
-    //    startUp = true;
-    //}
-    //public void Ten()
-    //{
-    //    numOfRounds = 10;
-    //    Keeper.previousRounds = 10;
-    //    startUp = true;
-    //}
 
     /// <summary>
     /// Call to set the number of rounds
@@ -453,6 +222,9 @@ public class GameManager : MonoBehaviour {
         startUp = true;
     }
 
+    /// <summary>
+    /// Resets the game to where it was on the first round
+    /// </summary>
 	public void RedoRounds() {
         playerStatuses = new bool[4];
         winCounts = new int[4];
@@ -467,12 +239,19 @@ public class GameManager : MonoBehaviour {
         l = 1f;
 	}
 
+    /// <summary>
+    /// Plays the tutorial level
+    /// </summary>
 	public void Tutorial() {
 		TutorialScene = true;
 		Keeper.previousRounds = 1;
 		Application.LoadLevel (11);
 	}
 
+    /// <summary>
+    /// Kills the parameter player and updates all relevatnt data
+    /// </summary>
+    /// <param name="player"></param>
     public void KillPlayer (string player)
     {
         int playerNumber = int.Parse(player[player.Length - 1] + "");
