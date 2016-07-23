@@ -352,7 +352,7 @@ public class PlayerController : MonoBehaviour
         float shoot = MultiInput.GetAxis("RightTrigger", "", name);
         //bool grab = MultiInput.GetButtonDown("Grab","",name);
         
-        float grab = MultiInput.GetAxis("LeftTrigger", "", name);
+        float grab = MultiInput.GetAxis("X", "", name);
 
         if (shoot > 0f && fireCooldown <= 0)
         {
