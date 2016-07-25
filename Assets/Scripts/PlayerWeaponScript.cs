@@ -127,7 +127,7 @@ public class PlayerWeaponScript : MonoBehaviour
                     }
                     else if (shotType.Equals("plasma"))
                     {
-                        animator.setAnimation("plasmaSpin");
+                        animator.setAnimation("Plasma Spin");
                         if (transform.localScale.x < (4 * sizeX))
                         {
                             transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
