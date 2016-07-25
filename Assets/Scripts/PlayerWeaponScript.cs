@@ -116,7 +116,9 @@ public class PlayerWeaponScript : MonoBehaviour
                     if (shotType.Equals("fire"))
                     {
                         animator.setAnimation("Fireball Explosion");
-                        if (transform.localScale.x < (4 * sizeX))
+                        speed.x = -speed.x;
+                        speed.y = -speed.y;
+                        if (transform.localScale.x < (3 * sizeX))
                         {
                             transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
                         }

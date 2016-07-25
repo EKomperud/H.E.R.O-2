@@ -7,6 +7,12 @@ public class GameManager : MonoBehaviour {
     public HealthScript p;
 	public SpikeScript spikes;
 	public GameObject WinScreen;
+    public Sprite CyborgSelect;
+    public Sprite NinjaSelect;
+    public Sprite WitchHunterSelect;
+    public Sprite PirateSelect;
+    private Sprite[] selectImages;
+    private int[] selectedCharacters;
 	public bool MainMenuSlide = false;
 	public bool playBack = false;
 	public bool setTimer = false;
@@ -14,17 +20,7 @@ public class GameManager : MonoBehaviour {
 	private int numOfRounds = 0;
 	private int randomLevel = 0;
 	private bool startUp = false;
-	private bool P1exists = false;
-	private bool P2exists = false;
-	private bool P3exists = false;
-	private bool P4exists = false;
 
-    public bool firstLayer = false;
-    public bool secondLayer = false;
-    public bool thirdLayer = false;
-    public bool fourthLayer = false;
-    public bool fifthLayer = false;
-    public bool sixthLayer = false;
     public int layer;   // This should achieve the same function as having any number of layers
 
 	public bool doorDown = false;
@@ -74,11 +70,18 @@ public class GameManager : MonoBehaviour {
             layer = 0;
             playerStatuses = new bool[4];
             winCounts = new int[4];
+            selectedCharacters = new int[4];
             for (int i = 0; i < 4; i++)
             {
                 playerStatuses[i] = false;
                 winCounts[i] = 0;
+                selectedCharacters[i] = i + 1;
             }
+            selectImages = new Sprite[4];
+            selectImages[0] = CyborgSelect;
+            selectImages[1] = NinjaSelect;
+            selectImages[2] = PirateSelect;
+            selectImages[3] = WitchHunterSelect;
             DontDestroyOnLoad(this);
             if (managerInstance == null)
             {
@@ -176,7 +179,6 @@ public class GameManager : MonoBehaviour {
 			playBack = false;
 			setTimer = true;
             layer = 1;
-            firstLayer = true;
 		}
 	}
 
@@ -291,54 +293,76 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void P1Lock()
-    {
-        if (P1C)
-        {
-            P1C = false;
-        }
-        else
-        {
-            P1C = true;
-        }
-    }
-    public void P2Lock()
-    {
-        if (P2C)
-        {
-            P2C = false;
-        }
-        else
-        {
-            P2C = true;
-        }
-    }
-    public void P3Lock()
-    {
-        if (P3C)
-        {
-            P3C = false;
-        }
-        else
-        {
-            P3C = true;
-        }
-    }
-    public void P4Lock()
-    {
-        if (P4C)
-        {
-            P4C = false;
-        }
-        else
-        {
-            P4C = true;
-        }
-    }
+    //public void P1Lock()
+    //{
+    //    if (P1C)
+    //    {
+    //        P1C = false;
+    //    }
+    //    else
+    //    {
+    //        P1C = true;
+    //    }
+    //}
+    //public void P2Lock()
+    //{
+    //    if (P2C)
+    //    {
+    //        P2C = false;
+    //    }
+    //    else
+    //    {
+    //        P2C = true;
+    //    }
+    //}
+    //public void P3Lock()
+    //{
+    //    if (P3C)
+    //    {
+    //        P3C = false;
+    //    }
+    //    else
+    //    {
+    //        P3C = true;
+    //    }
+    //}
+    //public void P4Lock()
+    //{
+    //    if (P4C)
+    //    {
+    //        P4C = false;
+    //    }
+    //    else
+    //    {
+    //        P4C = true;
+    //    }
+    //}
 
     public void PlayerLock(int p)
     {
 
+    }
+
+    public void ScrollUp (int player)
+    {
+        Image select = GameObject.Find(player + "Select").GetComponent<Image>();
+        if (selectedCharacters[player - 1] == selectImages.Length)
+            selectedCharacters[player - 1] = 0;
+        else
+            selectedCharacters[player - 1]++;
+
+        select.sprite = selectImages[selectedCharacters[player - 1]];
+    }
+
+    public void ScrollDown (int player)
+    {
+        Image select = GameObject.Find(player + "Select").GetComponent<Image>();
+        if (selectedCharacters[player - 1] == 0)
+            selectedCharacters[player - 1] = selectImages.Length;
+        else
+            selectedCharacters[player - 1]--;
+
+        select.sprite = selectImages[selectedCharacters[player - 1]];
     }
 
     public void UP()

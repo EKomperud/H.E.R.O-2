@@ -25,7 +25,6 @@ public class MenuChange : MonoBehaviour {
 	void Update () {
 
 		if (Menu.layer == 1 ) {//&& Menu.doorDown) {
-            Debug.Log("option one");
 			MainScreen.SetActive (true);
 			NumOFP.SetActive (false);
 			CharSel.SetActive (false);
@@ -35,7 +34,6 @@ public class MenuChange : MonoBehaviour {
 		}
         
 		else if (Menu.layer == 1) {// && Menu.firstTime) {
-            Debug.Log("option two");
             MainScreen.SetActive (true);
 			NumOFP.SetActive (false);
 			CharSel.SetActive (false);
