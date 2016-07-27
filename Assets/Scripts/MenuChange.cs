@@ -65,8 +65,8 @@ public class MenuChange : MonoBehaviour {
 				picFour.SetActive (false);
 			} 
 			else {
-				picThree.SetActive (true);
-				picFour.SetActive (true);
+				//picThree.SetActive (true);
+				//picFour.SetActive (true);
 			}
 			//LevelSelect.SetActive (false);
 		}

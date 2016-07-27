@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
@@ -7,12 +8,42 @@ public class GameManager : MonoBehaviour {
     public HealthScript p;
 	public SpikeScript spikes;
 	public GameObject WinScreen;
+    public Transform CyborgPrefab;
     public Sprite CyborgSelect;
+    public Sprite CyborgLock;
+    public Transform NinjaPrefab;
     public Sprite NinjaSelect;
+    public Sprite NinjaLock;
+    public Transform WitchHunterPrefab;
     public Sprite WitchHunterSelect;
+    public Sprite WitchHunterLock;
+    public Transform PiratePrefab;
     public Sprite PirateSelect;
+    public Sprite PirateLock;
+
+    /// <summary>
+    /// Images of the characters
+    /// Cyborg = 0
+    /// Ninja = 1
+    /// Pirate = 2
+    /// Witch Hunter = 3
+    /// </summary>
     private Sprite[] selectImages;
-    private int[] selectedCharacters;
+
+    /// <summary>
+    /// Maps players to their selected characters
+    /// P1 = 0
+    /// P2 = 1
+    /// P3 = 2
+    /// P4 = 3
+    /// </summary>
+    private List<int> selectedCharacters;
+
+    private string[] characterNames;
+    public Transform[] characterPrefabs;
+
+    private SpawnPoint[] spawnPoints;
+
 	public bool MainMenuSlide = false;
 	public bool playBack = false;
 	public bool setTimer = false;
@@ -70,18 +101,33 @@ public class GameManager : MonoBehaviour {
             layer = 0;
             playerStatuses = new bool[4];
             winCounts = new int[4];
-            selectedCharacters = new int[4];
+            selectedCharacters = new List<int>(4);
+            characterNames = new string[4];
+            characterPrefabs = new Transform[4];
+            selectImages = new Sprite[4];
             for (int i = 0; i < 4; i++)
             {
                 playerStatuses[i] = false;
                 winCounts[i] = 0;
-                selectedCharacters[i] = i + 1;
+                selectedCharacters.Add(i);;
             }
-            selectImages = new Sprite[4];
+            selectImages = new Sprite[8];
             selectImages[0] = CyborgSelect;
             selectImages[1] = NinjaSelect;
             selectImages[2] = PirateSelect;
             selectImages[3] = WitchHunterSelect;
+            selectImages[4] = CyborgLock;
+            selectImages[5] = NinjaLock;
+            selectImages[6] = PirateLock;
+            selectImages[7] = WitchHunterLock;
+            characterNames[0] = "Cyborg";
+            characterNames[1] = "Ninja";
+            characterNames[2] = "Pirate";
+            characterNames[3] = "WitchHunter";
+            characterPrefabs[0] = CyborgPrefab;
+            characterPrefabs[1] = NinjaPrefab;
+            characterPrefabs[2] = PiratePrefab;
+            characterPrefabs[3] = WitchHunterPrefab;
             DontDestroyOnLoad(this);
             if (managerInstance == null)
             {
@@ -98,7 +144,7 @@ public class GameManager : MonoBehaviour {
 		if (startUp) {
             //pNum = Keeper.numOfP;
             //randomLevel = Random.Range (1, 8);
-            randomLevel = Random.Range (1, 11);
+            randomLevel = Random.Range (1, 2);
 			Application.LoadLevel (randomLevel);
 			//numOfRounds -= 1;
 			//Keeper.numberOfRounds = numOfRounds;
@@ -113,11 +159,28 @@ public class GameManager : MonoBehaviour {
         {
             activePlayers = totalPlayers;
             l -= Time.deltaTime;
-            if (l <=0)
+            if (l <= 0)
             {
                 WinScreen = GameObject.Find("Canvas").transform.GetChild(1).gameObject;
-                levelLoadup = true;;
+                levelLoadup = true; ;
             }
+            System.Random playerRandomizer = new System.Random();
+            int[] playerPositions = new int[totalPlayers + 1];
+            playerPositions[0] = 0;
+            for (int i = 1; i < totalPlayers + 1; i++)
+            {
+                int position = playerRandomizer.Next(1, totalPlayers + 1);
+                while (position == playerPositions[i - 1])
+                    position = playerRandomizer.Next(1, totalPlayers + 1);
+                playerPositions[i] = position;
+            }
+            for (int i = 1; i<totalPlayers+1;i++)
+            {
+                SpawnPoint spawn1 = GameObject.Find("Spawn"+i).GetComponent<SpawnPoint>();
+                spawn1.SpawnPlayer("_P" + playerPositions[i], characterNames[selectedCharacters[playerPositions[i]-1] - selectedCharacters.Count]
+                    ,characterPrefabs[selectedCharacters[playerPositions[i]-1] - selectedCharacters.Count]);
+            }
+            levelLoadup = true;
         }
 
         if (activePlayers == 1 && winner == null)
@@ -127,7 +190,7 @@ public class GameManager : MonoBehaviour {
             {
                 playerStatuses[i] = true;
             }
-            randomLevel = Random.Range(1, 8);
+            randomLevel = Random.Range(1, 2);
             Application.LoadLevel(randomLevel);
             levelLoadup = false;
             l = 1.5f;
@@ -340,13 +403,25 @@ public class GameManager : MonoBehaviour {
 
     public void PlayerLock(int p)
     {
-
+        if (!selectedCharacters.Contains(selectedCharacters[p-1]+selectedCharacters.Count))
+        {
+            Image select = GameObject.Find(p + "Select").GetComponent<Image>();
+            if (selectedCharacters[p-1]<selectedCharacters.Count) {
+                select.sprite = selectImages[selectedCharacters[p - 1] + (selectImages.Length / 2)];
+                selectedCharacters[p - 1] += selectedCharacters.Count;           
+            }
+            else
+            {
+                select.sprite = selectImages[selectedCharacters[p - 1] - (selectImages.Length / 2)];
+                selectedCharacters[p - 1] -= selectedCharacters.Count;
+            }
+        }
     }
 
     public void ScrollUp (int player)
     {
         Image select = GameObject.Find(player + "Select").GetComponent<Image>();
-        if (selectedCharacters[player - 1] == selectImages.Length)
+        if (selectedCharacters[player - 1] == (selectImages.Length/2)-1)
             selectedCharacters[player - 1] = 0;
         else
             selectedCharacters[player - 1]++;
@@ -358,9 +433,9 @@ public class GameManager : MonoBehaviour {
     {
         Image select = GameObject.Find(player + "Select").GetComponent<Image>();
         if (selectedCharacters[player - 1] == 0)
-            selectedCharacters[player - 1] = selectImages.Length;
+            selectedCharacters[player - 1] = (selectImages.Length/2)-1;
         else
-            selectedCharacters[player - 1]--;
+            selectedCharacters[player - 1] --;
 
         select.sprite = selectImages[selectedCharacters[player - 1]];
     }

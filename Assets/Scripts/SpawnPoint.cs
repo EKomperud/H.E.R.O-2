@@ -7,7 +7,6 @@ public class SpawnPoint : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
 	}
 	
 	// Update is called once per frame
@@ -22,9 +21,12 @@ public class SpawnPoint : MonoBehaviour {
         controller.name = name;
     }
 
-    public void SpawnPlayer()
+    public void SpawnPlayer(string playerNumber, string character, Transform prefab)
     {
-        var p = Instantiate(player) as Transform;
+        var p = Instantiate(prefab) as Transform;
         p.position = transform.position;
+        PlayerController controller = p.gameObject.GetComponent<PlayerController>();
+        controller.name = playerNumber;
+        controller.character = character;
     }
 }
