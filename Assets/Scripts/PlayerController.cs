@@ -56,6 +56,8 @@ public class PlayerController : MonoBehaviour
     private bool RunLeft = false;
     public bool RunArrows = false;
     private bool AirControl = true;
+	private bool colorTimer = false;
+	private float colorCountNumber = 0;
     public bool frozen = false;
 
     // Use this for initialization
@@ -85,7 +87,47 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (!dead)
+        {
+		if (colorChange.color == new Color(150, 0, 0)) {
+			if (colorTimer) {
+				colorCountNumber = 0;
+				colorTimer = false;
+			}
+			colorCountNumber += Time.deltaTime;
+			if (colorCountNumber > 2) {
+				colorChange.color = new Color(255, 255, 255);
+			}
+		}
+        //Debug.Log("AirPushVelocity = " + AirPushVelocity);
+        if (airCooldown > 0 && weapon == null)
+        {
+            airCooldown -= Time.deltaTime;
+        }
+        if (airCooldown <= 0 && weapon == null && !(weapons.Count > 0))
+        {
+            var shot = Instantiate(defaultShot) as Transform;
+            shot.position = transform.position;
+            PlayerWeaponScript shotScript = shot.gameObject.GetComponent<PlayerWeaponScript>();
+            weapon = shotScript;
+            shotScript.caster = this;
+            shotScript.MoveToCaster();
+        }
+        if (fireCooldown > 0)
+        {
+            fireCooldown -= Time.deltaTime;
+        }
+
+        if (burning)
+        {
+            burnDown -= Time.deltaTime;
+            if (burnDown <= 0f)
+                health.ManualDamage(health.hp) ;
+        }
+
+        Vector3 velocity = _controller.velocity;
+        if (_controller.isGrounded && _controller.ground != null && _controller.ground.tag == "MovingPlatform")
         {
             //Debug.Log("AirPushVelocity = " + AirPushVelocity);
             if (airCooldown > 0 && weapon == null)
@@ -349,6 +391,9 @@ public class PlayerController : MonoBehaviour
                 doubleJump = true;
                 doubleJumped = false;
             }
+            pushed = false;
+			colorTimer = true;
+        }
 
             _controller.move(velocity * Time.deltaTime);
             RunArrows = false;
