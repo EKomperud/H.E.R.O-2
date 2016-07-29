@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     public bool RunArrows = false;
     private bool AirControl = true;
 	private bool colorTimer = false;
-	private int colorCountNumber = 0;
+	private float colorCountNumber = 0;
     public bool frozen = false;
 
     // Use this for initialization
@@ -82,14 +82,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		if (colorChange.color = Color (150, 0, 0)) {
+		if (colorChange.color == new Color(150, 0, 0)) {
 			if (colorTimer) {
 				colorCountNumber = 0;
 				colorTimer = false;
 			}
 			colorCountNumber += Time.deltaTime;
 			if (colorCountNumber > 2) {
-				colorChange.color = new Color (255, 255, 255);
+				colorChange.color = new Color(255, 255, 255);
 			}
 		}
         //Debug.Log("AirPushVelocity = " + AirPushVelocity);
