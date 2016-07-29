@@ -21,7 +21,7 @@ public class HealthScript : MonoBehaviour {
 		//player = gameObject.GetComponent<PlayerScript>();
 		PlayerWeaponScript shot = collider.gameObject.GetComponent<PlayerWeaponScript> ();
         GameObject killz = collider.gameObject;
-		if (shot != null ) {
+		if (shot != null && !player.dead) {
 			PlayerController target = shot.caster;
 			if (!target.Equals(player))
 			{
@@ -33,11 +33,12 @@ public class HealthScript : MonoBehaviour {
                     {
                         Destroy(player.weapon);
                     }
-                    Destroy(gameObject);
+                    player.dead = true;
+                    player.DeathAnim(shot.shotType);
                 }
             }	
 		}
-        if (killz.gameObject.tag.Equals("KillZ") || killz.gameObject.tag.Equals("Spikes"))
+        else if ((killz.gameObject.tag.Equals("KillZ") || killz.gameObject.tag.Equals("Spikes"))&& !player.dead)
         {
             hp = 0;
             manager.KillPlayer(player.name);
@@ -45,13 +46,14 @@ public class HealthScript : MonoBehaviour {
             {
                 Destroy(player.weapon);
             }
-            Destroy(gameObject);
+            player.dead = true;
+            player.DeathAnim(killz.gameObject.tag);
         }
 	}
 
-    public void ManualDamage (int d)
+    public void ManualDamage (int d, string cause)
     {
-        if (hp > 0)
+        if (hp > 0 && !player.dead)
         {
             hp -= d;
             if (hp <= 0)
@@ -61,7 +63,8 @@ public class HealthScript : MonoBehaviour {
                 {
                     Destroy(player.weapon);
                 }
-                Destroy(gameObject);
+                player.dead = true;
+                player.DeathAnim(cause);
             }
         }
     }

@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     private CharacterController2D _controller;
     private AnimationController2D _animator;
 	private SpriteRenderer colorChange;
+    private AudioSource audioPlayer;
+    private Sounds sounds;
     public AudioClip DeathScreamWhenYouDie;
     private AudioSource audio;
     public Transform defaultShot;
@@ -37,9 +39,11 @@ public class PlayerController : MonoBehaviour
     public Vector2 speed = new Vector2(50, 50);
 
     // Operation booleans
+    public bool dead = false;
     public bool burning = false;
     public bool nearRock = false;
     public bool inFountain = false;
+    private bool plasmaDeath = false;
     public string name;
     public string character;
     public bool pushed = false;
@@ -63,7 +67,8 @@ public class PlayerController : MonoBehaviour
         _animator = gameObject.GetComponent<AnimationController2D>();
 		colorChange = gameObject.GetComponent<SpriteRenderer> ();
         weapons = new Stack();
-
+        audioPlayer = GetComponent<AudioSource>();
+        sounds = GetComponent<Sounds>();
     }
 
     void Awake()
@@ -80,395 +85,435 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("AirPushVelocity = " + AirPushVelocity);
-        if (airCooldown > 0 && weapon == null)
+        if (!dead)
         {
-            airCooldown -= Time.deltaTime;
-        }
-        if (airCooldown <= 0 && weapon == null && !(weapons.Count > 0))
-        {
-            var shot = Instantiate(defaultShot) as Transform;
-            shot.position = transform.position;
-            PlayerWeaponScript shotScript = shot.gameObject.GetComponent<PlayerWeaponScript>();
-            weapon = shotScript;
-            shotScript.caster = this;
-            shotScript.MoveToCaster();
-        }
-        if (fireCooldown > 0)
-        {
-            fireCooldown -= Time.deltaTime;
-        }
-
-        if (burning)
-        {
-            burnDown -= Time.deltaTime;
-            if (burnDown <= 0f)
-                health.ManualDamage(health.hp) ;
-        }
-
-        Vector3 velocity = _controller.velocity;
-        if (_controller.isGrounded && _controller.ground != null && _controller.ground.tag == "MovingPlatform")
-        {
-            this.transform.parent = _controller.ground.transform;
-        }
-        else
-        {
-            if (this.transform.parent != null)
+            //Debug.Log("AirPushVelocity = " + AirPushVelocity);
+            if (airCooldown > 0 && weapon == null)
             {
-                this.transform.parent = null;
+                airCooldown -= Time.deltaTime;
             }
-        }
-
-        // Gravity: pull player down
-        if (!Bounce)
-        {
-            velocity.y += gravity * Time.deltaTime;
-        }
-
-        // Player is bouncing
-        else if (Bounce)
-        {
-            if (velocity.y > 0)
+            if (airCooldown <= 0 && weapon == null && !(weapons.Count > 0))
             {
-                velocity.y *= 2.25f;
+                var shot = Instantiate(defaultShot) as Transform;
+                shot.position = transform.position;
+                PlayerWeaponScript shotScript = shot.gameObject.GetComponent<PlayerWeaponScript>();
+                weapon = shotScript;
+                shotScript.caster = this;
+                shotScript.MoveToCaster();
             }
-            else if (velocity.y < 9 && velocity.y > -9)
+            if (fireCooldown > 0)
             {
-                velocity.y = 20;
+                fireCooldown -= Time.deltaTime;
+            }
+
+            if (burning)
+            {
+                burnDown -= Time.deltaTime;
+                if (burnDown <= 0f)
+                    health.ManualDamage(health.hp, "fire");
+            }
+
+            Vector3 velocity = _controller.velocity;
+            if (_controller.isGrounded && _controller.ground != null && _controller.ground.tag == "MovingPlatform")
+            {
+                this.transform.parent = _controller.ground.transform;
             }
             else
             {
-                velocity.y += -velocity.y * 2.25f;
-            }
-            if (velocity.y > maxHeight)
-            {
-                velocity.y = maxHeight;
-            }
-            Bounce = false;
-        }
-
-        if (!frozen)
-        {
-            // Player is moving horizontally
-            //if (MultiInput.GetAxis("Horizontal", "", name) < 0 || MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
-            if (MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
-            {
-                if (slide)
+                if (this.transform.parent != null)
                 {
-                    if (velocity.x > 0)
-                    {
-                        velocity.x += -walkSpeed * 0.002f;
-                    }
-                    else
-                    {
-                        velocity.x += -walkSpeed * 0.11f;
-                    }
+                    this.transform.parent = null;
                 }
-                else if (RunLeft | RunRight)
-                {
-                    RunArrows = true;
+            }
 
+            // Gravity: pull player down
+            if (!Bounce)
+            {
+                velocity.y += gravity * Time.deltaTime;
+            }
+
+            // Player is bouncing
+            else if (Bounce)
+            {
+                if (velocity.y > 0)
+                {
+                    velocity.y *= 2.25f;
                 }
-                else if (!_controller.isGrounded) {
-                    velocity.x = -airSpeed;
+                else if (velocity.y < 9 && velocity.y > -9)
+                {
+                    velocity.y = 20;
                 }
                 else
                 {
-                    velocity.x = -walkSpeed;
+                    velocity.y += -velocity.y * 2.25f;
                 }
-                if (!_controller.isGrounded)
+                if (velocity.y > maxHeight)
                 {
-                    _animator.setAnimation(character + " Jump");
+                    velocity.y = maxHeight;
                 }
-                else
-                {
-                    _animator.setAnimation(character + " Walk");
-                }
-                _animator.setFacing("Left");
-                faceRight = false;
+                Bounce = false;
             }
-            //else if (MultiInput.GetAxis("Horizontal", "", name) > 0 || MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
-            else if (MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
+
+            if (!frozen)
             {
-                if (slide)
+                // Player is moving horizontally
+                //if (MultiInput.GetAxis("Horizontal", "", name) < 0 || MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
+                if (MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
                 {
-                    if (velocity.x < 0)
+                    if (slide)
                     {
-                        velocity.x += walkSpeed * 0.002f;
+                        if (velocity.x > 0)
+                        {
+                            velocity.x += -walkSpeed * 0.002f;
+                        }
+                        else
+                        {
+                            velocity.x += -walkSpeed * 0.11f;
+                        }
+                    }
+                    else if (RunLeft | RunRight)
+                    {
+                        RunArrows = true;
+
+                    }
+                    else if (!_controller.isGrounded)
+                    {
+                        velocity.x = -airSpeed;
                     }
                     else
                     {
-                        velocity.x += walkSpeed * 0.11f;
+                        velocity.x = -walkSpeed;
                     }
+                    if (!_controller.isGrounded)
+                    {
+                        _animator.setAnimation(character + " Jump");
+                    }
+                    else
+                    {
+                        _animator.setAnimation(character + " Walk");
+                    }
+                    _animator.setFacing("Left");
+                    faceRight = false;
                 }
-                else if (RunLeft | RunRight)
+                //else if (MultiInput.GetAxis("Horizontal", "", name) > 0 || MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
+                else if (MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
                 {
-                    RunArrows = true;
+                    if (slide)
+                    {
+                        if (velocity.x < 0)
+                        {
+                            velocity.x += walkSpeed * 0.002f;
+                        }
+                        else
+                        {
+                            velocity.x += walkSpeed * 0.11f;
+                        }
+                    }
+                    else if (RunLeft | RunRight)
+                    {
+                        RunArrows = true;
 
+                    }
+                    else if (!_controller.isGrounded)
+                    {
+                        velocity.x = airSpeed;
+                    }
+                    else
+                    {
+                        velocity.x = walkSpeed;
+                    }
+                    if (!_controller.isGrounded)
+                    {
+                        _animator.setAnimation(character + " Jump");
+                    }
+                    else
+                    {
+                        _animator.setAnimation(character + " Walk");
+                    }
+                    _animator.setFacing("Right");
+                    faceRight = true;
                 }
                 else if (!_controller.isGrounded)
                 {
-                    velocity.x = airSpeed;
-                }
-                else
-                {
-                    velocity.x = walkSpeed;
-                }
-                if (!_controller.isGrounded)
-                {
                     _animator.setAnimation(character + " Jump");
                 }
+
                 else
                 {
-                    _animator.setAnimation(character + " Walk");
-                }
-                _animator.setFacing("Right");
-                faceRight = true;
-            }
-            else if (!_controller.isGrounded)
-            {
-                _animator.setAnimation(character + " Jump");
-            }
-
-            else
-            {
-                _animator.setAnimation(character + " Idle");
-                if (slide)
-                {
-                    velocity.x += velocity.x * 0.05f;
-                }
-                else if (RunArrows)
-                {
-                    velocity.x += velocity.x * 3;
-                }
-                else if (pushed) velocity.x += velocity.x * 1.2f;
-                else if (_controller.isGrounded)
-                {
-                    velocity.x = 0;
-                }
-            }
-        }
-        else if (frozen)
-        {
-            freezeWarmup -= Time.deltaTime;
-            if (freezeWarmup <= 0)
-            {
-                frozen = false;
-                jumpHeight = 2;
-            }
-        }
-
-
-        if (RunLeft || RunRight)
-        {
-            RunArrows = true;
-        }
-
-        if (RunArrows)
-        {
-            if (RunRight)
-            {
-                velocity.x += RunArrowStrength;
-                velocity.y += 10;
-            }
-            else if (RunLeft)
-            {
-                velocity.x -= RunArrowStrength;
-                velocity.y += 10;
-            }
-            AirControl = false;
-        }
-
-        if (pushed)
-        {
-            if (!faceRight)
-            {
-                Debug.Log("AirPushVelocity = " + AirPushVelocity);
-                velocity.x += AirPushVelocity;
-                velocity.y += 3;
-            }
-            else if (faceRight)
-            {
-                Debug.Log("AirPushVelocity = " + AirPushVelocity);
-                velocity.x -= AirPushVelocity;
-                velocity.y += 3;
-            }
-            pushed = false;
-			colorChange.color = new Color (0, 0, 0);
-        }
-
-        //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
-        if (MultiInput.GetAxis("LeftTrigger", "", name) > 0 && !_controller.isGrounded)
-        {
-            velocity.y += gravity * Time.deltaTime * (MultiInput.GetAxis("LeftTrigger", "", name) * 3);
-        }
-        velocity.x *= 0.85f;
-
-        if (!_controller.isGrounded && !doubleJumped)
-        {
-            doubleJump = true;
-        }
-
-        if (_controller.isGrounded)
-        {
-            doubleJumped = false;
-            doubleJump = false;
-        }
-
-        // Double jump
-        //if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name)
-        //    || MultiInput.GetButtonDown("LeftBumper", "", name)))
-        if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("A", "", name)
-            || MultiInput.GetButtonDown("LeftBumper", "", name)))
-        {
-            velocity.y = 0;
-            velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
-            doubleJump = false;
-            doubleJumped = true;
-            Transform djParticle = transform.GetChild(1);
-            ParticleSystem dj = djParticle.GetComponent<ParticleSystem>();
-            dj.Play();
-        }
-
-        // First jump
-        //else if ((MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name) 
-        //    || MultiInput.GetButtonDown("LeftBumper", "", name)) && _controller.isGrounded)
-        else if ((MultiInput.GetButtonDown("A", "", name)
-            || MultiInput.GetButtonDown("LeftBumper", "", name)) && _controller.isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
-            doubleJump = true;
-            doubleJumped = false;
-        }
-
-        _controller.move(velocity * Time.deltaTime);
-        RunArrows = false;
-
-        if (_controller.isGrounded)
-        {
-            AirControl = true;
-        }
-
-
-        //float inputX = MultiInput.GetAxis("Horizontal", "", name);
-        float inputX = MultiInput.GetAxis("LeftJoystickX", "", name);
-        //float inputY = MultiInput.GetAxis("Vertical", "", name);
-        float inputY = MultiInput.GetAxis("LeftJoystickY", "", name);
-
-        float aimX = MultiInput.GetAxis("RightJoystickX", "", name);
-        float aimY = MultiInput.GetAxis("RightJoystickY", "", name);
-
-        //bool shoot = Input.GetButtonDown("Shoot_P1");
-        //bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
-        float shoot = MultiInput.GetAxis("RightTrigger", "", name);
-        //bool grab = MultiInput.GetButtonDown("Grab","",name);
-        
-        float grab = MultiInput.GetAxis("X", "", name);
-
-        if (shoot > 0f && fireCooldown <= 0)
-        {
-            fireCooldown = fireRate;
-            if (weapon != null && weapon.hasShot)
-            {
-                if (weapon.rock)
-                {
-                    weapon.gameObject.GetComponent<Rigidbody2D>().gravityScale = 6;
-
-                }
-                if (weapon.shotType.Equals("air") && airCooldown <= 0)
-                {
-                    airCooldown = airFireRate;
-                    if (aimX != 0 || aimY != 0)
+                    _animator.setAnimation(character + " Idle");
+                    if (slide)
                     {
-                        float x = aimX * 10;
-                        float y = aimY * 10;
-                        float z = -(Mathf.Atan2(y, x) * 57.2958f);
-                        if (aimX < 0)
-                            weapon.gameObject.transform.Rotate(180, 0, -z, Space.Self);
-                        else
-                            weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
-                        weapon.Attack(aimX, aimY);
+                        velocity.x += velocity.x * 0.05f;
                     }
-                    else
+                    else if (RunArrows)
                     {
-                        if (faceRight)
+                        velocity.x += velocity.x * 3;
+                    }
+                    else if (pushed) velocity.x += velocity.x * 1.2f;
+                    else if (_controller.isGrounded)
+                    {
+                        velocity.x = 0;
+                    }
+                }
+            }
+            else if (frozen)
+            {
+                freezeWarmup -= Time.deltaTime;
+                if (freezeWarmup <= 0)
+                {
+                    frozen = false;
+                    jumpHeight = 2;
+                }
+            }
+
+
+            if (RunLeft || RunRight)
+            {
+                RunArrows = true;
+            }
+
+            if (RunArrows)
+            {
+                if (RunRight)
+                {
+                    velocity.x += RunArrowStrength;
+                    velocity.y += 10;
+                }
+                else if (RunLeft)
+                {
+                    velocity.x -= RunArrowStrength;
+                    velocity.y += 10;
+                }
+                AirControl = false;
+            }
+
+            if (pushed)
+            {
+                if (!faceRight)
+                {
+                    Debug.Log("AirPushVelocity = " + AirPushVelocity);
+                    velocity.x += AirPushVelocity;
+                    velocity.y += 3;
+                }
+                else if (faceRight)
+                {
+                    Debug.Log("AirPushVelocity = " + AirPushVelocity);
+                    velocity.x -= AirPushVelocity;
+                    velocity.y += 3;
+                }
+                pushed = false;
+                colorChange.color = new Color(0, 0, 0);
+            }
+
+            //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
+            if (MultiInput.GetAxis("LeftTrigger", "", name) > 0 && !_controller.isGrounded)
+            {
+                velocity.y += gravity * Time.deltaTime * (MultiInput.GetAxis("LeftTrigger", "", name) * 3);
+            }
+            velocity.x *= 0.85f;
+
+            if (!_controller.isGrounded && !doubleJumped)
+            {
+                doubleJump = true;
+            }
+
+            if (_controller.isGrounded)
+            {
+                doubleJumped = false;
+                doubleJump = false;
+            }
+
+            // Double jump
+            //if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name)
+            //    || MultiInput.GetButtonDown("LeftBumper", "", name)))
+            if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("A", "", name)
+                || MultiInput.GetButtonDown("LeftBumper", "", name)))
+            {
+                velocity.y = 0;
+                velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
+                doubleJump = false;
+                doubleJumped = true;
+                Transform djParticle = transform.GetChild(1);
+                ParticleSystem dj = djParticle.GetComponent<ParticleSystem>();
+                dj.Play();
+            }
+
+            // First jump
+            //else if ((MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name) 
+            //    || MultiInput.GetButtonDown("LeftBumper", "", name)) && _controller.isGrounded)
+            else if ((MultiInput.GetButtonDown("A", "", name)
+                || MultiInput.GetButtonDown("LeftBumper", "", name)) && _controller.isGrounded)
+            {
+                audioPlayer.PlayOneShot(sounds.Jump);
+                velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
+                doubleJump = true;
+                doubleJumped = false;
+            }
+
+            _controller.move(velocity * Time.deltaTime);
+            RunArrows = false;
+
+            if (_controller.isGrounded)
+            {
+                AirControl = true;
+            }
+
+
+            //float inputX = MultiInput.GetAxis("Horizontal", "", name);
+            float inputX = MultiInput.GetAxis("LeftJoystickX", "", name);
+            //float inputY = MultiInput.GetAxis("Vertical", "", name);
+            float inputY = MultiInput.GetAxis("LeftJoystickY", "", name);
+
+            float aimX = MultiInput.GetAxis("RightJoystickX", "", name);
+            float aimY = MultiInput.GetAxis("RightJoystickY", "", name);
+
+            //bool shoot = Input.GetButtonDown("Shoot_P1");
+            //bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
+            float shoot = MultiInput.GetAxis("RightTrigger", "", name);
+            //bool grab = MultiInput.GetButtonDown("Grab","",name);
+
+            float grab = MultiInput.GetAxis("X", "", name);
+
+            if (shoot > 0f && fireCooldown <= 0)
+            {
+                fireCooldown = fireRate;
+                if (weapon != null && weapon.hasShot)
+                {
+                    if (weapon.rock)
+                    {
+                        weapon.gameObject.GetComponent<Rigidbody2D>().gravityScale = 6;
+
+                    }
+                    if (weapon.shotType.Equals("air") && airCooldown <= 0)
+                    {
+                        airCooldown = airFireRate;
+                        if (aimX != 0 || aimY != 0)
                         {
-                            weapon.Attack(1, 0);
+                            float x = aimX * 10;
+                            float y = aimY * 10;
+                            float z = -(Mathf.Atan2(y, x) * 57.2958f);
+                            if (aimX < 0)
+                                weapon.gameObject.transform.Rotate(180, 0, -z, Space.Self);
+                            else
+                                weapon.gameObject.transform.Rotate(0, 0, z, Space.Self);
+                            weapon.Attack(aimX, aimY);
                         }
                         else
                         {
-                            weapon.gameObject.transform.Rotate(180, 0, 180, Space.Self);
-                            weapon.Attack(-1, 0);
+                            if (faceRight)
+                            {
+                                weapon.Attack(1, 0);
+                            }
+                            else
+                            {
+                                weapon.gameObject.transform.Rotate(180, 0, 180, Space.Self);
+                                weapon.Attack(-1, 0);
+                            }
                         }
-                    }
-                    weapon = null;
-                }
-                else
-                {
-                    if (aimX != 0 || aimY != 0)
-                    {
-                        float x = aimX * 10;
-                        float y = aimY * 10;
-                        float z = -(Mathf.Atan2(y, x) * 57.2958f);
-                        weapon.Attack(aimX, aimY);
-                        Debug.Log("this is happening");
+                        weapon = null;
                     }
                     else
                     {
-                        if (faceRight)
-                            weapon.Attack(1, 0);
+                        if (aimX != 0 || aimY != 0)
+                        {
+                            float x = aimX * 10;
+                            float y = aimY * 10;
+                            float z = -(Mathf.Atan2(y, x) * 57.2958f);
+                            weapon.Attack(aimX, aimY);
+                            Debug.Log("this is happening");
+                        }
                         else
-                            weapon.Attack(-1, 0);
-                    }
-                    // Post weapon firing
+                        {
+                            if (faceRight)
+                                weapon.Attack(1, 0);
+                            else
+                                weapon.Attack(-1, 0);
+                        }
+                        // Post weapon firing
                         if (weapons.Count > 0)
                         {
                             weapon = (PlayerWeaponScript)weapons.Pop();
                         }
                         else weapon = null;
+                    }
                 }
+                airCooldown += 0.75f;
             }
-            airCooldown += 0.75f;
-        }
-        if (grab > 0)
-        {
-            if (nearRock)
+            if (grab > 0)
             {
-                if (weapon != null && weapon.shotType.Equals("air"))
+                if (nearRock)
                 {
-                    Destroy(weapon.gameObject);
-                }
-                while (weapons.Count > 0)
-                {
-                    weapon = (PlayerWeaponScript)weapons.Pop();
-                    Destroy(weapon.gameObject);
-                }
-                weapon = rock.gameObject.GetComponentInParent<PlayerWeaponScript>();
-                //weapon.rockScript.player = this;
-                weapon.caster = this;
-                weapon.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
-            }
-
-            else if (inFountain)
-            {
-                if (weapon != null && weapon.shotType.Equals("air") && weapons.Count == 0)
-                {
-                    Destroy(weapon.gameObject);
-                    fountain.CreateShot(this);
-                }
-                else if (weapon == null)
-                {
-                    fountain.CreateShot(this);
-                    if (weapon.shotType.Equals("water"))
+                    if (weapon != null && weapon.shotType.Equals("air"))
                     {
-                        burning = false;
+                        Destroy(weapon.gameObject);
+                    }
+                    while (weapons.Count > 0)
+                    {
+                        weapon = (PlayerWeaponScript)weapons.Pop();
+                        Destroy(weapon.gameObject);
+                    }
+                    weapon = rock.gameObject.GetComponentInParent<PlayerWeaponScript>();
+                    //weapon.rockScript.player = this;
+                    weapon.caster = this;
+                    weapon.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
+                }
 
-                        Transform burnParticles = transform.GetChild(0);
-                        ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
-                        nbaJamOnFireEdition.Stop();
+                else if (inFountain)
+                {
+                    if (weapon != null && weapon.shotType.Equals("air") && weapons.Count == 0)
+                    {
+                        Destroy(weapon.gameObject);
+                        fountain.CreateShot(this);
+                    }
+                    else if (weapon == null)
+                    {
+                        fountain.CreateShot(this);
+                        if (weapon.shotType.Equals("water"))
+                        {
+                            burning = false;
+
+                            Transform burnParticles = transform.GetChild(0);
+                            ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
+                            nbaJamOnFireEdition.Stop();
+                        }
                     }
                 }
             }
+        }
+        else
+        {
+            if (plasmaDeath)
+            {
+                transform.Rotate(new Vector3(0, 0, 10));
+                transform.localScale = new Vector3(transform.localScale.x * 0.95f, transform.localScale.y * 0.95f, 0f);
+            }
+        }
+    }
+
+    public void DeathAnim(string style)
+    {
+        if (style.Equals("fire"))
+        {
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            rb.isKinematic = false;
+            rb.gravityScale *= 2;
+            rb.AddForce(new Vector2(0, 7.5f), ForceMode2D.Impulse);
+            Transform burnParticles = transform.GetChild(0);
+            ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
+            nbaJamOnFireEdition.Stop();
+            colorChange.color = new Color(0, 0, 0);
+        }
+        else if (style.Equals("Spikes"))
+        {
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            rb.isKinematic = false;
+            rb.gravityScale *= 2;
+            rb.AddForce(new Vector2(0, 7.5f), ForceMode2D.Impulse);
+            audioPlayer.PlayOneShot(sounds.SpikeDeath);
+        }
+        else if (style.Equals("plasma"))
+        {
+            plasmaDeath = true;
         }
     }
 

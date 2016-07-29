@@ -330,7 +330,7 @@ public class PlayerWeaponScript : MonoBehaviour
                 float mag = speed.magnitude;
                 HealthScript h = player.GetComponent<HealthScript>();
 				player.GetComponent<SpriteRenderer> ().color = new Color(150, 0, 0);
-                h.ManualDamage(1);
+                h.ManualDamage(1,"rock");
             }
             if (!caster.Equals(player))
             {

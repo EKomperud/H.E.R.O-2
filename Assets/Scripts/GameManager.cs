@@ -72,15 +72,8 @@ public class GameManager : MonoBehaviour {
     private bool levelLoadup = true;
     private float l;
 
-	public int pNum = 0;
-	public int PCONE = 1;
-	public int PCTWO = 1;
-	public int PCTHREE = 1;
-	public int PCFOUR = 1;
-	public bool P1C = false;
-	public bool P2C = false;
-	public bool P3C = false;
-	public bool P4C = false;
+    public float EndOfMatchTime = 2f;
+    private float EndOfMatchTimer;
 	public Text firstWins;
 	private bool dontChange = true;
 	private bool winAdd1 = true;
@@ -144,7 +137,8 @@ public class GameManager : MonoBehaviour {
 		if (startUp) {
             //pNum = Keeper.numOfP;
             //randomLevel = Random.Range (1, 8);
-            randomLevel = Random.Range (1, 2);
+            EndOfMatchTimer = EndOfMatchTime;
+            randomLevel = Random.Range (1, 11);
 			Application.LoadLevel (randomLevel);
 			//numOfRounds -= 1;
 			//Keeper.numberOfRounds = numOfRounds;
@@ -187,15 +181,23 @@ public class GameManager : MonoBehaviour {
 
         if (activePlayers == 1 && winner == null)
         {
-            activePlayers = totalPlayers;
-            for (int i = 0; i < totalPlayers; i++)
+            if (EndOfMatchTimer >= 0)
             {
-                playerStatuses[i] = true;
+                EndOfMatchTimer -= Time.deltaTime;
             }
-            randomLevel = Random.Range(1, 2);
-            Application.LoadLevel(randomLevel);
-            levelLoadup = false;
-            l = 2.0f;
+            else
+            {
+                EndOfMatchTimer = EndOfMatchTime;
+                activePlayers = totalPlayers;
+                for (int i = 0; i < totalPlayers; i++)
+                {
+                    playerStatuses[i] = true;
+                }
+                randomLevel = Random.Range(1, 11);
+                Application.LoadLevel(randomLevel);
+                levelLoadup = false;
+                l = 2.0f;
+            }
         }
         if (winner != null && !winnerShown)
         {
@@ -280,6 +282,10 @@ public class GameManager : MonoBehaviour {
         {
             playerStatuses[i] = true;
         }
+        for (int i = p; i<4; i++)
+        {
+            GameObject.Find("Canvas2").transform.GetChild(3).transform.GetChild(i).gameObject.SetActive(false);
+        }
         Next();
     }
 
@@ -358,51 +364,6 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    //public void P1Lock()
-    //{
-    //    if (P1C)
-    //    {
-    //        P1C = false;
-    //    }
-    //    else
-    //    {
-    //        P1C = true;
-    //    }
-    //}
-    //public void P2Lock()
-    //{
-    //    if (P2C)
-    //    {
-    //        P2C = false;
-    //    }
-    //    else
-    //    {
-    //        P2C = true;
-    //    }
-    //}
-    //public void P3Lock()
-    //{
-    //    if (P3C)
-    //    {
-    //        P3C = false;
-    //    }
-    //    else
-    //    {
-    //        P3C = true;
-    //    }
-    //}
-    //public void P4Lock()
-    //{
-    //    if (P4C)
-    //    {
-    //        P4C = false;
-    //    }
-    //    else
-    //    {
-    //        P4C = true;
-    //    }
-    //}
-
     public void PlayerLock(int p)
     {
         if (!selectedCharacters.Contains(selectedCharacters[p-1]+selectedCharacters.Count))
@@ -418,6 +379,18 @@ public class GameManager : MonoBehaviour {
                 selectedCharacters[p - 1] -= selectedCharacters.Count;
             }
         }
+        int locked = 0;
+        foreach (int i in selectedCharacters)
+        {
+            if (i >= selectedCharacters.Count)
+                locked++;
+        }
+        Button next = GameObject.Find("Canvas2").transform.GetChild(3).transform.GetChild(5).GetComponent<Button>();
+        if (locked == totalPlayers)
+            next.interactable = true;
+        else
+            next.interactable = false;
+
     }
 
     public void ScrollUp (int player)
@@ -442,74 +415,4 @@ public class GameManager : MonoBehaviour {
         select.sprite = selectImages[selectedCharacters[player - 1]];
     }
 
-    public void UP()
-    {
-        if (this.gameObject.tag == "PC1")
-        {
-            PCONE += 1;
-            if (PCONE <= 5)
-            {
-                PCONE = 1;
-            }
-        }
-        if (this.gameObject.tag == "PC2")
-        {
-            PCTWO += 1;
-            if (PCTWO <= 5)
-            {
-                PCTWO = 1;
-            }
-        }
-        if (this.gameObject.tag == "PC3")
-        {
-            PCTHREE += 1;
-            if (PCTHREE <= 5)
-            {
-                PCTHREE = 1;
-            }
-        }
-        if (this.gameObject.tag == "PC4")
-        {
-            PCFOUR += 1;
-            if (PCFOUR <= 5)
-            {
-                PCFOUR = 1;
-            }
-        }
-    }
-    public void DOWN()
-    {
-        if (this.gameObject.tag == "PC1")
-        {
-            PCONE -= 1;
-            if (PCONE >= 0)
-            {
-                PCONE = 4;
-            }
-        }
-        if (this.gameObject.tag == "PC2")
-        {
-            PCTWO -= 1;
-            if (PCTWO >= 0)
-            {
-                PCTWO = 4;
-            }
-        }
-        if (this.gameObject.tag == "PC3")
-        {
-            PCTHREE -= 1;
-            if (PCTHREE >= 0)
-            {
-                PCTHREE = 4;
-            }
-        }
-        if (this.gameObject.tag == "PC4")
-        {
-            PCFOUR -= 1;
-            if (PCFOUR >= 0)
-            {
-                PCFOUR = 4;
-            }
-        }
-    }
 }
