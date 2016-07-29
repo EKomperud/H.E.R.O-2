@@ -4,9 +4,9 @@ using System.Collections;
 public class MenuSliding : MonoBehaviour {
 
 	public Vector3 endPosition = Vector3.zero;
-	public float speed = 3f;
+	public float speed = 6f;
 
-	private float timer = 0f;
+	private float timer = 6f;
 	private Vector3 startPosition = Vector3.zero;
 	private GameManager Menu;
 

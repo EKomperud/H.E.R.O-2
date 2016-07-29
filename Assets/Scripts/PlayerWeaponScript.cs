@@ -19,6 +19,8 @@ public class PlayerWeaponScript : MonoBehaviour
     public Vector2 speed = new Vector2(0f, 0f);
     public Vector2 direction = new Vector2(1, 1);
 
+    public bool aim = false;
+    public bool inWall = false;
     public bool hasShot { get; set; }
     public bool fire = false;
     public bool connected = false;
@@ -84,6 +86,7 @@ public class PlayerWeaponScript : MonoBehaviour
 
                     if ((X > 0.1 || X < -0.1) || (Y > 0.1 || Y < -0.1))
                     {
+                        aim = true;
                         if (shotType.Equals("water")) {
                             if (mag.magnitude >= 0.5)
                             {
@@ -102,11 +105,12 @@ public class PlayerWeaponScript : MonoBehaviour
 
                     else
                     {
+                        aim = false;
                         hasShot = true;
                         atCaster = true;
                         if (!caster.faceRight)
                         {
-                            transform.rotation = Quaternion.Euler(180, 0, 180);
+                            //transform.rotation = Quaternion.Euler(180, 0, 180);
                         }
                     }
                 }
@@ -288,7 +292,7 @@ public class PlayerWeaponScript : MonoBehaviour
 
         PlayerWeaponScript projectile = collider.gameObject.GetComponent<PlayerWeaponScript>();
         PlayerController player = collider.gameObject.GetComponent<PlayerController>();
-
+        WallScript wall = collider.gameObject.GetComponent<WallScript>();
         // Collided with another projectile
         if (projectile != null  && caster != null && !projectile.caster.Equals(this.caster))
         {
@@ -363,7 +367,6 @@ public class PlayerWeaponScript : MonoBehaviour
                 }
             }
         }
-
     }
 
     void RaycastTrigger(Collider2D collider)
@@ -378,6 +381,7 @@ public class PlayerWeaponScript : MonoBehaviour
 
     public void Attack(float X, float Y)
     {
+
             direction.x = X;
             direction.y = Y;
             if (hasShot)
@@ -385,7 +389,8 @@ public class PlayerWeaponScript : MonoBehaviour
                 fire = true;
             }
             if (!rock)
-                animator.setAnimation(shotType + "Shoot");       
+                animator.setAnimation(shotType + "Shoot");
+            
     }
 
     public void MoveToCaster()

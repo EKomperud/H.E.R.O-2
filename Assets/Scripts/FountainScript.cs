@@ -97,6 +97,9 @@ public class FountainScript : MonoBehaviour {
                 if (player.burning)
                 {
                     player.burning = false;
+                    Transform burnParticles = player.transform.GetChild(0);
+                    ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
+                    nbaJamOnFireEdition.Stop();
                     Destroy(shotScript.gameObject);
                 }
             }

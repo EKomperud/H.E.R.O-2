@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public float fireRate = 0.3f;
     private float fireCooldown;
     public float walkSpeed = 3;
+    public float airSpeed = 6;
     public float gravity = -35;
     public float jumpHeight = 2;
     public float maxHeight = 20;
@@ -166,6 +167,9 @@ public class PlayerController : MonoBehaviour
                     RunArrows = true;
 
                 }
+                else if (!_controller.isGrounded) {
+                    velocity.x = -airSpeed;
+                }
                 else
                 {
                     velocity.x = -walkSpeed;
@@ -199,6 +203,10 @@ public class PlayerController : MonoBehaviour
                 {
                     RunArrows = true;
 
+                }
+                else if (!_controller.isGrounded)
+                {
+                    velocity.x = airSpeed;
                 }
                 else
                 {
@@ -287,9 +295,9 @@ public class PlayerController : MonoBehaviour
         }
 
         //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
-        if (MultiInput.GetAxis("LeftJoystickY", "", name) > 0 && !_controller.isGrounded)
+        if (MultiInput.GetAxis("LeftTrigger", "", name) > 0 && !_controller.isGrounded)
         {
-            velocity.y += gravity * Time.deltaTime * (MultiInput.GetAxis("LeftJoystickY", "", name) * 4);
+            velocity.y += gravity * Time.deltaTime * (MultiInput.GetAxis("LeftTrigger", "", name) * 3);
         }
         velocity.x *= 0.85f;
 
@@ -451,6 +459,7 @@ public class PlayerController : MonoBehaviour
                     if (weapon.shotType.Equals("water"))
                     {
                         burning = false;
+
                         Transform burnParticles = transform.GetChild(0);
                         ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
                         nbaJamOnFireEdition.Stop();
@@ -498,6 +507,15 @@ public class PlayerController : MonoBehaviour
         else if (collider.tag == "RunLeft")
         {
             RunLeft = true;
+        }
+        PlayerController player = collider.GetComponent<PlayerController>();
+        if (player!=null && burning)
+        {
+            player.burning = true;
+            player.burnDown = player.burnTime;
+            Transform burnParticles = player.transform.GetChild(0);
+            ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
+            nbaJamOnFireEdition.Play();
         }
     }
 

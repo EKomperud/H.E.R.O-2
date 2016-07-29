@@ -159,28 +159,30 @@ public class GameManager : MonoBehaviour {
         {
             activePlayers = totalPlayers;
             l -= Time.deltaTime;
+            
             if (l <= 0)
             {
                 WinScreen = GameObject.Find("Canvas").transform.GetChild(1).gameObject;
+                System.Random playerRandomizer = new System.Random();
+                int[] playerPositions = new int[totalPlayers + 1];
+                playerPositions[0] = 0;
+                for (int i = 1; i < totalPlayers + 1; i++)
+                {
+                    int position = playerRandomizer.Next(1, totalPlayers + 1);
+                    while (position == playerPositions[i - 1])
+                        position = playerRandomizer.Next(1, totalPlayers + 1);
+                    playerPositions[i] = position;
+                }
+                for (int i = 1; i < totalPlayers + 1; i++)
+                {
+                    SpawnPoint spawn1 = GameObject.Find("Spawn" + i).GetComponent<SpawnPoint>();
+                    spawn1.SpawnPlayer("_P" + playerPositions[i], characterNames[selectedCharacters[playerPositions[i] - 1] - selectedCharacters.Count]
+                        , characterPrefabs[selectedCharacters[playerPositions[i] - 1] - selectedCharacters.Count]);
+                }
                 levelLoadup = true; ;
             }
-            System.Random playerRandomizer = new System.Random();
-            int[] playerPositions = new int[totalPlayers + 1];
-            playerPositions[0] = 0;
-            for (int i = 1; i < totalPlayers + 1; i++)
-            {
-                int position = playerRandomizer.Next(1, totalPlayers + 1);
-                while (position == playerPositions[i - 1])
-                    position = playerRandomizer.Next(1, totalPlayers + 1);
-                playerPositions[i] = position;
-            }
-            for (int i = 1; i<totalPlayers+1;i++)
-            {
-                SpawnPoint spawn1 = GameObject.Find("Spawn"+i).GetComponent<SpawnPoint>();
-                spawn1.SpawnPlayer("_P" + playerPositions[i], characterNames[selectedCharacters[playerPositions[i]-1] - selectedCharacters.Count]
-                    ,characterPrefabs[selectedCharacters[playerPositions[i]-1] - selectedCharacters.Count]);
-            }
-            levelLoadup = true;
+
+            //levelLoadup = true;
         }
 
         if (activePlayers == 1 && winner == null)
@@ -193,7 +195,7 @@ public class GameManager : MonoBehaviour {
             randomLevel = Random.Range(1, 2);
             Application.LoadLevel(randomLevel);
             levelLoadup = false;
-            l = 1.5f;
+            l = 2.0f;
         }
         if (winner != null && !winnerShown)
         {
