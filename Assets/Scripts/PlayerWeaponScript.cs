@@ -329,6 +329,7 @@ public class PlayerWeaponScript : MonoBehaviour
                 Debug.Log("rock collision");
                 float mag = speed.magnitude;
                 HealthScript h = player.GetComponent<HealthScript>();
+				player.GetComponent<SpriteRenderer> ().color = new Color(150, 0, 0);
                 h.ManualDamage(1);
             }
             if (!caster.Equals(player))
@@ -339,6 +340,7 @@ public class PlayerWeaponScript : MonoBehaviour
                     player.AirPushVelocity = (5 / airTime) * direction.x;
                     player.pushed = true;
                     connected = true;
+					player.GetComponent<SpriteRenderer> ().color = new Color(150, 0, 0);
                 }
                 if (shotType.Equals("water"))
                 {
@@ -364,6 +366,7 @@ public class PlayerWeaponScript : MonoBehaviour
                 if (shotType.Equals("plasma"))
                 {
                     connected = true;
+					player.GetComponent<SpriteRenderer> ().color = new Color(150, 0, 0);
                 }
             }
         }

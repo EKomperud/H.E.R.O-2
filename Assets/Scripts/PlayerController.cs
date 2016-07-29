@@ -292,6 +292,7 @@ public class PlayerController : MonoBehaviour
                 velocity.y += 3;
             }
             pushed = false;
+			SpriteRenderer.color = new Color(0, 0, 0);
         }
 
         //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
