@@ -52,6 +52,8 @@ public class PlayerController : MonoBehaviour
     private bool RunLeft = false;
     public bool RunArrows = false;
     private bool AirControl = true;
+	private bool colorTimer = false;
+	private int colorCountNumber = 0;
     public bool frozen = false;
 
     // Use this for initialization
@@ -80,6 +82,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		if (colorChange.color = Color (150, 0, 0)) {
+			if (colorTimer) {
+				colorCountNumber = 0;
+				colorTimer = false;
+			}
+			colorCountNumber += Time.deltaTime;
+			if (colorCountNumber > 2) {
+				colorChange.color = new Color (255, 255, 255);
+			}
+		}
         //Debug.Log("AirPushVelocity = " + AirPushVelocity);
         if (airCooldown > 0 && weapon == null)
         {
@@ -294,7 +306,7 @@ public class PlayerController : MonoBehaviour
                 velocity.y += 3;
             }
             pushed = false;
-			colorChange.color = new Color (0, 0, 0);
+			colorTimer = true;
         }
 
         //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
