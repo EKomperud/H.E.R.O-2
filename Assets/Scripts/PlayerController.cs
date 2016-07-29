@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     // Character objects
     private CharacterController2D _controller;
     private AnimationController2D _animator;
+	private SpriteRenderer colorChange;
     public AudioClip DeathScreamWhenYouDie;
     private AudioSource audio;
     public Transform defaultShot;
@@ -60,6 +61,7 @@ public class PlayerController : MonoBehaviour
         health = gameObject.GetComponent<HealthScript>();
         _controller = gameObject.GetComponent<CharacterController2D>();
         _animator = gameObject.GetComponent<AnimationController2D>();
+		colorChange = gameObject.GetComponent<SpriteRenderer> ();
         weapons = new Stack();
 
     }
@@ -275,6 +277,7 @@ public class PlayerController : MonoBehaviour
                 velocity.y += 10;
             }
             AirControl = false;
+			colorChange.color = new Color (0, 0, 0);
         }
 
         if (pushed)
@@ -292,7 +295,6 @@ public class PlayerController : MonoBehaviour
                 velocity.y += 3;
             }
             pushed = false;
-			SpriteRenderer.color = new Color(0, 0, 0);
         }
 
         //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
