@@ -8,6 +8,7 @@ public class WallScript : MonoBehaviour {
 	void OnTriggerEnter2D (Collider2D collider) {
         PlayerWeaponScript shot = collider.gameObject.GetComponent<PlayerWeaponScript>();
 		if (shot != null && (shot.fire || shot.aim) && !shot.rock) {
+            shot.fire = true;
             shot.connected = true;
 		}
 	}
