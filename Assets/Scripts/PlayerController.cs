@@ -98,9 +98,10 @@ public class PlayerController : MonoBehaviour
                     colorTimer = false;
                 }
                 colorCountNumber += Time.deltaTime;
-                if (colorCountNumber > 2)
+                if (colorCountNumber > 10)
                 {
                     colorChange.color = new Color(255, 255, 255);
+                    Debug.Log("here");
                 }
             }
             //Debug.Log("AirPushVelocity = " + AirPushVelocity);

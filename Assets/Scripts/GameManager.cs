@@ -147,8 +147,8 @@ public class GameManager : MonoBehaviour {
             Debug.Log("total players upon startup: " + totalPlayers);
             activePlayers = totalPlayers;
             levelLoadup = false;
-            GameObject canvas2 = GameObject.Find("Canvas2");
-            //canvas2.SetActive(false);
+            Transform canvas2 = GameObject.Find("Canvas2").transform.GetChild(0);
+            canvas2.gameObject.SetActive(false);
 		}
         if (!levelLoadup)
         {
