@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour {
             activePlayers = totalPlayers;
             levelLoadup = false;
             GameObject canvas2 = GameObject.Find("Canvas2");
-            canvas2.SetActive(false);
+            //canvas2.SetActive(false);
 		}
         if (!levelLoadup)
         {
@@ -226,6 +226,14 @@ public class GameManager : MonoBehaviour {
     /// Exits to the main menu from the win screen
     /// </summary>
 	public void ExitLevel (){
+        MainMenuSlide = false;
+        activePlayers = 0;
+        doorUp = false;
+        layer = 0;
+        numOfRounds = 0;
+        totalPlayers = 0;
+        winner = null;
+        firstTime = true;
         layer = 1;
 		Application.LoadLevel (0);
         MainMenu();
