@@ -14,6 +14,7 @@ public class MenuSliding : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Menu = GameObject.Find("GameManager").GetComponent<GameManager> ();
+        Menu.OpenDoor = new bool[2];
 		startPosition = this.gameObject.transform.position;
 		endPosition = endPosition + startPosition;
 
@@ -25,11 +26,8 @@ public class MenuSliding : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        DoorCheck();
 		if (Menu.playBack) {
-			if (Menu.setTimer) {
-				timer = 0;
-				Menu.setTimer = false;
-			}
 			timer += Time.deltaTime * speed;
 			this.transform.position = Vector3.Lerp (endPosition, startPosition, timer);
 			if (this.transform.position == startPosition) {
@@ -45,10 +43,6 @@ public class MenuSliding : MonoBehaviour {
 
 		} 
 		else if (Menu.MainMenuSlide) {
-			if (Menu.setTimer) {
-				timer = 0;
-				Menu.setTimer = false;
-			}
 			timer += Time.deltaTime * speed;
 			this.transform.position = Vector3.Lerp (startPosition, endPosition, timer);
 			if (this.transform.position == endPosition) {
@@ -66,7 +60,25 @@ public class MenuSliding : MonoBehaviour {
 		Gizmos.DrawLine (this.transform.position, endPosition + this.transform.position);
 	}
 
-	void doorSlider () {
-		
-	}
+    void DoorCheck ()
+    {
+        if (Menu.setTimer)
+        {
+            timer = 0;
+            if (this.gameObject.tag == "TopGun")
+            {
+                Menu.OpenDoor[0] = true;
+            }
+            else if (this.gameObject.tag == "PowerBottom")
+            {
+                Menu.OpenDoor[1] = true;
+            }
+            if (Menu.OpenDoor[0] && Menu.OpenDoor[1])
+            {
+                Menu.setTimer = false;
+                Menu.OpenDoor[0] = false;
+                Menu.OpenDoor[1] = false;
+            }
+        }
+    }
 }

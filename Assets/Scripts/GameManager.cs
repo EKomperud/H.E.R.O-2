@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour {
 	public bool playBack = false;
 	public bool setTimer = false;
 	public int buttonCountFirst = 0;
+    public bool[] OpenDoor;
 	private int numOfRounds = 0;
 	private int randomLevel = 0;
 	private bool startUp = false;
@@ -257,7 +258,15 @@ public class GameManager : MonoBehaviour {
 		MainMenuSlide = false;
 		setTimer = true;
         if (layer > 1)      
-            layer--;        
+            layer--;
+
+        if (layer == 2)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                GameObject.Find("Canvas2").transform.GetChild(3).transform.GetChild(i).gameObject.SetActive(true);
+            }
+        }
 	}
 
     /// <summary>
