@@ -40,6 +40,12 @@ public class HealthScript : MonoBehaviour {
 		}
         else if ((killz.gameObject.tag.Equals("KillZ") || killz.gameObject.tag.Equals("Spikes"))&& !player.dead)
         {
+            if (killz.gameObject.tag.Equals("Spikes"))
+            {
+                Transform blood = transform.GetChild(3);
+                ParticleSystem bloody = blood.GetComponent<ParticleSystem>();
+                bloody.Play();
+            }
             hp = 0;
             manager.KillPlayer(player.name);
             if (player.weapon != null)
