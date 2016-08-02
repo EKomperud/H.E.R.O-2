@@ -21,6 +21,14 @@ public class GameManager : MonoBehaviour {
     public Sprite PirateSelect;
     public Sprite PirateLock;
 
+    public AudioClip MenuMusic;
+    private AudioClip[] battleMusic;
+    public AudioClip battle1;
+    public AudioClip battle2;
+    public AudioClip battle3;
+    public AudioClip battle4;
+    public AudioClip battle5;
+
     /// <summary>
     /// Images of the characters
     /// Cyborg = 0
@@ -93,6 +101,7 @@ public class GameManager : MonoBehaviour {
             //}
             p = gameObject.GetComponent<HealthScript>();
             layer = 0;
+            battleMusic = new AudioClip[5];
             playerStatuses = new bool[4];
             winCounts = new int[4];
             selectedCharacters = new List<int>(4);
@@ -106,6 +115,11 @@ public class GameManager : MonoBehaviour {
                 selectedCharacters.Add(i);;
             }
             selectImages = new Sprite[8];
+            battleMusic[0] = battle1;
+            battleMusic[1] = battle2;
+            battleMusic[2] = battle3;
+            battleMusic[3] = battle4;
+            battleMusic[4] = battle5;
             selectImages[0] = CyborgSelect;
             selectImages[1] = NinjaSelect;
             selectImages[2] = PirateSelect;
@@ -157,24 +171,28 @@ public class GameManager : MonoBehaviour {
             
             if (l <= 0)
             {
-                WinScreen = GameObject.Find("Canvas").transform.GetChild(1).gameObject;
-                System.Random playerRandomizer = new System.Random();
-                int[] playerPositions = new int[totalPlayers + 1];
-                playerPositions[0] = 0;
-                for (int i = 1; i < totalPlayers + 1; i++)
+                try
                 {
-                    int position = playerRandomizer.Next(1, totalPlayers + 1);
-                    while (position == playerPositions[i - 1])
-                        position = playerRandomizer.Next(1, totalPlayers + 1);
-                    playerPositions[i] = position;
+                    WinScreen = GameObject.Find("Canvas").transform.GetChild(1).gameObject;
+                    System.Random playerRandomizer = new System.Random();
+                    int[] playerPositions = new int[totalPlayers + 1];
+                    playerPositions[0] = 0;
+                    for (int i = 1; i < totalPlayers + 1; i++)
+                    {
+                        int position = playerRandomizer.Next(1, totalPlayers + 1);
+                        while (position == playerPositions[i - 1])
+                            position = playerRandomizer.Next(1, totalPlayers + 1);
+                        playerPositions[i] = position;
+                    }
+                    for (int i = 1; i < totalPlayers + 1; i++)
+                    {
+                        SpawnPoint spawn1 = GameObject.Find("Spawn" + i).GetComponent<SpawnPoint>();
+                        spawn1.SpawnPlayer("_P" + playerPositions[i], characterNames[selectedCharacters[playerPositions[i] - 1] - selectedCharacters.Count]
+                            , characterPrefabs[selectedCharacters[playerPositions[i] - 1] - selectedCharacters.Count]);
+                    }
+                    levelLoadup = true; ;
                 }
-                for (int i = 1; i < totalPlayers + 1; i++)
-                {
-                    SpawnPoint spawn1 = GameObject.Find("Spawn" + i).GetComponent<SpawnPoint>();
-                    spawn1.SpawnPlayer("_P" + playerPositions[i], characterNames[selectedCharacters[playerPositions[i] - 1] - selectedCharacters.Count]
-                        , characterPrefabs[selectedCharacters[playerPositions[i] - 1] - selectedCharacters.Count]);
-                }
-                levelLoadup = true; ;
+                finally { }
             }
 
             //levelLoadup = true;
@@ -197,7 +215,7 @@ public class GameManager : MonoBehaviour {
                 randomLevel = Random.Range(1, 16);
                 Application.LoadLevel(randomLevel);
                 levelLoadup = false;
-                l = 2.0f;
+                l = 3.0f;
             }
         }
         if (winner != null && !winnerShown)
@@ -207,6 +225,9 @@ public class GameManager : MonoBehaviour {
             //{
             //    firstWins.text += "Player " + (i + 1) + ": " + winCounts[i] + " wins ";
             //}
+            Transform text = WinScreen.transform.GetChild(3);
+            Text actualText = text.GetComponent<Text>();
+            actualText.text = winner + " is better than everyone else";
             WinScreen.SetActive(true);
             Button playAgainButton = WinScreen.transform.GetChild(2).gameObject.GetComponent<Button>();
             playAgainButton.onClick.AddListener(() => RedoRounds());
@@ -251,6 +272,9 @@ public class GameManager : MonoBehaviour {
     /// </summary>
 	public void MainMenu() {
 		if (firstTime) {
+            AudioSource source = GetComponent<AudioSource>();
+            source.loop = true;
+            source.PlayOneShot(MenuMusic);
 			MainMenuSlide = true;
 			playBack = false;
 			setTimer = true;
@@ -321,6 +345,10 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     public void SetRounds(int r)
     {
+        System.Random rand = new System.Random();
+        AudioSource source = GetComponent<AudioSource>();
+        source.Stop();
+        source.PlayOneShot(battleMusic[rand.Next(battleMusic.Length-1)]);
         numOfRounds = r;
         Keeper.previousRounds = r;
         startUp = true;
@@ -331,6 +359,10 @@ public class GameManager : MonoBehaviour {
     /// Resets the game to where it was on the first round from the win screen
     /// </summary>
 	public void RedoRounds() {
+        System.Random rand = new System.Random();
+        AudioSource source = GetComponent<AudioSource>();
+        source.Stop();
+        source.PlayOneShot(battleMusic[rand.Next(battleMusic.Length-1)]);
         playerStatuses = new bool[4];
         winCounts = new int[4];
         Debug.Log("total players upon RedoRoundsCall: " + totalPlayers);
