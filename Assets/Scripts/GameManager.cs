@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour {
 	public int Player3W = 0;
 	public int Player4W = 0;
     public int totalPlayers;
-    public int activePlayers;
+    public int activePlayers = -1;
     private bool[] playerStatuses;
     private int[] winCounts;
     private string winner = null;
@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour {
             //levelLoadup = true;
         }
 
-        if (activePlayers <= 1 && winner == null)
+        if ((activePlayers == 1 || activePlayers == 0) && winner == null)
         {
             if (EndOfMatchTimer >= 0)
             {
@@ -248,7 +248,7 @@ public class GameManager : MonoBehaviour {
     /// </summary>
 	public void ExitLevel (){
         MainMenuSlide = false;
-        activePlayers = 0;
+        activePlayers = -1;
         doorUp = false;
         layer = 0;
         numOfRounds = 0;
