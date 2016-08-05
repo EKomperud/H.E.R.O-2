@@ -90,20 +90,20 @@ public class PlayerController : MonoBehaviour
 
         if (!dead)
         {
-            if (colorChange.color == new Color(150, 0, 0))
-            {
-                if (colorTimer)
-                {
-                    colorCountNumber = 0;
-                    colorTimer = false;
-                }
-                colorCountNumber += Time.deltaTime;
-                if (colorCountNumber > 10)
-                {
-                    colorChange.color = new Color(255, 255, 255);
-                    Debug.Log("here");
-                }
-            }
+            //if (colorChange.color == new Color(150, 0, 0))
+            //{
+            //    if (colorTimer)
+            //    {
+            //        colorCountNumber = 0;
+            //        colorTimer = false;
+            //    }
+            //    colorCountNumber += Time.deltaTime;
+            //    if (colorCountNumber > 10)
+            //    {
+            //        colorChange.color = new Color(255, 255, 255);
+            //        Debug.Log("here");
+            //    }
+            //}
             //Debug.Log("AirPushVelocity = " + AirPushVelocity);
             if (airCooldown > 0 && weapon == null)
             {
@@ -319,7 +319,7 @@ public class PlayerController : MonoBehaviour
                     velocity.y += 3;
                 }
                 pushed = false;
-                colorChange.color = new Color(0, 0, 0);
+                _animator.setAnimation(character + " Hit");
             }
 
             //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
@@ -515,9 +515,12 @@ public class PlayerController : MonoBehaviour
         if (style.Equals("fire"))
         {
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
-            rb.isKinematic = false;
+            //rb.isKinematic = false;
             rb.gravityScale *= 2;
-            rb.AddForce(new Vector2(0, 7.5f), ForceMode2D.Impulse);
+            //rb.AddForce(new Vector2(0, 7.5f), ForceMode2D.Impulse);
+            transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            transform.position = new Vector3(transform.position.x, transform.position.y - 0.2f, transform.position.z);
+            _animator.setAnimation("ashesToAshes");
             Transform burnParticles = transform.GetChild(0);
             ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
             nbaJamOnFireEdition.Stop();

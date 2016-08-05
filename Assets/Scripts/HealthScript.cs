@@ -23,7 +23,7 @@ public class HealthScript : MonoBehaviour {
         GameObject killz = collider.gameObject;
 		if (shot != null && !player.dead) {
 			PlayerController target = shot.caster;
-			if (!target.Equals(player))
+			if (target == null || !target.Equals(player))
 			{
 				hp -= shot.damage;
                 if (hp <= 0)

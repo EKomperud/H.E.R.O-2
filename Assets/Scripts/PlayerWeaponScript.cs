@@ -114,49 +114,49 @@ public class PlayerWeaponScript : MonoBehaviour
                         }
                     }
                 }
+            }
 
-                if (connected)
+            if (connected)
+            {
+                if (shotType.Equals("fire"))
                 {
-                    if (shotType.Equals("fire"))
+                    animator.setAnimation("Fireball Explosion");
+                    speed.x = -speed.x;
+                    speed.y = -speed.y;
+                    if (transform.localScale.x < (3 * sizeX))
                     {
-                        animator.setAnimation("Fireball Explosion");
-                        speed.x = -speed.x;
-                        speed.y = -speed.y;
-                        if (transform.localScale.x < (3 * sizeX))
-                        {
-                            transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
-                        }
-                        else
-                            Destroy(gameObject);
+                        transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
                     }
-                    else if (shotType.Equals("plasma"))
-                    {
-                        animator.setAnimation("Plasma Spin");
-                        if (transform.localScale.x < (4 * sizeX))
-                        {
-                            transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
-                        }
-                    }
-                    else if (shotType.Equals("air"))
-                    {
+                    else
                         Destroy(gameObject);
-                    }
-                    else if (shotType.Equals("water"))
+                }
+                else if (shotType.Equals("plasma"))
+                {
+                    animator.setAnimation("Plasma Spin");
+                    if (transform.localScale.x < (4 * sizeX))
                     {
-                        animator.setAnimation("waterFreeze");
-                        if (destroyCountdown >=0)
-                        {
-                            destroyCountdown -= Time.deltaTime;
-                        }
-                        else
-                            Destroy(gameObject);
+                        transform.localScale = new Vector3(transform.localScale.x * 1.05f, transform.localScale.y * 1.05f, 1);
                     }
                 }
+                else if (shotType.Equals("air"))
+                {
+                    Destroy(gameObject);
+                }
+                else if (shotType.Equals("water"))
+                {
+                    animator.setAnimation("waterFreeze");
+                    if (destroyCountdown >= 0)
+                    {
+                        destroyCountdown -= Time.deltaTime;
+                    }
+                    else
+                        Destroy(gameObject);
+                }
             }
-            else
-            {
-                Destroy(gameObject);
-            }
+            //else
+            //{
+            //    Destroy(gameObject);
+            //}
         }
 
         // Rock
@@ -289,7 +289,6 @@ public class PlayerWeaponScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-
         PlayerWeaponScript projectile = collider.gameObject.GetComponent<PlayerWeaponScript>();
         PlayerController player = collider.gameObject.GetComponent<PlayerController>();
         WallScript wall = collider.gameObject.GetComponent<WallScript>();
@@ -329,10 +328,10 @@ public class PlayerWeaponScript : MonoBehaviour
                 Debug.Log("rock collision");
                 float mag = speed.magnitude;
                 HealthScript h = player.GetComponent<HealthScript>();
-				player.GetComponent<SpriteRenderer> ().color = new Color(150, 0, 0);
-                h.ManualDamage(1,"rock");
+				//player.GetComponent<SpriteRenderer> ().color = new Color(150, 0, 0);
+                //h.ManualDamage(1,"rock");
             }
-            if (!caster.Equals(player))
+            if (caster == null || !caster.Equals(player))
             {
                 if (shotType.Equals("air"))
                 {
@@ -340,7 +339,6 @@ public class PlayerWeaponScript : MonoBehaviour
                     player.AirPushVelocity = (5 / airTime) * direction.x;
                     player.pushed = true;
                     connected = true;
-					player.GetComponent<SpriteRenderer> ().color = new Color(150, 0, 0);
                 }
                 if (shotType.Equals("water"))
                 {
@@ -366,7 +364,11 @@ public class PlayerWeaponScript : MonoBehaviour
                 if (shotType.Equals("plasma"))
                 {
                     connected = true;
-					player.GetComponent<SpriteRenderer> ().color = new Color(150, 0, 0);
+                    if (shotType.Equals("plasma"))
+                    {
+                        caster = null;
+                    }
+                    //player.GetComponent<SpriteRenderer> ().color = new Color(150, 0, 0);
                 }
             }
         }

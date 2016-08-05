@@ -10,6 +10,10 @@ public class WallScript : MonoBehaviour {
 		if (shot != null && shot.fire  && !shot.rock) {
             //shot.fire = true;
             shot.connected = true;
+            if (shot.shotType.Equals("plasma"))
+            {
+                shot.caster = null;
+            }
 		}
 	}
 

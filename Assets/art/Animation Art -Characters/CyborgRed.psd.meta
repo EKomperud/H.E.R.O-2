@@ -1,0 +1,297 @@
+fileFormatVersion: 2
+guid: 88aaecd7ae742f144a227fe4845dbb15
+timeCreated: 1470384291
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: CyborgRed_0
+    21300002: CyborgRed_1
+    21300004: CyborgRed_2
+    21300006: CyborgRed_3
+    21300008: CyborgRed_4
+    21300010: CyborgRed_5
+    21300012: CyborgRed_6
+    21300014: CyborgRed_7
+    21300016: CyborgRed_8
+    21300018: CyborgRed_9
+    21300020: CyborgRed_10
+    21300022: CyborgRed_11
+    21300024: CyborgRed_12
+    21300026: CyborgRed_13
+    21300028: CyborgRed_14
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: CyborgRed_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_1
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_2
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_3
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_4
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 730
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 380
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_6
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 380
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_7
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 380
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_8
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 380
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_9
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 380
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 30
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_11
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 30
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_12
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 30
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_13
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 30
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    - name: CyborgRed_14
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 30
+        width: 350
+        height: 350
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -175, y: 175}
+        - {x: -175, y: -175}
+        - {x: 175, y: -175}
+        - {x: 175, y: 175}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

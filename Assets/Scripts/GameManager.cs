@@ -174,15 +174,15 @@ public class GameManager : MonoBehaviour {
                 try
                 {
                     WinScreen = GameObject.Find("Canvas").transform.GetChild(1).gameObject;
-                    System.Random playerRandomizer = new System.Random();
-                    int[] playerPositions = new int[totalPlayers + 1];
-                    playerPositions[0] = 0;
-                    for (int i = 1; i < totalPlayers + 1; i++)
+                    System.Random playerRandomizer = new System.Random();               // total players = 4
+                    List<int> playerPositions = new List<int>(totalPlayers + 1);                   // playerPositions = new int[5]
+                    playerPositions.Add(0);                                            // playerPositions = [0,n,n,n,n]
+                    for (int i = 1; i < totalPlayers + 1; i++)                          // i=1; i<5; i++
                     {
-                        int position = playerRandomizer.Next(1, totalPlayers + 1);
-                        while (position == playerPositions[i - 1])
+                        int position = playerRandomizer.Next(1, totalPlayers + 1);      // position = random between 1 and 4
+                        while (playerPositions.Contains(position))                      
                             position = playerRandomizer.Next(1, totalPlayers + 1);
-                        playerPositions[i] = position;
+                        playerPositions.Add(position);
                     }
                     for (int i = 1; i < totalPlayers + 1; i++)
                     {
