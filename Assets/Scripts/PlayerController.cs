@@ -5,6 +5,9 @@ public class PlayerController : MonoBehaviour
 {
 
     // Balance numbers
+    public float hitAnimTime = 0.1f;
+    private float hitAnim = 0;
+    private int flashFrames = 10;
     public float burnTime = 3f;
     public float burnDown;
     public float freezeTime = 4f;
@@ -23,8 +26,9 @@ public class PlayerController : MonoBehaviour
 
     // Character objects
     private CharacterController2D _controller;
-    private AnimationController2D _animator;
+    public AnimationController2D _animator;
 	private SpriteRenderer colorChange;
+    private Color baseColor;
     private AudioSource audioPlayer;
     private Sounds sounds;
     public AudioClip DeathScreamWhenYouDie;
@@ -68,6 +72,7 @@ public class PlayerController : MonoBehaviour
         _controller = gameObject.GetComponent<CharacterController2D>();
         _animator = gameObject.GetComponent<AnimationController2D>();
 		colorChange = gameObject.GetComponent<SpriteRenderer> ();
+        baseColor = colorChange.color;
         weapons = new Stack();
         audioPlayer = GetComponent<AudioSource>();
         sounds = GetComponent<Sounds>();
@@ -90,21 +95,16 @@ public class PlayerController : MonoBehaviour
 
         if (!dead)
         {
-            //if (colorChange.color == new Color(150, 0, 0))
-            //{
-            //    if (colorTimer)
-            //    {
-            //        colorCountNumber = 0;
-            //        colorTimer = false;
-            //    }
-            //    colorCountNumber += Time.deltaTime;
-            //    if (colorCountNumber > 10)
-            //    {
-            //        colorChange.color = new Color(255, 255, 255);
-            //        Debug.Log("here");
-            //    }
-            //}
-            //Debug.Log("AirPushVelocity = " + AirPushVelocity);
+            if (hitAnim > 0)
+            {
+                colorChange.color = new Color(150, 0, 0);
+                hitAnim -= Time.deltaTime;
+            }
+            else
+            {
+                colorChange.color = baseColor;
+            }
+            Debug.Log("AirPushVelocity = " + AirPushVelocity);
             if (airCooldown > 0 && weapon == null)
             {
                 airCooldown -= Time.deltaTime;
@@ -319,7 +319,7 @@ public class PlayerController : MonoBehaviour
                     velocity.y += 3;
                 }
                 pushed = false;
-                _animator.setAnimation(character + " Hit");
+                hitAnim = hitAnimTime;
             }
 
             //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)

@@ -164,7 +164,7 @@ public class PlayerWeaponScript : MonoBehaviour
         {
             if (caster != null)
             {
-                rb2d.isKinematic = true;
+                //rb2d.isKinematic = true;
                 if (!fire)
                 {
 
@@ -194,7 +194,7 @@ public class PlayerWeaponScript : MonoBehaviour
         {
             if (caster != null)
             {
-                rb2d.isKinematic = true;
+                //rb2d.isKinematic = true;
                 if (!fire)
                 {
                     if (caster.faceRight)
@@ -215,7 +215,7 @@ public class PlayerWeaponScript : MonoBehaviour
                     if ((Xrock > 1.5 || Xrock < -1.5) || (Y > 0.1 || Y < -0.1))
                     {
                         atCaster = false;
-                        Vector2 movement = new Vector2((speed.x / 2) * Xrock, (speed.y / 2) * Y);
+                        Vector2 movement = new Vector2((speed.x) * Xrock, (speed.y) * Y);
                         movement *= Time.deltaTime;
                         rb2d.MovePosition(rb2d.position + (movement * 25) * Time.fixedDeltaTime);
                     }
@@ -233,9 +233,9 @@ public class PlayerWeaponScript : MonoBehaviour
                 gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
                 hasShot = false;
 
-                Vector2 movement = new Vector2(speed.x * direction.x * 1.5f, -(speed.y * direction.y * 1.5f));
-                speed.x = (speed.x - speed.x * 0.075f);
-                speed.y = (speed.y - speed.y * 0.1f);
+                Vector2 movement = new Vector2(speed.x * direction.x * 1.5f, -(speed.y * direction.y * 3.0f));
+                speed.x = (speed.x - speed.x * 0.070f);
+                speed.y = (speed.y - speed.y * 0.4f);
                 
                 movement *= Time.deltaTime;
                 rb2d.MovePosition(rb2d.position + (movement*50) * Time.fixedDeltaTime);
@@ -293,7 +293,7 @@ public class PlayerWeaponScript : MonoBehaviour
         PlayerController player = collider.gameObject.GetComponent<PlayerController>();
         WallScript wall = collider.gameObject.GetComponent<WallScript>();
         // Collided with another projectile
-        if (projectile != null  && caster != null && !projectile.caster.Equals(this.caster))
+        if (!(projectile == null)  && !(caster == null) && !projectile.caster.Equals(this.caster))
         {
             if (shotType.Equals("air"))
             {
@@ -343,6 +343,7 @@ public class PlayerWeaponScript : MonoBehaviour
                 if (shotType.Equals("water"))
                 {
                     animator.setAnimation("waterFreeze");
+                    player._animator.setAnimation(player.character + " Frozen");
                     player.jumpHeight = 0.25f;
                     player.frozen = true;
                     player.freezeWarmup = player.freezeTime;

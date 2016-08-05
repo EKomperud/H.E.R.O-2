@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour {
             //pNum = Keeper.numOfP;
             //randomLevel = Random.Range (1, 8);
             EndOfMatchTimer = EndOfMatchTime;
-            randomLevel = Random.Range (1, 11);
+            randomLevel = Random.Range (1, 16);
 			Application.LoadLevel (randomLevel);
 			//numOfRounds -= 1;
 			//Keeper.numberOfRounds = numOfRounds;
@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour {
             //levelLoadup = true;
         }
 
-        if (activePlayers == 1 && winner == null)
+        if (activePlayers <= 1 && winner == null)
         {
             if (EndOfMatchTimer >= 0)
             {
@@ -212,7 +212,7 @@ public class GameManager : MonoBehaviour {
                 {
                     playerStatuses[i] = true;
                 }
-                randomLevel = Random.Range(1, 11);
+                randomLevel = Random.Range(1, 16);
                 Application.LoadLevel(randomLevel);
                 levelLoadup = false;
                 l = 3.0f;
