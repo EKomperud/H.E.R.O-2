@@ -323,9 +323,9 @@ public class PlayerController : MonoBehaviour
             }
 
             //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
-            if (MultiInput.GetAxis("LeftTrigger", "", name) > 0 && !_controller.isGrounded)
+            if (MultiInput.GetButton("LeftBumper", "", name) && !_controller.isGrounded)
             {
-                velocity.y += gravity * Time.deltaTime * (MultiInput.GetAxis("LeftTrigger", "", name) * 3);
+                velocity.y += gravity * Time.deltaTime  * 3;
             }
             velocity.x *= 0.85f;
 
@@ -389,12 +389,12 @@ public class PlayerController : MonoBehaviour
 
             //bool shoot = Input.GetButtonDown("Shoot_P1");
             //bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
-            float shoot = MultiInput.GetAxis("RightTrigger", "", name);
+            bool shoot = MultiInput.GetButton("RightBumper", "", name);
             //bool grab = MultiInput.GetButtonDown("Grab","",name);
 
             float grab = MultiInput.GetAxis("X", "", name);
 
-            if (shoot > 0f && fireCooldown <= 0)
+            if (shoot && fireCooldown <= 0)
             {
                 fireCooldown = fireRate;
                 if (weapon != null && weapon.hasShot)

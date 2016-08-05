@@ -272,6 +272,7 @@ public class GameManager : MonoBehaviour {
     /// </summary>
 	public void MainMenu() {
 		if (firstTime) {
+            firstTime = false;
             AudioSource source = GetComponent<AudioSource>();
             source.loop = true;
             source.PlayOneShot(MenuMusic);
@@ -383,7 +384,7 @@ public class GameManager : MonoBehaviour {
 	public void Tutorial() {
 		TutorialScene = true;
 		Keeper.previousRounds = 1;
-		Application.LoadLevel (11);
+		Application.LoadLevel (16);
 	}
 
     /// <summary>
