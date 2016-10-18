@@ -22,7 +22,7 @@ public class PlayerController2 : MonoBehaviour
 
     // Character objects
     private Stack weapons;
-    private PlayerWeaponScript weapon;
+    private IWeapon weapon;
     public Transform defaultWeapon;
     private BoxCollider2D hitbox;
     private Rigidbody2D rigidBody;
@@ -47,8 +47,8 @@ public class PlayerController2 : MonoBehaviour
     {
         weapons = new Stack();
         var shot = Instantiate(defaultWeapon, this.transform.position, Quaternion.identity) as Transform;
-        weapon = shot.gameObject.GetComponent<PlayerWeaponScript>();
-        ///weapon.caster = this;
+        weapon = shot.gameObject.GetComponent<IWeapon>();
+        weapon.caster = this;
         hitbox = gameObject.GetComponent<BoxCollider2D>();
         rigidBody = gameObject.GetComponent<Rigidbody2D>();
         //raycastingLayers = gameObject.GetComponent<LayerMask>();
@@ -144,8 +144,8 @@ public class PlayerController2 : MonoBehaviour
             else
             {
                 var shot = Instantiate(defaultWeapon, this.transform.position, Quaternion.identity) as Transform;
-                weapon = shot.gameObject.GetComponent<PlayerWeaponScript>();
-                //weapon.caster = this;
+                weapon = shot.gameObject.GetComponent<IWeapon>();
+                weapon.caster = this;
             }
         }
 
@@ -184,10 +184,16 @@ public class PlayerController2 : MonoBehaviour
      * */
     
     /// <summary>
-    /// Begins burning this player
+    /// Hit this player with a weapon
     /// </summary>
-    public void Burn()
+    public void WeaponHit(string type)
     {
-
+        switch (type)
+        {
+            case "fire":; break;
+            case "water":; break;
+            case "air":; break;
+            case "rock":; break;
+        }
     }
 }

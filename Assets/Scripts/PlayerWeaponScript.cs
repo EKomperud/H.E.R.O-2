@@ -387,7 +387,6 @@ public class PlayerWeaponScript : MonoBehaviour
 
     public void Attack(float X, float Y)
     {
-
             direction.x = X;
             direction.y = Y;
             if (hasShot)
@@ -396,7 +395,6 @@ public class PlayerWeaponScript : MonoBehaviour
             }
             if (!rock)
                 animator.setAnimation(shotType + "Shoot");
-            
     }
 
     public void MoveToCaster()

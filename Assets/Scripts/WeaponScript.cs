@@ -1,15 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WeaponScript : MonoBehaviour {
+public interface IWeapon {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    PlayerController2 caster { get; set; }
+
+    void Attack(float x, float y);
+
+    //void MoveToCaster();
 }
