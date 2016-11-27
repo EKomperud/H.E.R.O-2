@@ -476,11 +476,11 @@ public class PlayerController : MonoBehaviour
                     if (weapon != null && weapon.shotType.Equals("air") && weapons.Count == 0)
                     {
                         Destroy(weapon.gameObject);
-                        fountain.CreateShot(this);
+                        //fountain.CreateShot(this);
                     }
                     else if (weapon == null)
                     {
-                        fountain.CreateShot(this);
+                        //fountain.CreateShot(this);
                         if (weapon.shotType.Equals("water"))
                         {
                             burning = false;

@@ -32,28 +32,30 @@ public class FountainScript : MonoBehaviour {
         }
     }
 
-	void OnTriggerEnter2D (Collider2D collider) {        
-		PlayerController player = collider.gameObject.GetComponent<PlayerController> ();
-		if (player != null) {
+	void OnTriggerEnter2D (Collider2D collider) {
+        if (collider.tag.Equals("Player"))
+        {
+            PlayerController2 player = collider.gameObject.GetComponent<PlayerController2>();
             player.fountain = this;
-			player.inFountain = true;
-			Players.Add (player);
-		}
+            player.inFountain = true;
+            Players.Add(player);
+        }        
 	}
 
 	void OnTriggerExit2D (Collider2D collider) {
-		PlayerController player = collider.gameObject.GetComponent<PlayerController> ();
-		if (player != null) {
+        if (collider.tag.Equals("Player"))
+        {
+            PlayerController2 player = collider.gameObject.GetComponent<PlayerController2>();
             if (player.fountain.Equals(this))
             {
                 player.fountain = null;
                 player.inFountain = false;
             }
-			Players.Remove (player);
-		}
+            Players.Remove(player);
+        }
 	}
 
-	public void CreateShot (PlayerController player) {
+	public void CreateShot (PlayerController2 player) {
         if (cooldown <= 0)
         {
             cooldown = cooldownRate;
@@ -61,10 +63,10 @@ public class FountainScript : MonoBehaviour {
             {
                 var shot = Instantiate(shotPrefab) as Transform;
                 shot.position = transform.position;
-                PlayerWeaponScript shotScript = shot.gameObject.GetComponent<PlayerWeaponScript>();
+                IWeapon shotScript = shot.gameObject.GetComponent<IWeapon>();
                 player.weapon = shotScript;
                 shotScript.caster = player;
-                shotScript.MoveToCaster();
+                //shotScript.MoveToCaster();
             }
             if (fountainType.Equals("fire"))
             {
@@ -72,36 +74,26 @@ public class FountainScript : MonoBehaviour {
                 var shot2 = Instantiate(shotPrefab) as Transform;
                 var shot3 = Instantiate(shotPrefab) as Transform;
                 shot1.position = shot2.position = shot3.position = transform.position;
-                PlayerWeaponScript shotScript1 = shot1.gameObject.GetComponent<PlayerWeaponScript>();
-                PlayerWeaponScript shotScript2 = shot2.gameObject.GetComponent<PlayerWeaponScript>();
-                PlayerWeaponScript shotScript3 = shot3.gameObject.GetComponent<PlayerWeaponScript>();
+                IWeapon shotScript1 = shot1.gameObject.GetComponent<IWeapon>();
+                IWeapon shotScript2 = shot2.gameObject.GetComponent<IWeapon>();
+                IWeapon shotScript3 = shot3.gameObject.GetComponent<IWeapon>();
                 player.weapon = shotScript1;
                 player.weapons.Push(shotScript2);
                 player.weapons.Push(shotScript3);
                 shotScript1.caster = shotScript2.caster = shotScript3.caster = player;
-                //shotScript1.caster = player;
-                //shotScript2.caster = player;
-                //shotScript3.caster = player;
-                shotScript1.MoveToCaster();
-                shotScript2.MoveToCaster();
-                shotScript3.MoveToCaster();
+                //shotScript1.MoveToCaster();
+                //shotScript2.MoveToCaster();
+                //shotScript3.MoveToCaster();
             }
             else if (fountainType.Equals("water"))
             {
                 var shot = Instantiate(shotPrefab) as Transform;
                 shot.position = transform.position;
-                PlayerWeaponScript shotScript = shot.gameObject.GetComponent<PlayerWeaponScript>();
+                IWeapon shotScript = shot.gameObject.GetComponent<IWeapon>();
                 player.weapon = shotScript;
                 shotScript.caster = player;
-                shotScript.MoveToCaster();
-                if (player.burning)
-                {
-                    player.burning = false;
-                    Transform burnParticles = player.transform.GetChild(0);
-                    ParticleSystem nbaJamOnFireEdition = burnParticles.GetComponent<ParticleSystem>();
-                    nbaJamOnFireEdition.Stop();
-                    Destroy(shotScript.gameObject);
-                }
+                //shotScript.MoveToCaster();
+
             }
             Transform particles = transform.GetChild(0);
             ParticleSystem p = particles.GetComponent<ParticleSystem>();

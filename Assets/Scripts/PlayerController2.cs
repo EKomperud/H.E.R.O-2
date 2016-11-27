@@ -8,27 +8,30 @@ public class PlayerController2 : MonoBehaviour
     public bool dead;
     public bool doubleJumpAvailable;
     public bool faceRight;
+    public bool inFountain;
     private bool grounded;
+    private bool holdingWeapon;
 
     // Cooldowns. Rate is the time cap. CD is the timer
     public float airRate = 5;       //air
-    public float airCD = 0;
+    private float airCD = 0;
     public float burnRate = 5;      //burning
-    public float burnCD = 0;
+    private float burnCD = 0;
     public float freezeRate = 5;    //frozen
-    public float freezeCD = 0;
+    private float freezeCD = 0;
     public float fireRate = 1;      //fire rate
-    public float fireCD = 0;
+    private float fireCD = 0;
 
     // Character objects
-    private Stack weapons;
-    private IWeapon weapon;
+    public Stack weapons;
+    public IWeapon weapon;
     public Transform defaultWeapon;
     private BoxCollider2D hitbox;
     private Rigidbody2D rigidBody;
     public string name;
     public string character;
     public LayerMask raycastingLayers;
+    public FountainScript fountain;
 
     // Misc
     private float lastXinput;
@@ -85,17 +88,57 @@ public class PlayerController2 : MonoBehaviour
     /// </summary>
     private void LateralMovement(float inputX)
     {
-        if (inputX > 0.05)
+        RaycastHit2D[] hits1 = Physics2D.RaycastAll(new Vector3(transform.position.x + hitbox.size.x / 2, transform.position.y), Vector2.down, (float)((hitbox.size.y / 2) + 0.5));
+        RaycastHit2D[] hits2 = Physics2D.RaycastAll(new Vector3(transform.position.x - hitbox.size.x / 2, transform.position.y), Vector2.down, (float)((hitbox.size.y / 2) + 0.5));
+        RaycastHit2D[] rightHits = Physics2D.RaycastAll(new Vector3(transform.position.x, transform.position.y), Vector2.right, (float)((hitbox.size.x / 2) + 0.5));
+        RaycastHit2D[] leftHits = Physics2D.RaycastAll(new Vector3(transform.position.x, transform.position.y), Vector2.left, (float)((hitbox.size.x / 2) + 0.5));
+        ArrayList verticalHits = new ArrayList(hits1);
+        verticalHits.AddRange(hits2);
+        ArrayList lateralHits = new ArrayList(rightHits);
+        lateralHits.AddRange(leftHits);
+        if (verticalHits.Count != 0) // grounded
         {
-            transform.localScale = new Vector2((float)1.25, transform.localScale.y);
-            if (rigidBody.velocity.x < 7)
-                rigidBody.AddForce(new Vector2(inputX, 0), ForceMode2D.Impulse);
+            if (inputX > 0.05)
+            {
+                transform.localScale = new Vector2((float)1.25, transform.localScale.y);
+                //if (rigidBody.velocity.x < 7)
+                //    rigidBody.AddForce(new Vector2(inputX, 0), ForceMode2D.Impulse);
+                rigidBody.velocity = new Vector2(inputX * 10, rigidBody.velocity.y);
+            }
+            else if (inputX < -0.05)
+            {
+                transform.localScale = new Vector2((float)-1.25, transform.localScale.y);
+                //if (rigidBody.velocity.x > -7)
+                //    rigidBody.AddForce(new Vector2(inputX, 0), ForceMode2D.Impulse);
+                rigidBody.velocity = new Vector2(inputX * 10, rigidBody.velocity.y);
+            }
+            else
+            {
+                rigidBody.velocity = new Vector2(rigidBody.velocity.x * (float)0.9, rigidBody.velocity.y);
+            }
         }
-        else if (inputX < -0.05)
+        else if (lateralHits.Count == 0)  // airborne
         {
-            transform.localScale = new Vector2((float)-1.25, transform.localScale.y);
-            if (rigidBody.velocity.x > -7)
-                rigidBody.AddForce(new Vector2(inputX, 0), ForceMode2D.Impulse);
+            if (inputX > 0.05)
+            {
+                transform.localScale = new Vector2((float)1.25, transform.localScale.y);
+                float X = rigidBody.velocity.x;
+                //if (rigidBody.velocity.x < 3f)
+                if (X < 3f)
+                    rigidBody.AddForce(new Vector2(inputX, 0), ForceMode2D.Impulse);
+                //rigidBody.velocity = new Vector2(inputX * 10, rigidBody.velocity.y);
+            }
+            else if (inputX < -0.05)
+            {
+                transform.localScale = new Vector2((float)-1.25, transform.localScale.y);
+                if (rigidBody.velocity.x > -3f)
+                    rigidBody.AddForce(new Vector2(inputX, 0), ForceMode2D.Impulse);
+                //rigidBody.velocity = new Vector2(inputX * 10, rigidBody.velocity.y);
+            }
+            else
+            {
+                rigidBody.velocity = new Vector2(rigidBody.velocity.x * (float)0.9, rigidBody.velocity.y);
+            }
         }
     }
 
@@ -107,10 +150,14 @@ public class PlayerController2 : MonoBehaviour
         rigidBody.AddForce(Physics2D.gravity);
         if (jump)
         {
-            RaycastHit2D[] hits1 = Physics2D.RaycastAll(new Vector3(transform.position.x + hitbox.size.x / 2, transform.position.y), Vector2.down, (float)((hitbox.size.y / 2) + 0.5));
-            RaycastHit2D[] hits2 = Physics2D.RaycastAll(new Vector3(transform.position.x - hitbox.size.x / 2, transform.position.y), Vector2.down, (float)((hitbox.size.y / 2) + 0.5));
+            RaycastHit2D[] hits1 = Physics2D.RaycastAll(new Vector3(transform.position.x + hitbox.size.x / 2, transform.position.y), Vector2.down, (float)((hitbox.size.y / 2) + 0.2));
+            RaycastHit2D[] hits2 = Physics2D.RaycastAll(new Vector3(transform.position.x - hitbox.size.x / 2, transform.position.y), Vector2.down, (float)((hitbox.size.y / 2) + 0.2));
+            RaycastHit2D[] rightHits = Physics2D.RaycastAll(new Vector3(transform.position.x, transform.position.y), Vector2.right, (float)((hitbox.size.x / 2) + 0.2));
+            RaycastHit2D[] leftHits = Physics2D.RaycastAll(new Vector3(transform.position.x, transform.position.y), Vector2.left, (float)((hitbox.size.x / 2) + 0.2));
             ArrayList hitsList = new ArrayList(hits1);
             hitsList.AddRange(hits2);
+            //hitsList.AddRange(rightHits);
+            //hitsList.AddRange(leftHits);
             if (hitsList.Count != 0)
             {
                 foreach (RaycastHit2D h in hitsList)
@@ -119,6 +166,27 @@ public class PlayerController2 : MonoBehaviour
                         rigidBody.AddForce(new Vector2(0, 15), ForceMode2D.Impulse);
                         break;
                     }
+            }
+            if (rightHits.Length != 0 || leftHits.Length != 0)
+            {
+                if (rightHits.Length != 0)
+                {
+                    foreach (RaycastHit2D h in rightHits)
+                        if (h.collider.gameObject.tag.Equals("Terrain"))
+                        {
+                            rigidBody.AddForce(new Vector2(-10, 15), ForceMode2D.Impulse);
+                            break;
+                        }
+                }
+                if (leftHits.Length != 0)
+                {
+                    foreach (RaycastHit2D h in leftHits)
+                        if (h.collider.gameObject.tag.Equals("Terrain"))
+                        {
+                            rigidBody.AddForce(new Vector2(10, 15), ForceMode2D.Impulse);
+                            break;
+                        }
+                }
             }
         }
         if (groundPound)
@@ -168,7 +236,15 @@ public class PlayerController2 : MonoBehaviour
     /// </summary>
     private void WeaponUse(bool grab, bool shoot)
     {
+        if (grab && !holdingWeapon)
+        {
+            Destroy(weapon);
+            fountain.CreateShot(this);
+        }
+        if (shoot && holdingWeapon)
+        {
 
+        }
     }
 
     void OnTriggerStay2D(Collider2D collider)
@@ -195,5 +271,11 @@ public class PlayerController2 : MonoBehaviour
             case "air":; break;
             case "rock":; break;
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * transform.localScale.x * (float)((hitbox.size.y / 2) + 0.1));
     }
 }

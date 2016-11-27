@@ -2,9 +2,9 @@
 using System.Collections;
 using System;
 
-public class Fire : MonoBehaviour, IWeapon
+public class Fire : IWeapon
 {
-    public PlayerController2 caster { get; set; }
+    //public PlayerController2 caster;
     public Vector2 speed;
     private Rigidbody2D rigidBody;
     private bool fired;
@@ -12,7 +12,7 @@ public class Fire : MonoBehaviour, IWeapon
 
     // Use this for initialization
     void Start () {
-	
+        speed = new Vector2(10f, 10f);
 	}
 	
 	// Update is called once per frame
@@ -35,12 +35,14 @@ public class Fire : MonoBehaviour, IWeapon
         switch (tag)
         {
             case "Player":
-                collider.gameObject.GetComponent<PlayerController2>().WeaponHit("fire"); break;
+                PlayerController2 player = collider.gameObject.GetComponent<PlayerController2>();
+                if (!player.Equals(caster))
+                    player.WeaponHit("fire"); break;
             default:; break;
         }
     }
 
-    public void Attack(float x, float y)
+    public override void Attack(float x, float y)
     {
         direction.x = x;
         direction.y = y;
@@ -56,8 +58,8 @@ public class Fire : MonoBehaviour, IWeapon
         if (mag.magnitude < 0.1f)
             inputX = inputY = 0;
 
-        float X = caster.transform.position.x - this.transform.position.x + inputX; // Determine the position of the weapon
-        float Y = caster.transform.position.y - this.transform.position.y - inputY;
+        float X = caster.transform.position.x - gameObject.transform.position.x + inputX; // Determine the position of the weapon
+        float Y = caster.transform.position.y - gameObject.transform.position.y - inputY;
         float Z = (Mathf.Atan2(Y, X) * 57.2958f);
 
         if ((X > 0.1 || X < -0.1) || (Y > 0.1 || Y < -0.1))                         // Move it if it ought to be moved
@@ -69,7 +71,12 @@ public class Fire : MonoBehaviour, IWeapon
 
             Vector3 movement = new Vector3((speed.x / 2) * X, (speed.y / 2) * Y, 0);
             movement *= Time.deltaTime;
-            transform.Translate(movement, Space.World);
+            gameObject.transform.Translate(movement, Space.World);
         }
     }
+
+    //public override void Destroy()
+    //{
+    //    Destroy(this);
+    //}
 }

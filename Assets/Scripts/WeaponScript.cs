@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface IWeapon {
+public abstract class IWeapon : MonoBehaviour {
 
-    PlayerController2 caster { get; set; }
+    public PlayerController2 caster;
 
-    void Attack(float x, float y);
+    public abstract void Attack(float x, float y);
+
+    //public void Destroy();
 
     //void MoveToCaster();
 }
