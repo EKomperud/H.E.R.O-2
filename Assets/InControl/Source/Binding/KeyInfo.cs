@@ -54,8 +54,7 @@ namespace InControl
 			get
 			{
 				if (Application.platform == RuntimePlatform.OSXEditor ||
-					Application.platform == RuntimePlatform.OSXPlayer ||
-					Application.platform == RuntimePlatform.OSXDashboardPlayer
+					Application.platform == RuntimePlatform.OSXPlayer
 #if !UNITY_5_4_OR_NEWER
 					|| Application.platform == RuntimePlatform.OSXWebPlayer
 #endif

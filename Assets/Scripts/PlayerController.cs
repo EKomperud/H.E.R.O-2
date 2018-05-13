@@ -95,7 +95,6 @@ public class PlayerController : MonoBehaviour
 
         if (!dead)
         {
-            // hit animation
             if (hitAnim > 0)
             {
                 colorChange.color = new Color(150, 0, 0);
@@ -105,7 +104,6 @@ public class PlayerController : MonoBehaviour
             {
                 colorChange.color = baseColor;
             }
-            // air cooldown
             Debug.Log("AirPushVelocity = " + AirPushVelocity);
             if (airCooldown > 0 && weapon == null)
             {
@@ -120,12 +118,11 @@ public class PlayerController : MonoBehaviour
                 shotScript.caster = this;
                 shotScript.MoveToCaster();
             }
-            // fire rate
             if (fireCooldown > 0)
             {
                 fireCooldown -= Time.deltaTime;
             }
-            // burn
+
             if (burning)
             {
                 burnDown -= Time.deltaTime;
@@ -146,7 +143,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            // Gravity
+            // Gravity: pull player down
             if (!Bounce)
             {
                 velocity.y += gravity * Time.deltaTime;
@@ -174,10 +171,10 @@ public class PlayerController : MonoBehaviour
                 Bounce = false;
             }
 
-
             if (!frozen)
             {
                 // Player is moving horizontally
+                //if (MultiInput.GetAxis("Horizontal", "", name) < 0 || MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
                 if (MultiInput.GetAxis("LeftJoystickX", "", name) < 0)
                 {
                     if (slide)
@@ -215,6 +212,7 @@ public class PlayerController : MonoBehaviour
                     _animator.setFacing("Left");
                     faceRight = false;
                 }
+                //else if (MultiInput.GetAxis("Horizontal", "", name) > 0 || MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
                 else if (MultiInput.GetAxis("LeftJoystickX", "", name) > 0)
                 {
                     if (slide)
@@ -256,6 +254,7 @@ public class PlayerController : MonoBehaviour
                 {
                     _animator.setAnimation(character + " Jump");
                 }
+
                 else
                 {
                     _animator.setAnimation(character + " Idle");
@@ -274,7 +273,6 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            // Frozen
             else if (frozen)
             {
                 freezeWarmup -= Time.deltaTime;
@@ -285,11 +283,12 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            // pushed by arrows
+
             if (RunLeft || RunRight)
             {
                 RunArrows = true;
             }
+
             if (RunArrows)
             {
                 if (RunRight)
@@ -305,7 +304,6 @@ public class PlayerController : MonoBehaviour
                 AirControl = false;
             }
 
-            // pushed by air
             if (pushed)
             {
                 if (!faceRight)
@@ -324,23 +322,27 @@ public class PlayerController : MonoBehaviour
                 hitAnim = hitAnimTime;
             }
 
-            // ground pound
+            //if ((MultiInput.GetAxis("Vertical", "", name) < 0 || MultiInput.GetAxis("LeftJoystickY", "", name) > 0) && !_controller.isGrounded)
             if (MultiInput.GetButton("LeftBumper", "", name) && !_controller.isGrounded)
             {
                 velocity.y += gravity * Time.deltaTime  * 3;
             }
             velocity.x *= 0.85f;
 
-            // double-jump control
             if (!_controller.isGrounded && !doubleJumped)
             {
                 doubleJump = true;
             }
+
             if (_controller.isGrounded)
             {
                 doubleJumped = false;
                 doubleJump = false;
             }
+
+            // Double jump
+            //if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name)
+            //    || MultiInput.GetButtonDown("LeftBumper", "", name)))
             if (!doubleJumped && doubleJump && (MultiInput.GetButtonDown("A", "", name)
                 || MultiInput.GetButtonDown("LeftBumper", "", name)))
             {
@@ -354,6 +356,8 @@ public class PlayerController : MonoBehaviour
             }
 
             // First jump
+            //else if ((MultiInput.GetButtonDown("Jump", "", name) || MultiInput.GetButtonDown("A", "", name) 
+            //    || MultiInput.GetButtonDown("LeftBumper", "", name)) && _controller.isGrounded)
             else if ((MultiInput.GetButtonDown("A", "", name)
                 || MultiInput.GetButtonDown("LeftBumper", "", name)) && _controller.isGrounded)
             {
@@ -374,17 +378,22 @@ public class PlayerController : MonoBehaviour
                 AirControl = true;
             }
 
-            // get inputs
+
+            //float inputX = MultiInput.GetAxis("Horizontal", "", name);
             float inputX = MultiInput.GetAxis("LeftJoystickX", "", name);
+            //float inputY = MultiInput.GetAxis("Vertical", "", name);
             float inputY = MultiInput.GetAxis("LeftJoystickY", "", name);
 
             float aimX = MultiInput.GetAxis("RightJoystickX", "", name);
             float aimY = MultiInput.GetAxis("RightJoystickY", "", name);
 
+            //bool shoot = Input.GetButtonDown("Shoot_P1");
+            //bool shoot = MultiInput.GetButtonDown("Shoot", "", name);
             bool shoot = MultiInput.GetButton("RightBumper", "", name);
-            bool grab = MultiInput.GetButton("X", "", name);
+            //bool grab = MultiInput.GetButtonDown("Grab","",name);
 
-            // firing weapon
+            float grab = MultiInput.GetAxis("X", "", name);
+
             if (shoot && fireCooldown <= 0)
             {
                 fireCooldown = fireRate;
@@ -450,9 +459,7 @@ public class PlayerController : MonoBehaviour
                 }
                 airCooldown += 0.75f;
             }
-
-            // grabbing weapon
-            if (grab)
+            if (grab > 0)
             {
                 if (nearRock)
                 {
@@ -476,11 +483,11 @@ public class PlayerController : MonoBehaviour
                     if (weapon != null && weapon.shotType.Equals("air") && weapons.Count == 0)
                     {
                         Destroy(weapon.gameObject);
-                        //fountain.CreateShot(this);
+                        fountain.CreateShot(this);
                     }
                     else if (weapon == null)
                     {
-                        //fountain.CreateShot(this);
+                        fountain.CreateShot(this);
                         if (weapon.shotType.Equals("water"))
                         {
                             burning = false;
@@ -535,11 +542,13 @@ public class PlayerController : MonoBehaviour
 
     void Flip()
     {
+        // Switch the way the player is labelled as facing.
+
+        // Multiply the player's x local scale by -1.
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
     }
-
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.tag == "KillZ")
