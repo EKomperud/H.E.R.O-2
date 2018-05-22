@@ -35,11 +35,15 @@ public class NLevelManager : MonoBehaviour {
         {
             spawnPoints.AddLast(spawnPointsObject.GetChild(i));
         }
+        if (NGameManager.TryGetInstance(out gameManager))
+        {
+            gameData = gameManager.SetLevelManager(this);
+        }
+        Initialize();
 	}
 	
-    public void Initialize(NPersistentGameDataSO gameData)
+    public void Initialize()
     {
-        this.gameData = gameData;
         if (levelType == LevelType.gameplay)
         {
             int i = 0;
@@ -54,6 +58,7 @@ public class NLevelManager : MonoBehaviour {
                         e.MoveNext();
                     player.transform.position = e.Current.position;
                     spawnPoints.Remove(e.Current);
+                    player.AddLevelManager(this);
                     livingPlayers++;
                 }
                 else
@@ -72,21 +77,28 @@ public class NLevelManager : MonoBehaviour {
         {
             foreach (NPlayerController player in players.Values)
             {
-                if (player.GetLivingStatus())
+                if (player.gameObject.activeSelf && player.GetLivingStatus())
                 {
                     if (++gameData.playerWins[player.GetPlayerNumber()] >= gameData.neededWins)
                     {
                         winMenu.gameObject.SetActive(true);
                         EventSystem.current.SetSelectedGameObject(winMenu.GetChild(1).gameObject);
-                        winMenu.GetChild(3).GetComponent<Text>().text = "shit";
+                        winMenu.GetChild(3).GetComponent<Text>().text = "P" + player.GetPlayerNumber() + " is better than everyone else";
                     }
                     else
                     {
-                        if (gameManager != null || NGameManager.TryGetInstance(out gameManager))
-                            gameManager.LoadRandomLevel();
+                        StartCoroutine("EndSequence");
                     }
                 }
             }
         }
+    }
+
+    private IEnumerator EndSequence()
+    {
+        Debug.Log("end sequence");
+        yield return new WaitForSeconds(2.5f);
+        if (gameManager != null || NGameManager.TryGetInstance(out gameManager))
+            gameManager.LoadRandomLevel();
     }
 }

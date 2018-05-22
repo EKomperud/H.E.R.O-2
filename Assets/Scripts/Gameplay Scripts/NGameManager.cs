@@ -16,16 +16,21 @@ public class NGameManager : MonoBehaviour {
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            gameData.playerWins = new int[4] { 0, 0, 0, 0 };
         }
         DontDestroyOnLoad(gameObject);
         instance = this;
 
-        GameObject lm = GameObject.Find("Players, Spawns, and Level Manager");
-        if (lm != null)
-        {
-            levelManager = lm.GetComponent<NLevelManager>();
-            levelManager.Initialize(gameData);
-        }
+        //GameObject lm = GameObject.Find("Players, Spawns, and Level Manager");
+        //if (lm != null)
+        //{
+        //    levelManager = lm.GetComponent<NLevelManager>();
+        //    levelManager.Initialize(gameData);
+        //}
     }
 
     public void SetRounds(int r)
@@ -40,12 +45,12 @@ public class NGameManager : MonoBehaviour {
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        GameObject lm = GameObject.Find("Players, Spawns, and Level Manager");
-        if (lm != null)
-        {
-            levelManager = lm.GetComponent<NLevelManager>();
-            levelManager.Initialize(gameData);
-        }
+        //GameObject lm = GameObject.Find("Players, Spawns, and Level Manager");
+        //if (lm != null)
+        //{
+        //    levelManager = lm.GetComponent<NLevelManager>();
+        //    levelManager.Initialize(gameData);
+        //}
     }
 
     public void LoadMenu()
@@ -62,6 +67,12 @@ public class NGameManager : MonoBehaviour {
     public void LoadRandomLevel()
     {
         SceneManager.LoadSceneAsync(Random.Range(1, 16));
+    }
+
+    public NPersistentGameDataSO SetLevelManager(NLevelManager lm)
+    {
+        levelManager = lm;
+        return gameData;
     }
 
     public static bool TryGetInstance(out NGameManager gm)
