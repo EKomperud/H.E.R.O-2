@@ -39,6 +39,8 @@ public class NPlayerController : MonoBehaviour {
 
     [Tooltip("air, fire, water, earth, plasma")]
     [SerializeField] private int[] weaponCounts;
+    private NLevelManager levelManager;
+    private bool living;
     private Player joystick;
     private NState[] movementStates;
     private NState movementState;
@@ -78,6 +80,7 @@ public class NPlayerController : MonoBehaviour {
         weapon = null;
         totem = null;
         totemDist = Mathf.Infinity;
+        living = true;
     }
 
     void Update()
@@ -192,10 +195,30 @@ public class NPlayerController : MonoBehaviour {
 
     public void HitByPlasma(Vector3 blackHole)
     {
-        rb.simulated = false;
-        NStateInfo info = new NStateInfo(this, rb, bc, joystick, ac, sr, balanceData);
-        movementStates[6] = new NStateSucc(info, EState.succ, blackHole);
-        TryStateTransition(EState.succ);
+        if (living)
+        {
+            living = false;
+            rb.simulated = false;
+            NStateInfo info = new NStateInfo(this, rb, bc, joystick, ac, sr, balanceData);
+            movementStates[6] = new NStateSucc(info, EState.succ, blackHole);
+            TryStateTransition(EState.succ);
+            levelManager.RemovePlayer(gameObject);
+        }
+    }
+
+    public void AddLevelManager(NLevelManager levelManager)
+    {
+        this.levelManager = levelManager;
+    }
+
+    public int GetPlayerNumber()
+    {
+        return playerNumber;
+    }
+
+    public bool GetLivingStatus()
+    {
+        return living;
     }
     #endregion
 
@@ -284,6 +307,8 @@ public class NPlayerController : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
         TryStateTransition(EState.ashes);
+        living = false;
+        levelManager.RemovePlayer(gameObject);
     }
 
     #endregion

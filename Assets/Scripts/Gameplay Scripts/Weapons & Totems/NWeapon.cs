@@ -112,6 +112,7 @@ public class NWeapon : MonoBehaviour {
         rb.simulated = true;
         rb.velocity = angle * speed;
         cc.enabled = true;
+        transform.SetParent(null);
         animator.SetBool("discharged", true);
         StartCoroutine("LifetimeTimer");
     }
