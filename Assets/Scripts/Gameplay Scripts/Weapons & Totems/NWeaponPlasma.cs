@@ -11,7 +11,7 @@ public class NWeaponPlasma : NWeapon
     {
         base.Start();
         lifetime = Mathf.Infinity;
-        gracePeriod = 0.25f;
+        gracePeriod = 0.1f;
     }
 
     protected override void Update()

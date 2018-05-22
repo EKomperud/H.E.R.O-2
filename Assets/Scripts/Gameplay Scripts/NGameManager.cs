@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class NGameManager : MonoBehaviour {
@@ -9,6 +11,8 @@ public class NGameManager : MonoBehaviour {
     private static NGameManager instance = null;
 
     [SerializeField] NPersistentGameDataSO gameData;
+    [SerializeField] Transform winMenu;
+    [SerializeField] Transform pauseMenu;
     NLevelManager levelManager;
 
     void Start ()
@@ -24,13 +28,6 @@ public class NGameManager : MonoBehaviour {
         }
         DontDestroyOnLoad(gameObject);
         instance = this;
-
-        //GameObject lm = GameObject.Find("Players, Spawns, and Level Manager");
-        //if (lm != null)
-        //{
-        //    levelManager = lm.GetComponent<NLevelManager>();
-        //    levelManager.Initialize(gameData);
-        //}
     }
 
     public void SetRounds(int r)
@@ -43,25 +40,17 @@ public class NGameManager : MonoBehaviour {
         gameData.playerCharacterChoices = c;
     }
 
-    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    public void Play()
     {
-        //GameObject lm = GameObject.Find("Players, Spawns, and Level Manager");
-        //if (lm != null)
-        //{
-        //    levelManager = lm.GetComponent<NLevelManager>();
-        //    levelManager.Initialize(gameData);
-        //}
+        winMenu.gameObject.SetActive(false);
+        gameData.playerWins = new int[4] { 0, 0, 0, 0 };
+        SceneManager.LoadSceneAsync(Random.Range(1, 16));
     }
 
-    public void LoadMenu()
+    public void Menu()
     {
+        winMenu.gameObject.SetActive(false);
         SceneManager.LoadSceneAsync(17);
-    }
-
-    public void LoadLevel(int level)
-    {
-        if (level >= 1 && level <= 15)
-            SceneManager.LoadSceneAsync(level);
     }
 
     public void LoadRandomLevel()
@@ -73,6 +62,13 @@ public class NGameManager : MonoBehaviour {
     {
         levelManager = lm;
         return gameData;
+    }
+
+    public void WinSequence(int winner)
+    {
+        winMenu.gameObject.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(winMenu.GetChild(1).gameObject);
+        winMenu.GetChild(3).GetComponent<Text>().text = "P" + (winner + 1) + " is better than everyone else";
     }
 
     public static bool TryGetInstance(out NGameManager gm)

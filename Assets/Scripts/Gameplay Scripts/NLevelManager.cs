@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class NLevelManager : MonoBehaviour {
 
@@ -15,8 +13,6 @@ public class NLevelManager : MonoBehaviour {
     [SerializeField] private LevelType levelType;
     [SerializeField] private Transform spawnPointsObject;
     [SerializeField] private Transform playersObject;
-    [SerializeField] private Transform winMenu;
-    [SerializeField] private Transform pauseMenu;
     private NGameManager gameManager;
     private LinkedList<Transform> spawnPoints;
     private Dictionary<GameObject, NPlayerController> players;
@@ -81,9 +77,7 @@ public class NLevelManager : MonoBehaviour {
                 {
                     if (++gameData.playerWins[player.GetPlayerNumber()] >= gameData.neededWins)
                     {
-                        winMenu.gameObject.SetActive(true);
-                        EventSystem.current.SetSelectedGameObject(winMenu.GetChild(1).gameObject);
-                        winMenu.GetChild(3).GetComponent<Text>().text = "P" + player.GetPlayerNumber() + " is better than everyone else";
+                        gameManager.WinSequence(player.GetPlayerNumber());
                     }
                     else
                     {
