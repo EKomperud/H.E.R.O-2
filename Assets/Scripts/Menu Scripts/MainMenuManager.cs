@@ -21,7 +21,8 @@ public class MainMenuManager : MonoBehaviour {
         eventSystem = EventSystem.current;
         fightButton.onClick.AddListener(ToCharacterSelect);
         characterSelectManager.SetActive(false);
-        NGameManager.TryGetInstance(out gameManager);
+        if (NGameManager.TryGetInstance(out gameManager))
+            gameManager.SetEventSystemSelected(fightButton.gameObject);
     }
 
     public void ToCharacterSelect()

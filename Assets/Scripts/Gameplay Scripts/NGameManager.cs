@@ -71,6 +71,11 @@ public class NGameManager : MonoBehaviour {
         winMenu.GetChild(3).GetComponent<Text>().text = "P" + (winner + 1) + " is better than everyone else";
     }
 
+    public void SetEventSystemSelected(GameObject g)
+    {
+        EventSystem.current.SetSelectedGameObject(g);
+    }
+
     public static bool TryGetInstance(out NGameManager gm)
     {
         gm = instance;

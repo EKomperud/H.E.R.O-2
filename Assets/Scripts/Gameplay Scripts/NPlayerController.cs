@@ -45,6 +45,7 @@ public class NPlayerController : MonoBehaviour {
     private NState[] movementStates;
     private NState movementState;
     private SortedList<EElement, Queue<NWeapon>> weapons;
+    private bool avatar;
     private EElement weaponEquipped;
     private NWeapon weapon;
     private NTotem totem;
@@ -81,6 +82,7 @@ public class NPlayerController : MonoBehaviour {
         totem = null;
         totemDist = Mathf.Infinity;
         living = true;
+        avatar = false;
     }
 
     void Update()
@@ -96,7 +98,10 @@ public class NPlayerController : MonoBehaviour {
         {
             if (weapons[totem.GetElement()].Count < weaponCounts[(int)totem.GetElement()])
             {
-                SpawnWeapons();
+                if (avatar)
+                    SpawnWeapons();
+                else if (!avatar && (!(weapon != null) || totem.GetElement() == weaponEquipped))
+                    SpawnWeapons();
             }   
         }
 
@@ -113,7 +118,7 @@ public class NPlayerController : MonoBehaviour {
             }
             else
             {
-                if (CycleWeaponEquipped())
+                if (avatar && CycleWeaponEquipped())
                 {
                     weapon = weapons[weaponEquipped].Peek();
                     SetAllWeaponAngles();
@@ -126,7 +131,7 @@ public class NPlayerController : MonoBehaviour {
         }
 
         swapButton = joystick.GetButtonDown("Swap Weapon");
-        if (swapButton)
+        if (avatar && swapButton)
         {
             EElement oldWeapon = weaponEquipped;
             if (CycleWeaponEquipped())
