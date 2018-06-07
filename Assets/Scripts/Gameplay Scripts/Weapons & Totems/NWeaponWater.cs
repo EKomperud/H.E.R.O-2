@@ -10,17 +10,22 @@ public class NWeaponWater : NWeapon
         base.Start();
     }
 
-    void OnTriggerEnter2D(Collider2D collider)
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        NPlayerController np = collider.gameObject.GetComponent<NPlayerController>();
+        NPlayerController np = collision.collider.gameObject.GetComponent<NPlayerController>();
+        NWeapon w = collision.collider.gameObject.GetComponent<NWeapon>();
         if (np != null && np != wielder)
         {
             np.HitByWater();
             StartCoroutine("Explosion");
         }
-        else if (collider.gameObject.tag.Equals("Environment"))
+        else if (collision.collider.gameObject.tag.Equals("Environment"))
         {
             StartCoroutine("Explosion");
+        }
+        else if (w != null)
+        {
+            w.HitByWater();
         }
     }
 
@@ -36,5 +41,24 @@ public class NWeaponWater : NWeapon
             yield return new WaitForEndOfFrame();
         }
         Destroy(gameObject);
+    }
+
+    public override void HitByAir()
+    {
+        base.HitByAir();
+        rb.velocity = -rb.velocity;
+    }
+
+    public override void HitByFire()
+    {
+        base.HitByFire();
+        Destroy(gameObject);
+    }
+
+    public override void HitByEarth()
+    {
+        base.HitByEarth();
+        rb.velocity = -rb.velocity;
+        StartCoroutine("Explosion");
     }
 }

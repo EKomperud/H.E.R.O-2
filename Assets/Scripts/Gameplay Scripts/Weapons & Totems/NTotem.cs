@@ -14,14 +14,14 @@ public class NTotem : MonoBehaviour {
     //TODO: Have GameManager pass each totem a list of players, then have a dictionary cache true/false for in-range/not-in-range
     protected Dictionary<GameObject, NPlayerController> playersInRange;
 
-    protected void Start()
+    protected virtual void Start()
     {
         playersInRange = new Dictionary<GameObject, NPlayerController>();
         cooling = false;
         ac = GetComponent<Animator>();
     }
 
-    void OnTriggerStay2D(Collider2D collider)
+    protected virtual void OnTriggerStay2D(Collider2D collider)
     {
         NPlayerController np = collider.gameObject.GetComponent<NPlayerController>();
         if (np != null)
@@ -31,7 +31,7 @@ public class NTotem : MonoBehaviour {
         }
     }
 
-    protected void OnTriggerExit2D(Collider2D collider)
+    protected virtual void OnTriggerExit2D(Collider2D collider)
     {
         NPlayerController np = collider.gameObject.GetComponent<NPlayerController>();
         if (np != null)
@@ -46,7 +46,7 @@ public class NTotem : MonoBehaviour {
         return element;
     }
 
-    public Transform GetWeapon()
+    public virtual Transform GetWeapon()
     {
         return weapon;
     }
@@ -61,11 +61,12 @@ public class NTotem : MonoBehaviour {
         return !cooling;
     }
 
-    public void StartCooldown()
+    public virtual bool Pickup()
     {
         cooling = true;
         ac.SetBool("cooling", cooling);
         StartCoroutine("Cooldown");
+        return true;
     }
 
     private IEnumerator Cooldown()

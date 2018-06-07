@@ -9,24 +9,40 @@ public class NWeaponFire : NWeapon {
         base.Start();
     }
 	
-	void OnTriggerEnter2D(Collider2D collider)
+	void OnCollisionEnter2D(Collision2D collision)
     {
-        NPlayerController np = collider.gameObject.GetComponent<NPlayerController>();
+        NPlayerController np = collision.collider.gameObject.GetComponent<NPlayerController>();
+        NWeapon w = collision.collider.gameObject.GetComponent<NWeapon>();
         if (np != null && np != wielder)
         {
             np.HitByFire();
             StartCoroutine("Explosion");
         }
-        else if (collider.gameObject.tag.Equals("Environment"))
+        else if (collision.collider.gameObject.tag.Equals("Environment"))
         {
             StartCoroutine("Explosion");
         }
+        else if (w != null)
+        {
+            w.HitByFire();
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        NPlayerController np = collider.gameObject.GetComponent<NPlayerController>();
+        NWeapon w = collider.gameObject.GetComponent<NWeapon>();
+        if (np != null && np != wielder)
+            np.HitByFire();
+        else if (w != null)
+            w.HitByFire();
     }
 
     private IEnumerator Explosion()
     {
         animator.SetBool("collided", true);
-        rb.velocity *= 0.1f;
+        rb.velocity *= -0.05f;
+        gameObject.GetComponent<Collider2D>().isTrigger = true;
         float timer = 0f;
         while (timer <= 0.5f)
         {
@@ -35,5 +51,24 @@ public class NWeaponFire : NWeapon {
             yield return new WaitForEndOfFrame();
         }
         Destroy(gameObject);
+    }
+
+    public override void HitByAir()
+    {
+        base.HitByAir();
+        rb.velocity = -rb.velocity;
+    }
+
+    public override void HitByWater()
+    {
+        base.HitByWater();
+        Destroy(gameObject);
+    }
+
+    public override void HitByEarth()
+    {
+        base.HitByEarth();
+        rb.velocity = -rb.velocity;
+        StartCoroutine("Explosion");
     }
 }

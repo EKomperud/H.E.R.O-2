@@ -16,8 +16,17 @@ public class MovingElement : MonoBehaviour {
         rect = GetComponent<RectTransform>();
         rect.anchoredPosition = positionA;
         position = false;
-        MainMenuManager.CharSelectTransition += Move;
 	}
+
+    void OnEnable()
+    {
+        MainMenuManager.CharSelectTransition += Move;
+    }
+
+    void OnDisable()
+    {
+        MainMenuManager.CharSelectTransition -= Move;
+    }
 
 	void Move()
     {

@@ -5,15 +5,6 @@ public class SpawnPoint : MonoBehaviour {
 
     private Transform player;
 
-	// Use this for initialization
-	void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
     public void SetPlayer(Transform player, string name)
     {
         this.player = player;

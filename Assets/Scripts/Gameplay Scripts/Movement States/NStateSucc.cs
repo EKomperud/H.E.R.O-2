@@ -10,7 +10,6 @@ public class NStateSucc : NState
     public NStateSucc(NStateInfo info, EState state, Vector3 blackHole) : base(info, state)
     {
         this.blackHole = blackHole;
-        validTransitions = new bool[6] { false, false, false, false, false, false };
     }
 
     public override void EnterState()
@@ -39,6 +38,11 @@ public class NStateSucc : NState
     public override void StateFixedUpdate()
     {
         base.StateFixedUpdate();
+    }
+
+    public void SetBlackHolePosition(Vector3 blackHole)
+    {
+        this.blackHole = blackHole;
     }
 
 }

@@ -8,132 +8,76 @@ using UnityEngine;
 public class NStateSO : ScriptableObject {
 
     #region Members
+    [Header("Global")]
+    [SerializeField] public float globalGravityPerFrame;
+
     [Header("Normal/Grounded State")]
-    [SerializeField] float normalDirectionSwitchRatio;
-    [SerializeField] float normalMaxLateralSpeed;
-    [SerializeField] float normalMaxVerticalSpeed;
-    [SerializeField] float normalGravityPerFrame;
+    [SerializeField] public float normalDirectionSwitchRatio;
+    [SerializeField] public float normalMaxLateralVelocity;
+    [Space]
+
+    [Header("Slippery/Grounded State")]
+    [SerializeField] public float slippedDirectionSwitchRatio;
+    [SerializeField] public float slippedMaxLateralVelocity;
     [Space]
 
     [Header("Jump1 State")]
-    [SerializeField] float jump1DirectionSwitchRatio;
-    [SerializeField] float jump1MaxLateralSpeed;
-    [SerializeField] float jump1MaxVerticalSpeed;
-    [SerializeField] float jump1GravityPerFrame;
+    [SerializeField] public float jump1DirectionSwitchRatio;
+    [SerializeField] public float jump1MaxLateralVelocity;
+    [SerializeField] public float jump1InitialVelocity;
+    [SerializeField] public float jump1ContinuedHoldVelocity;
+    [SerializeField] public int jump1ContinuedHoldFrames;
+    [SerializeField] public int jump1ContinuedHoldDelayFrames;
+    [SerializeField] public int jump1ShortHopFrames;
+    [SerializeField] public int jump1ShortHopVelocity;
+    [SerializeField] public int jump1RegularHopVelocity;
     [Space]
 
     [Header("Jump2 State")]
-    [SerializeField] float jump2DirectionSwitchRatio;
-    [SerializeField] float jump2MaxLateralSpeed;
-    [SerializeField] float jump2MaxVerticalSpeed;
-    [SerializeField] float jump2GravityPerFrame;
+    [SerializeField] public float jump2DirectionSwitchRatio;
+    [SerializeField] public float jump2MaxLateralVelocity;
+    [SerializeField] public float jump2InitialVelocity;
     [Space]
 
+    [Header("Slam State")]
+    [SerializeField] public float slamIncreasedGravityPerFrame;
+    [SerializeField] public float slamMaxLateralVelocity;
+    [SerializeField] public int slamJumpLockoutFrames;
+
     [Header("Ash State")]
-    [SerializeField] float ashDirectionSwitchRatio;
-    [SerializeField] float ashMaxLateralSpeed;
-    [SerializeField] float ashMaxVerticalSpeed;
-    [SerializeField] float ashGravityPerFrame;
+    [SerializeField] public float ashGravityPerFrame;
     [Space]
 
     [Header("Airborne State")]
-    [SerializeField] float airborneDirectionSwitchRatio;
-    [SerializeField] float airborneMaxLateralSpeed;
-    [SerializeField] float airborneMaxVerticalSpeed;
-    [SerializeField] float airborneGravityPerFrame;
+    [SerializeField] public float airborneDirectionSwitchRatio;
+    [SerializeField] public float airborneMaxLateralVelocity;
     [Space]
 
-    [Header("Frozen State")]
-    [SerializeField] float frozenDirectionSwitchRatio;
-    [SerializeField] float frozenMaxLateralSpeed;
-    [SerializeField] float frozenMaxVerticalSpeed;
-    [SerializeField] float frozenGravityPerFrame;
+    [Header("Bounced State")]
+    [SerializeField] public float bouncedDirectionSwitchRatio;
+    [SerializeField] public float bouncedMaxLateralVelocity;
+    [SerializeField] public float bouncedInitialVelocity;
+    [SerializeField] public int bouncedTransitionLockoutFrames;
+    [Space]
 
-    #endregion
+    [Header("Boinked State")]
+    [SerializeField] public float boinkedInitialVelocity;
+    [SerializeField] public int boinkedTransitionLockoutFrames;
 
-    #region Getters & Setters
-    public float GetDirectionSwitchRatio(EState state)
-    {
-        switch (state)
-        {
-            case EState.normal:
-                return normalDirectionSwitchRatio;
-            case EState.jump1:
-                return jump1DirectionSwitchRatio;
-            case EState.jump2:
-                return jump2DirectionSwitchRatio;
-            case EState.ashes:
-                return ashDirectionSwitchRatio;
-            case EState.airborne:
-                return airborneDirectionSwitchRatio;
-            case EState.frozen:
-                return frozenDirectionSwitchRatio;
-            default:
-                return -1;
-        }
-    }
+    [Header("Pushed State")]
+    [SerializeField] public float pushedDuration;
+    [SerializeField] public float pushedInitialVelocity;
 
-    public float GetMaxLateralSpeed(EState state)
-    {
-        switch (state)
-        {
-            case EState.normal:
-                return normalMaxLateralSpeed;
-            case EState.jump1:
-                return jump1MaxLateralSpeed;
-            case EState.jump2:
-                return jump2MaxLateralSpeed;
-            case EState.ashes:
-                return ashMaxLateralSpeed;
-            case EState.airborne:
-                return airborneMaxLateralSpeed;
-            case EState.frozen:
-                return frozenMaxLateralSpeed;
-            default:
-                return -1;
-        }
-    }
+    [Space]
 
-    public float GetMaxVerticalSpeed(EState state)
-    {
-        switch (state)
-        {
-            case EState.normal:
-                return normalMaxVerticalSpeed;
-            case EState.jump1:
-                return jump1MaxVerticalSpeed;
-            case EState.jump2:
-                return jump2MaxVerticalSpeed;
-            case EState.ashes:
-                return ashMaxVerticalSpeed;
-            case EState.airborne:
-                return airborneMaxVerticalSpeed;
-            case EState.frozen:
-                return frozenMaxVerticalSpeed;
-            default:
-                return -1;
-        }
-    }
+    [Header("Frozen SubState")]
+    [SerializeField] public float frozenDuration;
+    [SerializeField] public float frozenSlideSpeed;
+    [SerializeField] public float frozenGravityPerFrame;
+    [Space]
 
-    public float GetGravityPerFrame(EState state)
-    {
-        switch (state)
-        {
-            case EState.normal:
-                return normalGravityPerFrame;
-            case EState.jump1:
-                return jump1GravityPerFrame;
-            case EState.jump2:
-                return jump2GravityPerFrame;
-            case EState.ashes:
-                return ashGravityPerFrame;
-            case EState.airborne:
-                return airborneGravityPerFrame;
-            case EState.frozen:
-                return frozenGravityPerFrame;
-            default:
-                return -1;
-        }
-    }
+    [Header("Burning SubState")]
+    [SerializeField] public float burningDuration;
+
     #endregion
 }

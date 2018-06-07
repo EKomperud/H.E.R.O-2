@@ -8,6 +8,11 @@ public enum EState {
     jump2 = 2,
     ashes = 3,
     airborne = 4,
-    frozen = 5,
-    succ = 6
+    succ = 5,
+    pushed = 6,
+    bounced = 7,
+    spiked = 8,
+    slipped = 9,
+    slam = 10,
+    boinked = 11
 }

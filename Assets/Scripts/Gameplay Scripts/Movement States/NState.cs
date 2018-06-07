@@ -5,23 +5,30 @@ using Rewired;
 
 public class NState {
 
+    // References
     protected NPlayerController player;
     protected Rigidbody2D rb;
     protected BoxCollider2D bc;
     protected Animator ac;
     protected SpriteRenderer sr;
     protected NStateSO bd;
-    protected float directionSwitchRatio;
-    protected float maxLateralSpeed;
-    protected float maxVerticalSpeed;
-    protected float gravityPerFrame;
     protected EState state;
-    protected bool[] validTransitions;
 
     // Joystick & Controls
     protected Player joystick;
     protected Vector2 leftStick;
-    protected bool jumpButton;
+    protected bool freshJumpButton;
+    protected bool heldJumpButton;
+    protected bool slamButton;
+
+    // Global movement variables
+    protected float globalGravityPerFrame;
+    protected float frozenSlideSpeed;
+    protected float frozenGravityPerFrame;
+
+    // Members
+    protected RaycastHit2D[] hits;
+    protected int platformsLayer;
 
     public NState(NStateInfo info, EState state)
     {
@@ -33,19 +40,19 @@ public class NState {
         ac = info.ac;
         sr = info.sr;
         joystick = info.j;
-        jumpButton = false;
+        freshJumpButton = false;
+        heldJumpButton = false;
 
-        directionSwitchRatio = bd.GetDirectionSwitchRatio(state);
-        maxLateralSpeed = bd.GetMaxLateralSpeed(state);
-        maxVerticalSpeed = bd.GetMaxVerticalSpeed(state);
-        gravityPerFrame = bd.GetGravityPerFrame(state);
+        globalGravityPerFrame = info.bd.globalGravityPerFrame;
+        frozenSlideSpeed = info.bd.frozenSlideSpeed;
+        frozenGravityPerFrame = info.bd.frozenGravityPerFrame;
 
-        validTransitions = new bool[6] { false, false, false, false, false, false };
+        platformsLayer = LayerMask.NameToLayer("Platforms");
     }
 
     public virtual void EnterState()
     {
-
+        BottomCheck();
     }
 
     public virtual void ExitState()
@@ -53,40 +60,93 @@ public class NState {
 
     }
 
-    public bool AskValidTransition(EState newState)
-    {
-        return validTransitions[(int)newState];
-    }
-
     public virtual void StateUpdate()
     {
-        leftStick = new Vector2(joystick.GetAxis("Move Horizontal"),joystick.GetAxis("Move Vertical"));
-        if (leftStick.x < 0)
+        leftStick = Vector2.zero;
+        freshJumpButton = false;
+        if (player.GetLivingStatus())
         {
-            sr.flipX = true;
+            if (!GetBool("frozen"))
+            {
+                leftStick = new Vector2(joystick.GetAxis("Move Horizontal"), joystick.GetAxis("Move Vertical"));
+                freshJumpButton = joystick.GetButtonDown("Jump");
+                heldJumpButton = joystick.GetButton("Jump");
+                slamButton = joystick.GetButton("Slam");
+                //bool jb = joystick.getbutt
+            }
+            if (leftStick.x < 0)
+                sr.flipX = true;
+            else if (leftStick.x > 0)
+                sr.flipX = false;
         }
-        else if (leftStick.x > 0)
-        {
-            sr.flipX = false;
-        }
-
-        jumpButton = joystick.GetButtonDown("Jump");
     }
 
     public virtual void StateFixedUpdate()
     {
-        ac.SetFloat("speed", rb.velocity.magnitude);
+        ac.SetFloat("speed", rb.velocity.x);
     }
 
-    protected bool GroundCheck()
+    public void SetBool(string s, bool b)
+    {
+        player.SetMovementBool(s, b);
+    }
+
+    public bool GetBool(string s)
+    {
+        return player.GetMovementBool(s);
+    }
+
+    protected void BottomCheck()
     {
         double x = player.transform.position.x + bc.offset.x;
         double y = player.transform.position.y + bc.offset.y;
         float dist = (float)(bc.size.y * 0.5) + 0.05f;
-        RaycastHit2D rch0 = Physics2D.Raycast(new Vector2((float)(x - bc.size.x * 0.5f + 0.05f), (float)y), Vector2.down, dist, LayerMask.GetMask("Platforms"));
-        RaycastHit2D rch1 = Physics2D.Raycast(new Vector2((float)x, (float)y), Vector2.down, dist, LayerMask.GetMask("Platforms"));
-        RaycastHit2D rch2 = Physics2D.Raycast(new Vector2((float)(x + bc.size.x * 0.5f - 0.05f), (float)y), Vector2.down, dist, LayerMask.GetMask("Platforms"));
-        return ((rch0.collider != null) || (rch1.collider != null) || (rch2.collider != null));
+        RaycastHit2D[] rch0 = new RaycastHit2D[2];
+        RaycastHit2D[] rch1 = new RaycastHit2D[2];
+        RaycastHit2D[] rch2 = new RaycastHit2D[2];
+        Physics2D.RaycastNonAlloc(new Vector2((float)((x - bc.size.x * 0.5f) + 0.05f), (float)y), Vector2.down, rch0, dist, LayerMask.GetMask("Platforms", "Player"));
+        Physics2D.RaycastNonAlloc(new Vector2((float)x, (float)y), Vector2.down, rch1, dist, LayerMask.GetMask("Platforms", "Player"));
+        Physics2D.RaycastNonAlloc(new Vector2((float)((x + bc.size.x * 0.5f) - 0.05f), (float)y), Vector2.down, rch2, dist, LayerMask.GetMask("Platforms", "Player"));
+        hits = new RaycastHit2D[3] { rch0[1], rch1[1], rch2[1] };
     }
 
+    protected bool GroundCheck()
+    {
+        foreach (RaycastHit2D hit in hits)
+            if (hit.collider != null && hit.collider.gameObject.layer.Equals(platformsLayer))
+                return true;
+        return false;
+    }
+
+    protected MovingPlatform MovingPlatformCheck()
+    {
+        foreach (RaycastHit2D hit in hits)
+            if (hit.collider != null && hit.collider.gameObject.tag.Equals("MovingPlatform"))
+                return hit.collider.gameObject.GetComponent<MovingPlatform>();
+        return null;
+    }
+
+    protected bool IceCheck()
+    {
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.collider != null && !hit.collider.tag.Equals("IceBlock"))
+                return false;
+            else if (!(hit.collider != null))
+                return false;
+        }
+        return true;
+    }
+
+    protected NPlayerController HeadCheck()
+    {
+        foreach (RaycastHit2D hit in hits)
+            if (hit.collider != null)
+            {
+                NPlayerController otherPlayer = hit.collider.gameObject.GetComponent<NPlayerController>();
+                if (otherPlayer != null && otherPlayer != player && otherPlayer.GetLivingStatus())
+                    return otherPlayer;
+            }
+        return null;
+    }
 }

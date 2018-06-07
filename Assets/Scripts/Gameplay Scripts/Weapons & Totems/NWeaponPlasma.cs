@@ -14,35 +14,35 @@ public class NWeaponPlasma : NWeapon
         gracePeriod = 0.1f;
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         if (!held && gracePeriod > 0)
         {
-            gracePeriod -= Time.deltaTime;
+            gracePeriod -= Time.fixedDeltaTime;
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collider)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if (gracePeriod <= 0)
         {
-            NPlayerController np = collider.gameObject.GetComponent<NPlayerController>();
-            NWeapon w = collider.gameObject.GetComponent<NWeapon>();
+            NPlayerController np = collision.collider.gameObject.GetComponent<NPlayerController>();
+            NWeapon w = collision.collider.gameObject.GetComponent<NWeapon>();
             if (np != null)
             {
                 np.HitByPlasma(transform.position);
                 IEnumerator explosion = Explosion(1f, 0.25f);
                 StartCoroutine(explosion);
             }
-            else if (collider.gameObject.tag.Equals("Environment") && !collided)
+            else if (collision.collider.gameObject.tag.Equals("Environment") && !collided)
             {
                 IEnumerator explosion = Explosion(1f, 0.25f);
                 StartCoroutine(explosion);
             }
             else if (w != null)
             {
-                NWeaponPlasma wp = collider.gameObject.GetComponent<NWeaponPlasma>();
+                NWeaponPlasma wp = collision.collider.gameObject.GetComponent<NWeaponPlasma>();
                 if (wp != null)
                 {
                     if (transform.localScale.x > wp.transform.localScale.x)
@@ -66,6 +66,7 @@ public class NWeaponPlasma : NWeapon
     {
         collided = true;
         animator.SetBool("collided", true);
+        rb.bodyType = RigidbodyType2D.Kinematic;
         rb.velocity = Vector2.zero;
         transform.SetParent(null);
         transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
