@@ -112,6 +112,15 @@ public class NWeaponEarth : NWeapon {
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        NWeapon w = collider.gameObject.GetComponent<NWeapon>();
+        if (w != null)
+        {
+            w.HitByEarth();
+        }
+    }
+
     protected override void UpdateNotAiming()
     {
         Vector3 tp = wielder.transform.position;
@@ -160,6 +169,12 @@ public class NWeaponEarth : NWeapon {
         animator.SetBool("collided", false);
         _activeTime = activeTime;
 
+        // Set reference variables
+        rb.simulated = true;
+        rb.gravityScale = 0f;
+        cc.enabled = true;
+        cc.isTrigger = true;
+
         // Move to character
         Vector3 pct = wielder.transform.position;
         transform.position = new Vector3(pct.x + 0.5f, pct.y + 0.5f, pct.z);
@@ -177,10 +192,8 @@ public class NWeaponEarth : NWeapon {
 
         // Set reference variables
         rightStick = angle;
-        rb.simulated = true;
         rb.velocity = angle * speed;
-        rb.gravityScale = 0f;
-        cc.enabled = true;
+        cc.isTrigger = false;
         transform.SetParent(null);
     }
 
