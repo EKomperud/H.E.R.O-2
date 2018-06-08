@@ -35,7 +35,7 @@ public class NWeaponPlasma : NWeapon
                 IEnumerator explosion = Explosion(1f, 0.25f);
                 StartCoroutine(explosion);
             }
-            else if (collision.collider.gameObject.tag.Equals("Environment") && !collided)
+            else if (collision.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Platforms")) && !collided)
             {
                 IEnumerator explosion = Explosion(1f, 0.25f);
                 StartCoroutine(explosion);

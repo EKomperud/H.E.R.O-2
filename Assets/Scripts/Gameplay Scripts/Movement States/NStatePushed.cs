@@ -70,7 +70,7 @@ public class NStatePushed : NState {
         if (pushDuration <= 0)
         {
             BottomCheck();
-            if (GroundCheck())
+            if (GroundCheck() || HeadCheck())
             {
                 if (IceCheck())
                     return player.StateTransition(EState.slipped);

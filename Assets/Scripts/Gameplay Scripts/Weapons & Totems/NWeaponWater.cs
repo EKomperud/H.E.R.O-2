@@ -14,12 +14,12 @@ public class NWeaponWater : NWeapon
     {
         NPlayerController np = collision.collider.gameObject.GetComponent<NPlayerController>();
         NWeapon w = collision.collider.gameObject.GetComponent<NWeapon>();
-        if (np != null && np != wielder)
+        if (np != null)
         {
             np.HitByWater();
             StartCoroutine("Explosion");
         }
-        else if (collision.collider.gameObject.tag.Equals("Environment"))
+        else if (collision.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Platforms")))
         {
             StartCoroutine("Explosion");
         }
@@ -43,10 +43,13 @@ public class NWeaponWater : NWeapon
         Destroy(gameObject);
     }
 
-    public override void HitByAir()
+    public override void HitByAir(Vector2 normal, NPlayerController wielder)
     {
-        base.HitByAir();
-        rb.velocity = -rb.velocity;
+        base.HitByAir(normal, wielder);
+        Physics2D.IgnoreCollision(cc, this.wielder.GetCollider(), false);
+        Physics2D.IgnoreCollision(cc, wielder.GetCollider(), true);
+        this.wielder = wielder;
+        rb.velocity = normal * speed;
     }
 
     public override void HitByFire()

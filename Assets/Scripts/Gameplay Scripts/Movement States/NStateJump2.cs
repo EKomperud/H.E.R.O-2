@@ -59,7 +59,7 @@ public class NStateJump2 : NState
             return player.StateTransition(EState.bounced);
 
         BottomCheck();
-        if (GroundCheck())
+        if (GroundCheck() || HeadCheck())
         {
             if (IceCheck())
                 return player.StateTransition(EState.slipped);

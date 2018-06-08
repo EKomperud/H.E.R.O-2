@@ -12,6 +12,7 @@ public class NWeapon : MonoBehaviour {
     protected SpriteRenderer sr;
     protected Vector3 orbit;
     protected Vector2 rightStick;
+    protected Vector2 dischargeAngle;
     protected bool dischargeButton;
     protected Player joystick;
     protected float x, y, z, angle, rotationSpeed, bobSpeed, radius, xRotation, yRotation, height;
@@ -115,12 +116,18 @@ public class NWeapon : MonoBehaviour {
         height = h == Mathf.Infinity ? height : h;
     }
 
-    public virtual void Discharge(Vector2 angle)
+    public virtual void Discharge(Vector2 angle, Collider2D playerCollider)
     {
+        if (angle == Vector2.zero)
+        {
+
+        }
+        dischargeAngle = angle;
         held = false;
         rightStick = angle;
         rb.simulated = true;
         rb.velocity = angle * speed;
+        Physics2D.IgnoreCollision(cc, playerCollider, true);
         cc.enabled = true;
         transform.SetParent(null);
         animator.SetBool("discharged", true);
@@ -149,7 +156,7 @@ public class NWeapon : MonoBehaviour {
 
     }
 
-    public virtual void HitByAir()
+    public virtual void HitByAir(Vector2 normal, NPlayerController wielder)
     {
 
     }

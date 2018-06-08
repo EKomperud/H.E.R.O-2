@@ -35,6 +35,7 @@ public class NPlayerController : MonoBehaviour {
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private ParticleSystem fireParticles;
+    private ParticleSystem bloodParticles;
     [SerializeField] private NStateSO balanceData;
     [SerializeField] private int playerNumber;
 
@@ -69,7 +70,8 @@ public class NPlayerController : MonoBehaviour {
         boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        fireParticles = GetComponent<ParticleSystem>();
+        fireParticles = transform.GetChild(0).GetComponent<ParticleSystem>();
+        bloodParticles = transform.GetChild(1).GetComponent<ParticleSystem>();
 
         joystick = ReInput.players.GetPlayer(playerNumber);
         movementBools = new Dictionary<string, bool>();
@@ -134,7 +136,13 @@ public class NPlayerController : MonoBehaviour {
         dischargeButton = joystick.GetButtonDown("Discharge Weapon");
         if (dischargeButton && weapon != null)
         {
-            weapon.Discharge(new Vector2(joystick.GetAxis("Aim Horizontal"), joystick.GetAxis("Aim Vertical")).normalized);
+            Vector2 angle = new Vector2(joystick.GetAxis("Aim Horizontal"), joystick.GetAxis("Aim Vertical")).normalized;
+            if (angle == Vector2.zero)
+            {
+                angle = spriteRenderer.flipX ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
+                weapon.SetSpriteDirection(spriteRenderer.flipX);
+            }
+            weapon.Discharge(angle, boxCollider);
             weapons[weaponEquipped].Dequeue();
             weapon = null;
             if (weapons[weaponEquipped].Count != 0)
@@ -238,6 +246,11 @@ public class NPlayerController : MonoBehaviour {
         return weapon;
     }
 
+    public Collider2D GetCollider()
+    {
+        return boxCollider;
+    }
+
     public void Bounce()
     {
         movementState.SetBool("bounced", true);
@@ -257,7 +270,7 @@ public class NPlayerController : MonoBehaviour {
         NStateSpiked spiked = (NStateSpiked)movementStates[8];
         spiked.SetSpikedDirection(direction);
         movementState.SetBool("spiked", true);
-        // Play blood particle effects
+        bloodParticles.Play();
         levelManager.RemovePlayer(gameObject);
     }
 
@@ -320,7 +333,7 @@ public class NPlayerController : MonoBehaviour {
         Vector2 direction = h ? new Vector2(rigidBody.velocity.x, -rigidBody.velocity.y * 0.5f) : new Vector2(-rigidBody.velocity.x, rigidBody.velocity.y);
         spiked.SetSpikedDirection(direction);
         movementState.SetBool("spiked", true);
-        // Play blood particle effects
+        bloodParticles.Play();
         levelManager.RemovePlayer(gameObject);
     }
 

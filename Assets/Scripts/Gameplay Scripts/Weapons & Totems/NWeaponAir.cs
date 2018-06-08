@@ -16,7 +16,7 @@ public class NWeaponAir : NWeapon {
     {
         NPlayerController np = collision.collider.gameObject.GetComponent<NPlayerController>();
         NWeapon w = collision.collider.gameObject.GetComponent<NWeapon>();
-        if (np != null && np != wielder)
+        if (np != null)
         {
             if (!np.GetMovementBool("pushed"))
                 np.HitByAir(-collision.contacts[0].normal);
@@ -28,7 +28,7 @@ public class NWeaponAir : NWeapon {
         }
         if (w != null)
         {
-            w.HitByAir();
+            w.HitByAir(-collision.contacts[0].normal, wielder);
             if (!collided)
             {
                 IEnumerator coroutine = Explosion(false);
@@ -45,9 +45,9 @@ public class NWeaponAir : NWeapon {
         }
     }
 
-    public override void HitByAir()
+    public override void HitByAir(Vector2 normal, NPlayerController wielder)
     {
-        base.HitByAir();
+        base.HitByAir(normal, wielder);
     }
 
     public override void HitByEarth()

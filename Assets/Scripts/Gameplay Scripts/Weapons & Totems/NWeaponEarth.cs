@@ -11,6 +11,8 @@ public class NWeaponEarth : NWeapon {
     [SerializeField] private float decelerationFactor;
     [SerializeField] private float activeTime;
     [SerializeField] private float gravityScale;
+    [SerializeField] private float aimRadius;
+    [SerializeField] private float followSpeed;
     private float _activeTime;
 
     protected override void Start()
@@ -103,7 +105,7 @@ public class NWeaponEarth : NWeapon {
         {
             w.HitByEarth();
         }
-        else if (collision.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Platforms")) && !(wielder != null))
+        else if (collision.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Platforms")) && (wielder != null))
         {
             wielder = null;
             decelerating = true;
@@ -130,7 +132,7 @@ public class NWeaponEarth : NWeapon {
 
         orbit = new Vector3(tp.x + offset.x, tp.y + height + offset.y, tp.z + offset.z);
         Vector3 diff = orbit - transform.position;
-        if (diff.magnitude <= 0.40f)
+        if (diff.magnitude <= 0.20f)
         {
             transform.position = orbit;
         }
@@ -146,11 +148,11 @@ public class NWeaponEarth : NWeapon {
         float z = (Mathf.Atan2(rightStick.y, rightStick.x) * 57.2958f);
         transform.rotation = Quaternion.Euler(0, 0, z);
 
-        float x = wielder.transform.position.x - transform.position.x + (rightStick.x * 1.5f);
-        float y = wielder.transform.position.y - transform.position.y + (rightStick.y * 1.5f);
-        Vector3 movement = new Vector3(5 * x, 5 * y, 0);
+        float x = wielder.transform.position.x - transform.position.x + (rightStick.x * aimRadius);
+        float y = wielder.transform.position.y - transform.position.y + (rightStick.y * aimRadius);
+        Vector2 movement = new Vector3(followSpeed * x, followSpeed * y);
         movement *= Time.fixedDeltaTime;
-        transform.Translate(movement, Space.World);
+        rb.MovePosition(rb.position + movement);
 
         angle += rotationSpeed * Time.fixedDeltaTime;
     }
@@ -182,7 +184,7 @@ public class NWeaponEarth : NWeapon {
         
     }
 
-    public override void Discharge(Vector2 angle)
+    public override void Discharge(Vector2 angle, Collider2D playerCollider)
     {
         // Unset joystick control
         joystick = null;
