@@ -6,6 +6,7 @@ public class NWeaponPlasma : NWeapon
 {
     private float gracePeriod;
     private bool collided;
+    private Collider2D playerCollider;
 
     protected override void Start()
     {
@@ -20,6 +21,8 @@ public class NWeaponPlasma : NWeapon
         if (!held && gracePeriod > 0)
         {
             gracePeriod -= Time.fixedDeltaTime;
+            if (gracePeriod <= 0)
+                Physics2D.IgnoreCollision(cc, playerCollider, false);
         }
     }
 
@@ -62,6 +65,12 @@ public class NWeaponPlasma : NWeapon
         }
     }
 
+    public override void Discharge(Vector2 angle, Collider2D playerCollider)
+    {
+        base.Discharge(angle, playerCollider);
+        this.playerCollider = playerCollider;
+    }
+
     private IEnumerator Explosion(float time, float scale)
     {
         collided = true;
@@ -69,7 +78,7 @@ public class NWeaponPlasma : NWeapon
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.velocity = Vector2.zero;
         transform.SetParent(null);
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
+        transform.position = new Vector3(transform.position.x, transform.position.y, 1f);
         float timer = 0f;
         while (timer <= 1f)
         {

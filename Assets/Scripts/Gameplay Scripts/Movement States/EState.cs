@@ -14,5 +14,6 @@ public enum EState {
     spiked = 8,
     slipped = 9,
     slam = 10,
-    boinked = 11
+    boinked = 11,
+    inactive = 12
 }

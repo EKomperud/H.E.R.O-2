@@ -9,7 +9,7 @@ public class NSpikes : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D collider)
     {
         NPlayerController player = collider.gameObject.GetComponent<NPlayerController>();
-        if (player != null)
+        if (player != null && player.GetLivingStatus())
         {
             player.DeathBySpikes(horizontal);
         }

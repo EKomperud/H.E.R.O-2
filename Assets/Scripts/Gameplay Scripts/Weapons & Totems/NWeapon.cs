@@ -118,10 +118,6 @@ public class NWeapon : MonoBehaviour {
 
     public virtual void Discharge(Vector2 angle, Collider2D playerCollider)
     {
-        if (angle == Vector2.zero)
-        {
-
-        }
         dischargeAngle = angle;
         held = false;
         rightStick = angle;

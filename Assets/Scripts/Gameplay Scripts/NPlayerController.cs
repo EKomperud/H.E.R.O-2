@@ -83,8 +83,9 @@ public class NPlayerController : MonoBehaviour {
         movementBools["spiked"] = false;
         movementBools["slipped"] = false;
         movementBools["doubled"] = false;
+        movementBools["active"] = false;
         NStateInfo info = new NStateInfo(this, rigidBody, boxCollider, joystick, animator, spriteRenderer, balanceData);
-        movementStates = new NState[12];
+        movementStates = new NState[13];
         movementStates[0] = new NStateNormal(info, EState.normal);
         movementStates[1] = new NStateJump1(info, EState.jump1);
         movementStates[2] = new NStateJump2(info, EState.jump2);
@@ -97,7 +98,9 @@ public class NPlayerController : MonoBehaviour {
         movementStates[9] = new NStateSlipped(info, EState.slipped);
         movementStates[10] = new NStateSlam(info, EState.slam);
         movementStates[11] = new NStateBounced(info, EState.boinked, info.bd.boinkedInitialVelocity, info.bd.boinkedTransitionLockoutFrames);
-        movementState = movementStates[1];
+        movementStates[12] = new NStateInactive(info, EState.inactive);
+
+        movementState = movementStates[12];
 
         weapons = new SortedList<EElement, Queue<NWeapon>>(6);
         weapons[EElement.air] = new Queue<NWeapon>(weaponCounts[0]);
@@ -121,62 +124,72 @@ public class NPlayerController : MonoBehaviour {
             movementState.StateUpdate();
         }
 
-        grabButton = joystick.GetButtonDown("Grab Weapon");
-        if (grabButton && totem != null && totem.GetCooledDown())
+        if (living)
         {
-            if (weapons[totem.GetElement()].Count < weaponCounts[(int)totem.GetElement()])
+            grabButton = joystick.GetButtonDown("Grab Weapon");
+            if (grabButton && totem != null && totem.GetCooledDown())
             {
-                if (avatar)
-                    SpawnWeapons();
-                else if (!avatar && (!(weapon != null) || totem.GetElement() == weaponEquipped || weaponEquipped == EElement.air))
-                    SpawnWeapons();
-            }   
-        }
-
-        dischargeButton = joystick.GetButtonDown("Discharge Weapon");
-        if (dischargeButton && weapon != null)
-        {
-            Vector2 angle = new Vector2(joystick.GetAxis("Aim Horizontal"), joystick.GetAxis("Aim Vertical")).normalized;
-            if (angle == Vector2.zero)
-            {
-                angle = spriteRenderer.flipX ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
-                weapon.SetSpriteDirection(spriteRenderer.flipX);
-            }
-            weapon.Discharge(angle, boxCollider);
-            weapons[weaponEquipped].Dequeue();
-            weapon = null;
-            if (weapons[weaponEquipped].Count != 0)
-            {
-                SetWeaponAngles(weaponEquipped, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
-                weapon = weapons[weaponEquipped].Peek();
-            }
-            else
-            {
-                if (avatar && CycleWeaponEquipped())
+                if (weapons[totem.GetElement()].Count < weaponCounts[(int)totem.GetElement()])
                 {
+                    if (avatar)
+                        SpawnWeapons();
+                    else if (!avatar && (!(weapon != null) || totem.GetElement() == weaponEquipped || weaponEquipped == EElement.air))
+                        SpawnWeapons();
+                }
+                if (onFire != null && totem.GetElement() == EElement.water)
+                {
+                    Extinguish();
+                    Destroy(weapons[EElement.water].Dequeue().gameObject);
+                    SetWeaponAngles(weaponEquipped, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
                     weapon = weapons[weaponEquipped].Peek();
-                    SetAllWeaponAngles();
+                }
+            }
+
+            dischargeButton = joystick.GetButtonDown("Discharge Weapon");
+            if (dischargeButton && weapon != null)
+            {
+                Vector2 angle = new Vector2(joystick.GetAxis("Aim Horizontal"), joystick.GetAxis("Aim Vertical")).normalized;
+                if (angle == Vector2.zero)
+                {
+                    angle = spriteRenderer.flipX ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
+                    weapon.SetSpriteDirection(spriteRenderer.flipX);
+                }
+                weapon.Discharge(angle, boxCollider);
+                weapons[weaponEquipped].Dequeue();
+                weapon = null;
+                if (weapons[weaponEquipped].Count != 0)
+                {
+                    SetWeaponAngles(weaponEquipped, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
+                    weapon = weapons[weaponEquipped].Peek();
                 }
                 else
                 {
-                    if (weaponEquipped != EElement.air)
+                    if (avatar && CycleWeaponEquipped())
                     {
-                        weaponEquipped = EElement.air;
-                        TrySpawnAir();
+                        weapon = weapons[weaponEquipped].Peek();
+                        SetAllWeaponAngles();
                     }
                     else
-                        weaponEquipped = EElement.air;
+                    {
+                        if (weaponEquipped != EElement.air)
+                        {
+                            weaponEquipped = EElement.air;
+                            TrySpawnAir();
+                        }
+                        else
+                            weaponEquipped = EElement.air;
+                    }
                 }
             }
-        }
 
-        swapButton = joystick.GetButtonDown("Swap Weapon");
-        if (avatar && swapButton)
-        {
-            EElement oldWeapon = weaponEquipped;
-            if (CycleWeaponEquipped())
+            swapButton = joystick.GetButtonDown("Swap Weapon");
+            if (avatar && swapButton)
             {
-                weapon = weapons[weaponEquipped].Peek();
+                EElement oldWeapon = weaponEquipped;
+                if (CycleWeaponEquipped())
+                {
+                    weapon = weapons[weaponEquipped].Peek();
+                }
             }
         }
     }
@@ -271,6 +284,7 @@ public class NPlayerController : MonoBehaviour {
         spiked.SetSpikedDirection(direction);
         movementState.SetBool("spiked", true);
         bloodParticles.Play();
+        ReleaseAllWeapons();
         levelManager.RemovePlayer(gameObject);
     }
 
@@ -297,9 +311,7 @@ public class NPlayerController : MonoBehaviour {
         {
             if (onFire != null)
             {
-                StopCoroutine(onFire);
-                fireParticles.Stop();
-                onFire = null;
+                Extinguish();
             }
             movementState.SetBool("frozen", true);
             animator.SetBool("frozen", true);
@@ -319,6 +331,13 @@ public class NPlayerController : MonoBehaviour {
         movementState.SetBool("succed", true);
     }
 
+    public void Extinguish()
+    {
+        StopCoroutine(onFire);
+        onFire = null;
+        fireParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
     public void DeathByFalling()
     {
         living = false;
@@ -334,10 +353,11 @@ public class NPlayerController : MonoBehaviour {
         spiked.SetSpikedDirection(direction);
         movementState.SetBool("spiked", true);
         bloodParticles.Play();
+        ReleaseAllWeapons();
         levelManager.RemovePlayer(gameObject);
     }
 
-    public void AddLevelManager(NLevelManager levelManager)
+    public void LevelManagerInitialize(NLevelManager levelManager)
     {
         this.levelManager = levelManager;
     }
@@ -350,6 +370,12 @@ public class NPlayerController : MonoBehaviour {
     public bool GetLivingStatus()
     {
         return living;
+    }
+
+    public void Vibrate(int motorIndex, float motorLevel, float duration)
+    {
+        if (joystick != null)
+            joystick.SetVibration(motorIndex, motorLevel, duration);
     }
     #endregion
 
@@ -459,6 +485,23 @@ public class NPlayerController : MonoBehaviour {
         }
     }
 
+    private void ReleaseAllWeapons()
+    {
+        foreach (KeyValuePair<EElement, Queue<NWeapon>> e in weapons)
+        {
+            if (e.Key == EElement.earth || e.Key == EElement.plasma)
+            {
+                while (e.Value.Count != 0)
+                    e.Value.Dequeue().Discharge(Vector2.zero, boxCollider);
+            }
+            else
+            {
+                while (e.Value.Count != 0)
+                    Destroy(e.Value.Dequeue().gameObject);
+            }
+        }
+    }
+
     public void SetWeaponSpriteDirections(bool flipX)
     {
         foreach (KeyValuePair<EElement,Queue<NWeapon>> e in weapons)
@@ -484,6 +527,7 @@ public class NPlayerController : MonoBehaviour {
         fireParticles.Stop();
         levelManager.RemovePlayer(gameObject);
         onFire = null;
+        ReleaseAllWeapons();
     }
 
     #endregion

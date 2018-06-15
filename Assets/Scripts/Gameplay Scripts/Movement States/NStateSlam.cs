@@ -67,7 +67,7 @@ public class NStateSlam : NState {
 
         BottomCheck();
         NPlayerController otherPlayer = HeadCheck();
-        if (otherPlayer != null)
+        if (otherPlayer != null && otherPlayer.GetLivingStatus())
         {
             otherPlayer.DeathBySpikes(false);
             SetBool("doubled", false);

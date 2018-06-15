@@ -205,7 +205,7 @@ public class NWeaponEarth : NWeapon {
         double y = transform.position.y + cc.offset.y;
         CircleCollider2D circle = (CircleCollider2D)cc;
         float dist = (float)(circle.radius) + 0.05f;
-        RaycastHit2D rch = Physics2D.Raycast(new Vector2((float)x, (float)y), Vector2.down, dist, LayerMask.GetMask("Platforms"));
+        RaycastHit2D rch = Physics2D.Raycast(new Vector2((float)x, (float)y), Vector2.down, dist, LayerMask.GetMask("Platforms", "Player"));
         return rch.collider != null;
     }
 }
