@@ -14,13 +14,20 @@ public class NWeaponEarth : NWeapon {
     [SerializeField] private float aimRadius;
     [SerializeField] private float followSpeed;
     private float _activeTime;
+    protected RaycastHit2D[] rch0 = new RaycastHit2D[1];
+    protected RaycastHit2D[] rch1 = new RaycastHit2D[1];
+    protected RaycastHit2D[] rch2 = new RaycastHit2D[1];
+    protected RaycastHit2D[] hits;
+    protected MovingPlatform mp;
+    protected Vector2 gravityVector;
 
     protected override void Start()
     {
-        // Initialize weapon rotation members
+        // Initialize weapon movement members
         x = y = z = 0;
         rotationSpeed = 4f;
         bobSpeed = rotationSpeed * 2;
+        gravityVector = new Vector2(0, -gravityScale);
 
         // Set and initialize references
         rb = GetComponent<Rigidbody2D>();
@@ -73,7 +80,8 @@ public class NWeaponEarth : NWeapon {
                 }
                 else if (falling)
                 {
-                    if (BottomCheck())
+                    BottomCheck();
+                    if (GroundOrPlayerCheck())
                     {
                         // Reset state variables
                         animator.SetBool("gathering", false);
@@ -85,10 +93,20 @@ public class NWeaponEarth : NWeapon {
 
                         // Reset reference variables
                         transform.rotation = new Quaternion();
-                        rb.simulated = false;
-                        cc.enabled = false;
+                        rb.gravityScale = 0f;
+                        cc.isTrigger = true;
                     }
                 }
+            }
+        }
+        else
+        {
+            BottomCheck();
+            rb.velocity = GroundOrPlayerCheck() ? Vector2.zero : rb.velocity + gravityVector;
+            mp = MovingPlatformCheck();
+            if (mp != null)
+            {
+                rb.MovePosition(rb.position + mp.GetLastFrameMovement() + (rb.velocity * Time.fixedDeltaTime));
             }
         }
     }
@@ -184,7 +202,7 @@ public class NWeaponEarth : NWeapon {
         
     }
 
-    public override void Discharge(Vector2 angle, Collider2D playerCollider)
+    public override void Discharge(Vector2 angle, Collider2D playerCollider, bool flipX)
     {
         // Unset joystick control
         joystick = null;
@@ -199,13 +217,31 @@ public class NWeaponEarth : NWeapon {
         transform.SetParent(null);
     }
 
-    protected bool BottomCheck()
+    protected void BottomCheck()
     {
         double x = transform.position.x + cc.offset.x;
         double y = transform.position.y + cc.offset.y;
         CircleCollider2D circle = (CircleCollider2D)cc;
         float dist = (float)(circle.radius) + 0.05f;
-        RaycastHit2D rch = Physics2D.Raycast(new Vector2((float)x, (float)y), Vector2.down, dist, LayerMask.GetMask("Platforms", "Player"));
-        return rch.collider != null;
+        rch0[0] = rch1[0] = rch2[0] = new RaycastHit2D();
+        Physics2D.RaycastNonAlloc(new Vector2((float)x - circle.radius, (float)y), Vector2.down, rch0, dist, LayerMask.GetMask("Platforms", "Player"));
+        Physics2D.RaycastNonAlloc(new Vector2((float)x, (float)y), Vector2.down, rch1, dist, LayerMask.GetMask("Platforms", "Player"));
+        Physics2D.RaycastNonAlloc(new Vector2((float)x + circle.radius, (float)y), Vector2.down, rch2, dist, LayerMask.GetMask("Platforms", "Player"));
+    }
+
+    protected bool GroundOrPlayerCheck()
+    {
+        return (rch0[0].collider != null || rch1[0].collider != null || rch2[0].collider != null);
+    }
+
+    protected MovingPlatform MovingPlatformCheck()
+    {
+        if (rch1[0].collider != null && rch1[0].collider.gameObject.tag.Equals("MovingPlatform"))
+            return rch0[0].collider.gameObject.GetComponent<MovingPlatform>();
+        if (rch1[0].collider != null && rch1[0].collider.gameObject.tag.Equals("MovingPlatform"))
+            return rch0[0].collider.gameObject.GetComponent<MovingPlatform>();
+        if (rch2[0].collider != null && rch2[0].collider.gameObject.tag.Equals("MovingPlatform"))
+            return rch0[0].collider.gameObject.GetComponent<MovingPlatform>();
+        return null;
     }
 }

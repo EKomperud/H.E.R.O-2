@@ -52,6 +52,7 @@ public class NPlayerController : MonoBehaviour {
     private EElement weaponEquipped;
     private NWeapon weapon;
     private NTotem totem;
+    protected NWeaponPlasma plasmaPull;
     private float totemDist;
 
     private NState[] movementStates;
@@ -61,6 +62,7 @@ public class NPlayerController : MonoBehaviour {
 
     private bool grabButton;
     private bool dischargeButton;
+    private bool shieldButton;
     private bool swapButton;
     #endregion
 
@@ -149,12 +151,7 @@ public class NPlayerController : MonoBehaviour {
             if (dischargeButton && weapon != null)
             {
                 Vector2 angle = new Vector2(joystick.GetAxis("Aim Horizontal"), joystick.GetAxis("Aim Vertical")).normalized;
-                if (angle == Vector2.zero)
-                {
-                    angle = spriteRenderer.flipX ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
-                    weapon.SetSpriteDirection(spriteRenderer.flipX);
-                }
-                weapon.Discharge(angle, boxCollider);
+                weapon.Discharge(angle, boxCollider, spriteRenderer.flipX);
                 weapons[weaponEquipped].Dequeue();
                 weapon = null;
                 if (weapons[weaponEquipped].Count != 0)
@@ -171,15 +168,15 @@ public class NPlayerController : MonoBehaviour {
                     }
                     else
                     {
-                        if (weaponEquipped != EElement.air)
-                        {
-                            weaponEquipped = EElement.air;
-                            TrySpawnAir();
-                        }
-                        else
-                            weaponEquipped = EElement.air;
+                        weaponEquipped = EElement.air;
                     }
                 }
+            }
+
+            shieldButton = joystick.GetButtonDown("Shield");
+            if (shieldButton && weapon != null)
+            {
+
             }
 
             swapButton = joystick.GetButtonDown("Swap Weapon");
@@ -207,6 +204,20 @@ public class NPlayerController : MonoBehaviour {
         NPlayerController otherPlayer = col.gameObject.GetComponent<NPlayerController>();
         if (otherPlayer != null && onFire != null)
             otherPlayer.HitByFire();
+    }
+
+    private void OnTriggerStay2D(Collider2D collider)
+    {
+        NWeaponPlasma plasma = collider.transform.GetComponentInParent<NWeaponPlasma>();
+        if (plasma != null)
+            plasmaPull = plasma;
+    }
+
+    private void OnTriggerExit2D(Collider2D collider)
+    {
+        NWeaponPlasma plasma = collider.transform.GetComponentInParent<NWeaponPlasma>();
+        if (plasma != null)
+            plasmaPull = null; ;
     }
     #endregion
 
@@ -262,6 +273,11 @@ public class NPlayerController : MonoBehaviour {
     public Collider2D GetCollider()
     {
         return boxCollider;
+    }
+
+    public NWeaponPlasma GetPlasmaPull()
+    {
+        return plasmaPull;
     }
 
     public void Bounce()
@@ -492,7 +508,7 @@ public class NPlayerController : MonoBehaviour {
             if (e.Key == EElement.earth || e.Key == EElement.plasma)
             {
                 while (e.Value.Count != 0)
-                    e.Value.Dequeue().Discharge(Vector2.zero, boxCollider);
+                    e.Value.Dequeue().Discharge(Vector2.zero, boxCollider, spriteRenderer.flipX);
             }
             else
             {

@@ -55,6 +55,22 @@ public class NWeapon : MonoBehaviour {
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collider)
+    {
+        NWeaponPlasma plasma = collider.transform.GetComponentInParent<NWeaponPlasma>();
+        if (plasma != null)
+        {
+            if (element != EElement.plasma || transform.localScale.x < plasma.transform.localScale.x)
+            {
+                Vector2 dist = collider.transform.position - transform.position;
+                Vector2 oldVelocity = rb.velocity;
+                rb.velocity += (dist / dist.sqrMagnitude) * (plasma.transform.localScale.x);
+                float angleBetween = Vector2.Angle(oldVelocity, rb.velocity);
+                transform.Rotate(0f, 0f, -angleBetween);
+            }
+        }
+    }
+
     protected virtual void UpdateNotAiming()
     {
         Vector3 tp = wielder.transform.position;
@@ -116,18 +132,34 @@ public class NWeapon : MonoBehaviour {
         height = h == Mathf.Infinity ? height : h;
     }
 
-    public virtual void Discharge(Vector2 angle, Collider2D playerCollider)
+    public virtual void Discharge(Vector2 angle, Collider2D playerCollider, bool flipX)
     {
         dischargeAngle = angle;
         held = false;
         rightStick = angle;
         rb.simulated = true;
-        rb.velocity = angle * speed;
+        if (angle == Vector2.zero)
+        {
+            angle = flipX ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
+            sr.flipX = flipX;
+            rb.velocity = angle * speed;
+            //rb.MovePosition(new Vector2(transform.position.x, playerCollider.transform.position.y));
+            transform.position = new Vector2(transform.position.x, playerCollider.transform.position.y);
+        }
+        else
+        {
+            rb.velocity = angle * speed;
+        }
         Physics2D.IgnoreCollision(cc, playerCollider, true);
         cc.enabled = true;
         transform.SetParent(null);
         animator.SetBool("discharged", true);
         StartCoroutine("LifetimeTimer");
+    }
+
+    public virtual void Shield()
+    {
+
     }
 
     public void HitByPlasma(Vector3 blackHole)

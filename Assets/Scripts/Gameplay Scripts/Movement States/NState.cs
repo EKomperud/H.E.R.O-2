@@ -83,7 +83,12 @@ public class NState {
 
     public virtual void StateFixedUpdate()
     {
-        ac.SetFloat("speed", rb.velocity.x);
+        if (player.GetPlasmaPull() != null)
+        {
+            Vector2 dist = player.GetPlasmaPull().transform.position - player.transform.position;
+            rb.velocity += (dist / dist.sqrMagnitude) * (player.GetPlasmaPull().transform.localScale.x * 0.5f);
+        }
+        ac.SetFloat("speed", Mathf.Abs(rb.velocity.x));
     }
 
     public void SetBool(string s, bool b)

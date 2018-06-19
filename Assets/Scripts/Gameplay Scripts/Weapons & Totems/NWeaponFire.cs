@@ -4,23 +4,33 @@ using UnityEngine;
 
 public class NWeaponFire : NWeapon {
 
+    Vector2 lastFrameVelocity;
+
     protected override void Start()
     {
         base.Start();
     }
-	
-	void OnCollisionEnter2D(Collision2D collision)
+
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        lastFrameVelocity = rb.velocity;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
     {
         NPlayerController np = collision.collider.gameObject.GetComponent<NPlayerController>();
         NWeapon w = collision.collider.gameObject.GetComponent<NWeapon>();
         if (np != null)
         {
             np.HitByFire();
-            StartCoroutine("Explosion");
+            IEnumerator explosion = Explosion(Vector2.Reflect(rb.velocity,collision.contacts[0].normal));
+            StartCoroutine(explosion);
         }
         else if (collision.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Platforms")))
         {
-            StartCoroutine("Explosion");
+            IEnumerator explosion = Explosion(Vector2.Reflect(lastFrameVelocity, collision.contacts[0].normal));
+            StartCoroutine(explosion);
         }
         else if (w != null)
         {
@@ -38,10 +48,12 @@ public class NWeaponFire : NWeapon {
             w.HitByFire();
     }
 
-    private IEnumerator Explosion()
+    private IEnumerator Explosion(Vector2 newAngle)
     {
         animator.SetBool("collided", true);
-        rb.velocity *= -0.05f;
+        float rotationAngle = Vector2.SignedAngle(lastFrameVelocity, newAngle);
+        rb.velocity = newAngle * 0.05f;
+        transform.Rotate(0f, 0f, rotationAngle);
         gameObject.GetComponent<Collider2D>().isTrigger = true;
         float timer = 0f;
         while (timer <= 0.5f)

@@ -6,11 +6,16 @@ public class NWeaponPlasma : NWeapon
 {
     private float gracePeriod;
     private bool collided;
+    private CircleCollider2D circleCollider;
+    private CircleCollider2D pullCollider;
     private Collider2D playerCollider;
 
     protected override void Start()
     {
         base.Start();
+        circleCollider = (CircleCollider2D)cc;
+        pullCollider = transform.GetChild(0).GetComponent<CircleCollider2D>();
+        pullCollider.enabled = false;
         lifetime = Mathf.Infinity;
         gracePeriod = 0.1f;
     }
@@ -28,46 +33,43 @@ public class NWeaponPlasma : NWeapon
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (gracePeriod <= 0)
+        NPlayerController np = collision.collider.gameObject.GetComponent<NPlayerController>();
+        NWeapon w = collision.collider.gameObject.GetComponent<NWeapon>();
+        if (np != null && gracePeriod <= 0)
         {
-            NPlayerController np = collision.collider.gameObject.GetComponent<NPlayerController>();
-            NWeapon w = collision.collider.gameObject.GetComponent<NWeapon>();
-            if (np != null)
+            np.HitByPlasma(transform.position);
+            IEnumerator explosion = Explosion(1f, 0.25f);
+            StartCoroutine(explosion);
+        }
+        else if (collision.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Platforms")) && !collided)
+        {
+            IEnumerator explosion = Explosion(1f, 0.25f);
+            StartCoroutine(explosion);
+        }
+        else if (w != null)
+        {
+            NWeaponPlasma wp = collision.collider.gameObject.GetComponent<NWeaponPlasma>();
+            if (wp != null)
             {
-                np.HitByPlasma(transform.position);
-                IEnumerator explosion = Explosion(1f, 0.25f);
-                StartCoroutine(explosion);
-            }
-            else if (collision.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Platforms")) && !collided)
-            {
-                IEnumerator explosion = Explosion(1f, 0.25f);
-                StartCoroutine(explosion);
-            }
-            else if (w != null)
-            {
-                NWeaponPlasma wp = collision.collider.gameObject.GetComponent<NWeaponPlasma>();
-                if (wp != null)
+                if (transform.localScale.x > wp.transform.localScale.x)
                 {
-                    if (transform.localScale.x > wp.transform.localScale.x)
-                    {
-                        wp.HitByPlasma(transform.position);
-                        IEnumerator explosion = Explosion(2f, 0.5f);
-                        StartCoroutine(explosion);
-                    }
-                }
-                else
-                {
-                    w.HitByPlasma(transform.position);
-                    IEnumerator explosion = Explosion(0.25f, 0.1f);
+                    wp.HitByPlasma(transform.position);
+                    IEnumerator explosion = Explosion(2f, 0.5f);
                     StartCoroutine(explosion);
                 }
+            }
+            else
+            {
+                w.HitByPlasma(transform.position);
+                IEnumerator explosion = Explosion(0.25f, 0.1f);
+                StartCoroutine(explosion);
             }
         }
     }
 
-    public override void Discharge(Vector2 angle, Collider2D playerCollider)
+    public override void Discharge(Vector2 angle, Collider2D playerCollider, bool flipX)
     {
-        base.Discharge(angle, playerCollider);
+        base.Discharge(angle, playerCollider, flipX);
         this.playerCollider = playerCollider;
     }
 
@@ -75,7 +77,10 @@ public class NWeaponPlasma : NWeapon
     {
         collided = true;
         animator.SetBool("collided", true);
+        circleCollider.radius = 0.325f;
+        pullCollider.enabled = true;
         rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.useFullKinematicContacts = true;
         rb.velocity = Vector2.zero;
         transform.SetParent(null);
         transform.position = new Vector3(transform.position.x, transform.position.y, 1f);
