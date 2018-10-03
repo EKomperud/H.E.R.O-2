@@ -15,7 +15,7 @@ public class NStateAshes : NState {
     public override void EnterState()
     {
         base.EnterState();
-        ac.SetBool("ashes", true);
+        player.SetAnimatorBools("ashes", true);
     }
 
     public override void StateUpdate()

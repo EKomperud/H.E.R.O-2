@@ -25,7 +25,7 @@ public class NStateBounced : NState {
         rb.velocity = new Vector2(v.x, initialVerticalVelocity);
         transitionLockoutFrames = _transitionLockoutFrames;
         SetBool("bounced", false);
-        ac.SetBool("grounded", false);
+        player.SetAnimatorBools("grounded", false);
     }
 
     public override void ExitState()
@@ -58,6 +58,10 @@ public class NStateBounced : NState {
             return player.StateTransition(EState.ashes);
         else if (GetBool("spiked"))
             return player.StateTransition(EState.spiked);
+        else if (GetBool("dodged") && transitionLockoutFrames <= 0)
+            return player.StateTransition(EState.airDodge);
+        else if (GetBool("boosted") && transitionLockoutFrames <= 0)
+            return player.StateTransition(EState.suspended);
         else if (GetBool("pushed"))
             return player.StateTransition(EState.pushed);
         else if (GetBool("bounced"))

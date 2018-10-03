@@ -15,5 +15,8 @@ public enum EState {
     slipped = 9,
     slam = 10,
     boinked = 11,
-    inactive = 12
+    inactive = 12,
+    airDodge = 13,
+    suspended = 14,
+    fireBoost = 15
 }

@@ -67,10 +67,10 @@ public class NWeaponPlasma : NWeapon
         }
     }
 
-    public override void Discharge(Vector2 angle, Collider2D playerCollider, bool flipX)
+    public override void Discharge()
     {
-        base.Discharge(angle, playerCollider, flipX);
-        this.playerCollider = playerCollider;
+        base.Discharge();
+        playerCollider = wielder.GetCollider();
     }
 
     private IEnumerator Explosion(float time, float scale)

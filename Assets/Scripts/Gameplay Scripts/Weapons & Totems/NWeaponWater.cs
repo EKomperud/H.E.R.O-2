@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class NWeaponWater : NWeapon
 {
+    ParticleSystem waterParticles;
+    Collider2D weaponCollider;
+    Collider2D shieldCollider;
 
     protected override void Start()
     {
         base.Start();
+        waterParticles = transform.GetChild(0).GetComponent<ParticleSystem>();
+        weaponCollider = GetComponent<Collider2D>();
+        shieldCollider = transform.GetChild(1).GetComponent<Collider2D>();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -25,12 +31,30 @@ public class NWeaponWater : NWeapon
         }
         else if (w != null)
         {
-            w.HitByWater();
+            if (!activeShield)
+                w.HitByWater(collision);
+            else
+                w.HitByWaterShield(collision);
         }
+    }
+
+    public override void Shield()
+    {
+        cc = shieldCollider;
+        shieldCollider.gameObject.layer = LayerMask.NameToLayer("Shield");
+        base.Shield();
+        waterParticles.Play();
+        waterParticles.transform.SetParent(null);
+        ParticleSystem.MainModule main = waterParticles.main;
+        main.stopAction = ParticleSystemStopAction.Destroy;
     }
 
     private IEnumerator Explosion()
     {
+        waterParticles.Play();
+        waterParticles.transform.SetParent(null);
+        ParticleSystem.MainModule main = waterParticles.main;
+        main.stopAction = ParticleSystemStopAction.Destroy;
         animator.SetBool("collided", true);
         rb.velocity *= 0.1f;
         float timer = 0f;
@@ -52,10 +76,22 @@ public class NWeaponWater : NWeapon
         rb.velocity = normal * speed;
     }
 
-    public override void HitByFire()
+    public override void HitByFire(Collision2D collision)
     {
-        base.HitByFire();
-        Destroy(gameObject);
+        base.HitByFire(collision);
+        if (!activeShield)
+            Destroy(gameObject);
+        else
+            StartCoroutine("ShieldDissipate");
+    }
+
+    public override void HitByFireShield(Collision2D collision)
+    {
+        base.HitByFireShield(collision);
+        if (!activeShield)
+            Destroy(gameObject);
+        else
+            StartCoroutine("ShieldDissipate");
     }
 
     public override void HitByEarth()

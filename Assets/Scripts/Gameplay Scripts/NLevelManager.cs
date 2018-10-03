@@ -54,7 +54,8 @@ public class NLevelManager : MonoBehaviour {
                 playerNumber = player.GetPlayerNumber();
                 if (gameData.playerCharacterChoices[playerNumber] != 4)
                 {
-                    player.GetComponent<Animator>().runtimeAnimatorController = gameData.characterTemplates[gameData.playerCharacterChoices[playerNumber]].animator;
+                    player.SetAnimators(gameData.characterTemplates[gameData.playerCharacterChoices[playerNumber]].GetAnimatorControllers());
+                    player.SetPants(gameData.characterTemplates[gameData.playerCharacterChoices[playerNumber]].GetPants());
                     LinkedList<Transform>.Enumerator e = spawnPoints.GetEnumerator();
                     int r = Random.Range(1, spawnPoints.Count);
                     for (int j = 0; j < r; j++)
@@ -108,6 +109,7 @@ public class NLevelManager : MonoBehaviour {
         cameraQueue.Enqueue(CamToPosition(cam.transform.position, cam.orthographicSize, null));
         cameraCoroutine = cameraQueue.Dequeue();
         StartCoroutine(cameraCoroutine);
+        //BeginMatch();
     }
 
     private IEnumerator CamToPosition(Vector3 dest, float size, NPlayerController player)

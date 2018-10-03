@@ -16,11 +16,10 @@ public class NStateSpiked : NState {
         base.EnterState();
         rb.velocity = spikedDirection;
         if (spikedDirection.x < 0)
-            sr.flipX = true;
+            player.SpriteFlipX(true);
         else if (spikedDirection.x > 0)
-            sr.flipX = false;
+            player.SpriteFlipX(false);
         SetBool("pushed",false);
-        ac.SetBool("grounded", false);
     }
 
     public override void ExitState()

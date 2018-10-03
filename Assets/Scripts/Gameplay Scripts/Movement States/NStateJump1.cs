@@ -41,7 +41,8 @@ public class NStateJump1 : NState {
         base.EnterState();
         Vector2 v = rb.velocity;
         doubleJumpDelay = 0.075f;
-        ac.SetBool("grounded", false);
+        player.SetAnimatorTriggers("jumping");
+        player.SetAnimatorBools("falling", false);
         shortHopFrames = 0;
         jumped = false;
         player.TrySpawnAir();
@@ -50,7 +51,8 @@ public class NStateJump1 : NState {
     public override void ExitState()
     {
         base.ExitState();
-
+        player.SetAnimatorFloats("speedY", 0f);
+        player.SetAnimatorBools("falling", false);
     }
 
     public override void StateUpdate()
@@ -70,7 +72,9 @@ public class NStateJump1 : NState {
             shortHopFrames++;
         else
             shortHopFrames = _shortHopFrames + 1;
+
         base.StateFixedUpdate();
+        player.SetAnimatorBools("falling", speedY < 0);
     }
 
     #region Helpers
@@ -82,6 +86,10 @@ public class NStateJump1 : NState {
             return player.StateTransition(EState.ashes);
         else if (GetBool("spiked"))
             return player.StateTransition(EState.spiked);
+        else if (GetBool("dodged"))
+            return player.StateTransition(EState.airDodge);
+        else if (GetBool("boosted"))
+            return player.StateTransition(EState.suspended);
         else if (GetBool("pushed"))
             return player.StateTransition(EState.pushed);
         else if (GetBool("bounced"))
@@ -92,6 +100,7 @@ public class NStateJump1 : NState {
         BottomCheck();
         if ((GroundCheck() || HeadCheck()) && jumped)
         {
+            player.SetAnimatorTriggers("landing");
             if (IceCheck())
                 return player.StateTransition(EState.slipped);
             return player.StateTransition(EState.normal);

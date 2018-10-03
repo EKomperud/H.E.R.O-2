@@ -60,6 +60,10 @@ public class NStateSlam : NState {
             return player.StateTransition(EState.ashes);
         else if (GetBool("spiked"))
             return player.StateTransition(EState.spiked);
+        else if (GetBool("dodged"))
+            return player.StateTransition(EState.airDodge);
+        else if (GetBool("boosted"))
+            return player.StateTransition(EState.suspended);
         else if (GetBool("pushed"))
             return player.StateTransition(EState.pushed);
         else if (GetBool("bounced"))

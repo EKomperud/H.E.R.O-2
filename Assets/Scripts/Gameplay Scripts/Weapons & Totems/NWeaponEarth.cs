@@ -64,6 +64,7 @@ public class NWeaponEarth : NWeapon {
                 {
                     if ((_activeTime -= Time.fixedDeltaTime) <= 0)
                     {
+                        Physics2D.IgnoreCollision(cc, wielder.GetCollider(), false);
                         decelerating = true;
                         wielder = null;
                     }
@@ -123,12 +124,31 @@ public class NWeaponEarth : NWeapon {
         {
             w.HitByEarth();
         }
-        else if (collision.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Platforms")) && (wielder != null))
+        else if (collision.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Platforms")))
         {
-            wielder = null;
-            decelerating = true;
-            falling = true;
-            rb.gravityScale = gravityScale;
+            if (!decelerating || !falling)
+            {
+                Physics2D.IgnoreCollision(cc, wielder.GetCollider(), false);
+                wielder = null;
+                decelerating = true;
+                falling = true;
+                rb.gravityScale = gravityScale;
+            }
+            else if (falling)
+            {
+                // Reset state variables
+                animator.SetBool("gathering", false);
+                animator.SetBool("collided", true);
+                activeWeapon = false;
+                held = false;
+                decelerating = false;
+                falling = false;
+
+                // Reset reference variables
+                transform.rotation = new Quaternion();
+                rb.gravityScale = 0f;
+                cc.isTrigger = true;
+            }
         }
     }
 
@@ -202,7 +222,39 @@ public class NWeaponEarth : NWeapon {
         
     }
 
-    public override void Discharge(Vector2 angle, Collider2D playerCollider, bool flipX)
+    public override void Discharge()
+    {
+        // Unset joystick control
+        joystick = null;
+
+        // Set state variables
+        dischargeAngle = rightStick;
+        held = false;
+        bool flipX = wielder.GetFlipX();
+        float flip = flipX ? -1 : 1;
+        wielder.SetAnimatorFloats("attackX", rightStick.x * flip);
+        wielder.SetAnimatorFloats("attackY", rightStick.y);
+        wielder.SetAnimatorTriggers("attacking");
+
+        // Set reference variables
+        Collider2D playerCollider = wielder.GetCollider();
+        Physics2D.IgnoreCollision(cc, wielder.GetCollider(), true);
+        if (dischargeAngle == Vector2.zero)
+        {
+            dischargeAngle = flipX ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
+            rb.velocity = dischargeAngle * speed;
+            transform.position = new Vector2(transform.position.x, playerCollider.transform.position.y);
+        }
+        else
+        {
+            rb.velocity = dischargeAngle * speed;
+        }
+        cc.isTrigger = false;
+        transform.SetParent(null);
+        wielder.WeaponUsed();
+    }
+
+    public override void WielderDied()
     {
         // Unset joystick control
         joystick = null;
@@ -211,10 +263,13 @@ public class NWeaponEarth : NWeapon {
         held = false;
 
         // Set reference variables
-        rightStick = angle;
-        rb.velocity = angle * speed;
         cc.isTrigger = false;
         transform.SetParent(null);
+    }
+
+    public bool GetActive()
+    {
+        return held || activeWeapon || decelerating || falling;
     }
 
     protected void BottomCheck()

@@ -20,7 +20,7 @@ public class NStateNormal : NState {
         base.EnterState();
         Vector2 v = rb.velocity;
         rb.velocity = new Vector2(v.x * 0.8f, v.y);
-        ac.SetBool("grounded", true);
+        //player.SetAnimatorBools("grounded", true);
         SetBool("doubled", false);
     }
 
@@ -54,6 +54,10 @@ public class NStateNormal : NState {
             return player.StateTransition(EState.ashes);
         else if (GetBool("spiked"))
             return player.StateTransition(EState.spiked);
+        else if (GetBool("dodged"))
+            return player.StateTransition(EState.airDodge);
+        else if (GetBool("boosted"))
+            return player.StateTransition(EState.suspended);
         else if (GetBool("pushed"))
             return player.StateTransition(EState.pushed);
         else if (GetBool("bounced"))
@@ -72,8 +76,6 @@ public class NStateNormal : NState {
 
     protected void PhysicsUpdate()
     {
-        
-
         float x = 0;
         if (leftStick.x > 0)
         {

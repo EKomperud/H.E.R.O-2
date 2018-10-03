@@ -50,7 +50,8 @@ public class NStateSO : ScriptableObject {
 
     [Header("Airborne State")]
     [SerializeField] public float airborneDirectionSwitchRatio;
-    [SerializeField] public float airborneMaxLateralVelocity;
+    [SerializeField] public float airborneHardMaxLateralVelocity;
+    [SerializeField] public float airborneSoftMaxLateralVelocity;
     [Space]
 
     [Header("Bounced State")]
@@ -66,7 +67,19 @@ public class NStateSO : ScriptableObject {
 
     [Header("Pushed State")]
     [SerializeField] public float pushedDuration;
-    [SerializeField] public float pushedInitialVelocity;
+
+    [Header("Air Dodge State")]
+    [SerializeField] public float airDodgeInitialVelocity;
+    [SerializeField] public float airDodgeVelocityDecayRate;
+    [SerializeField] public float airDodgeVelocityMultiplier;
+
+    [Header("Suspended State")]
+    [SerializeField] public float suspendedSuspensionTime;
+    [SerializeField] public float suspendedVelocityDecay;
+
+    [Header("Fire Boost State")]
+    [SerializeField] public float fireBoostVelocity;
+    [SerializeField] public float fireBoostTime;
 
     [Space]
 
@@ -78,6 +91,7 @@ public class NStateSO : ScriptableObject {
 
     [Header("Burning SubState")]
     [SerializeField] public float burningDuration;
+
 
     #endregion
 }

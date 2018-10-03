@@ -4,12 +4,25 @@ using UnityEngine;
 
 public class NWeaponAir : NWeapon {
 
+    [Space]
+    [Header("Air Members")]
+    [SerializeField] private ParticleSystem airParticles;
+    [SerializeField] private Transform airShield;
+    [SerializeField] private float shieldTime;
     bool collided;
 
     protected override void Start()
     {
         base.Start();
         collided = false;
+    }
+
+    protected override void FixedUpdate()
+    {
+        if (!mobility)
+            base.FixedUpdate();
+        else
+            rb.MovePosition(wielder.GetNextFramePosition());
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -45,26 +58,6 @@ public class NWeaponAir : NWeapon {
         }
     }
 
-    public override void HitByAir(Vector2 normal, NPlayerController wielder)
-    {
-        base.HitByAir(normal, wielder);
-    }
-
-    public override void HitByEarth()
-    {
-        base.HitByEarth();
-    }
-
-    public override void HitByWater()
-    {
-        base.HitByWater();
-    }
-
-    public override void HitByFire()
-    {
-        base.HitByFire();
-    }
-
     private IEnumerator Explosion(bool reverseDirection)
     {
         collided = true;
@@ -87,5 +80,24 @@ public class NWeaponAir : NWeapon {
             yield return new WaitForEndOfFrame();
         }
         Destroy(gameObject);
+    }
+
+    public override void Mobility()
+    {
+        sr.enabled = false;
+        mobility = true;
+        transform.localPosition = new Vector3(0f, 0f, 0f);
+        airShield.gameObject.SetActive(true);
+        gameObject.layer = 9;
+        airShield.gameObject.layer = 9;
+        Collider2D playerCollider = wielder.GetCollider();
+        Physics2D.IgnoreCollision(airShield.GetComponent<Collider2D>(), playerCollider, true);
+        rb.simulated = true;
+        airParticles.Play();
+        airParticles.transform.SetParent(wielder.transform);
+        base.Mobility();
+        IEnumerator lifeTimer = LifetimeTimer(shieldTime);
+        StartCoroutine(lifeTimer);
+        wielder.AirMobility();
     }
 }

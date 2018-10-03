@@ -14,7 +14,8 @@ public class NTotemEarth : NTotem {
 
     public override bool Pickup()
     {
-        return !(earth.GetWielder() != null);
+        //return !(earth.GetWielder() != null);
+        return !earth.GetActive();
     }
 
     public override Transform GetWeapon()

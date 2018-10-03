@@ -11,16 +11,29 @@ public class NWeapon : MonoBehaviour {
     protected Animator animator;
     protected SpriteRenderer sr;
     protected Vector3 orbit;
+    protected Vector2 leftStick;
     protected Vector2 rightStick;
     protected Vector2 dischargeAngle;
     protected bool dischargeButton;
+    protected bool mobilityButton;
+    protected bool shieldButton;
+    protected bool activeShield;
     protected Player joystick;
     protected float x, y, z, angle, rotationSpeed, bobSpeed, radius, xRotation, yRotation, height;
     protected bool held;
-    protected float lifetime, timer;
+    protected bool shield;
+    protected bool mobility;
+    protected float lifetime = 3f;
+    protected float timer;
+    protected Vector3 _shieldGrowthRate;
 
     [SerializeField] protected float speed;
     [SerializeField] protected EElement element;
+
+    [Header("Shield Attributes")]
+    [SerializeField] protected int shieldFrames;
+    [SerializeField] protected float shieldSize;
+    [SerializeField] protected float shieldGrowthRate;
 
 	protected virtual void Start () {
         x = y = z = 0;
@@ -38,19 +51,50 @@ public class NWeapon : MonoBehaviour {
         sr = GetComponent<SpriteRenderer>();
         lifetime = 3f;
         timer = 0f;
+        _shieldGrowthRate = new Vector3(shieldGrowthRate, shieldGrowthRate, 0f);
     }
-	
-	protected virtual void FixedUpdate () {
+
+    void Update()
+    {
+        if (held && this.Equals(wielder.GetWeapon()) && wielder.GetWeaponCooled())
+        {
+            leftStick = new Vector2(joystick.GetAxis("Move Horizontal"), joystick.GetAxis("Move Vertical"));
+            rightStick = new Vector2(joystick.GetAxis("Aim Horizontal"), joystick.GetAxis("Aim Vertical"));
+            dischargeButton = joystick.GetButtonDown("Discharge Weapon");
+            mobilityButton = joystick.GetButtonDown("Mobility");
+
+            if (joystick.GetButtonDown("Shield") || (shieldButton && joystick.GetButton("Shield")))
+                shieldButton = true;
+            else if (!joystick.GetButton("Shield"))
+                shieldButton = false;
+
+            if (dischargeButton)
+                Discharge();
+
+            if (mobilityButton)
+                Mobility();
+        }
+    }
+
+    protected virtual void FixedUpdate () {
         if (held)
         {
-            rightStick = new Vector2(joystick.GetAxis("Aim Horizontal"), joystick.GetAxis("Aim Vertical"));
-            if (rightStick != Vector2.zero && this.Equals(wielder.GetWeapon()))
+            if (this.Equals(wielder.GetWeapon()))
             {
-                UpdateAiming(rightStick);
+                if (shieldButton || activeShield)
+                    UpdateShielding();
+                else if (rightStick != Vector2.zero)
+                    UpdateAiming(rightStick);
+                else
+                    UpdateNotAiming();
             }
             else
             {
-                UpdateNotAiming();
+                if (activeShield)
+                    UpdateShielding();
+                else
+                    UpdateNotAiming();
+
             }
         }
     }
@@ -73,6 +117,8 @@ public class NWeapon : MonoBehaviour {
 
     protected virtual void UpdateNotAiming()
     {
+        //if (this.Equals(wielder.GetWeapon()))
+        //    wielder.SetAnimatorBools("casting", false);
         Vector3 tp = wielder.transform.position;
         angle += rotationSpeed * Time.fixedDeltaTime;
         y += bobSpeed * Time.fixedDeltaTime;
@@ -94,19 +140,58 @@ public class NWeapon : MonoBehaviour {
 
     protected virtual void UpdateAiming(Vector2 rightStick)
     {
+        //if (this.Equals(wielder.GetWeapon()))
+        //    wielder.SetAnimatorBools("casting", true);
         float z = (Mathf.Atan2(rightStick.y, rightStick.x) * 57.2958f);
         transform.rotation = Quaternion.Euler(0, 0, z);
 
         float x = wielder.transform.position.x - this.transform.position.x + (rightStick.x * 1.5f);
         float y = wielder.transform.position.y - this.transform.position.y + (rightStick.y * 1.5f);
-        Vector3 movement = new Vector3(5 * x, 5 * y, 0);
+        Vector3 movement = new Vector3(10 * x, 10 * y, 0);
         movement *= Time.fixedDeltaTime;
         transform.Translate(movement, Space.World);
 
         angle += rotationSpeed * Time.fixedDeltaTime;
     }
 
+    protected virtual void UpdateShielding()
+    {
+        if (!activeShield)
+        {
+            //if (this.Equals(wielder.GetWeapon()))
+            //    wielder.SetAnimatorBools("casting", true);
+            transform.position = new Vector3(transform.position.x, transform.position.y, -1f);
+            float x = wielder.transform.position.x - this.transform.position.x;
+            float y = wielder.transform.position.y - this.transform.position.y;
+            Vector3 movement = new Vector3(10 * x, 10 * y, 0f);
+            movement *= Time.fixedDeltaTime;
+            transform.Translate(movement, Space.World);
+
+            float direction = (Mathf.Atan2(y, x) * 57.2958f);
+            transform.rotation = Quaternion.Euler(0, 0, direction);
+
+            angle += rotationSpeed * Time.fixedDeltaTime;
+            if (Vector2.Distance(transform.position, wielder.transform.position) <= 0.05f)
+                Shield();
+        }
+        else
+        {
+            if (transform.localScale.x <= shieldSize)
+                transform.localScale += _shieldGrowthRate;
+
+            rb.MovePosition(wielder.GetNextFramePosition());
+
+            if (--shieldFrames == 0)
+                StartCoroutine("ShieldDissipate");
+        }
+    }
+
     #region Public Methods
+    public void SetRightStick(Vector2 rs)
+    {
+        rightStick = rs;
+    }
+
     public void SetSpriteDirection(bool flipX)
     {
         sr.flipX = flipX;
@@ -132,34 +217,60 @@ public class NWeapon : MonoBehaviour {
         height = h == Mathf.Infinity ? height : h;
     }
 
-    public virtual void Discharge(Vector2 angle, Collider2D playerCollider, bool flipX)
+    public virtual void Discharge()
     {
-        dischargeAngle = angle;
+        bool flipX = wielder.GetFlipX();
+        float flip = flipX ? -1 : 1;
+        wielder.SetAnimatorFloats("attackX", rightStick.x * flip);
+        wielder.SetAnimatorFloats("attackY", rightStick.y);
+        wielder.SetAnimatorTriggers("attacking");
+
+        dischargeAngle = rightStick;
+        Collider2D playerCollider = wielder.GetCollider();
+        Physics2D.IgnoreCollision(cc, playerCollider, true);
+
         held = false;
-        rightStick = angle;
         rb.simulated = true;
-        if (angle == Vector2.zero)
+        if (dischargeAngle == Vector2.zero)
         {
-            angle = flipX ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
+            dischargeAngle = flipX ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
             sr.flipX = flipX;
-            rb.velocity = angle * speed;
-            //rb.MovePosition(new Vector2(transform.position.x, playerCollider.transform.position.y));
+            rb.velocity = dischargeAngle * speed;
             transform.position = new Vector2(transform.position.x, playerCollider.transform.position.y);
         }
         else
         {
-            rb.velocity = angle * speed;
+            rb.velocity = dischargeAngle * speed;
         }
-        Physics2D.IgnoreCollision(cc, playerCollider, true);
         cc.enabled = true;
         transform.SetParent(null);
         animator.SetBool("discharged", true);
-        StartCoroutine("LifetimeTimer");
+        IEnumerator lifeTimer = LifetimeTimer(0f);
+        StartCoroutine(lifeTimer);
+        wielder.WeaponUsed();
+    }
+
+    public virtual void Mobility()
+    {
+        wielder.WeaponUsed();
     }
 
     public virtual void Shield()
     {
+        activeShield = true;
+        transform.position = wielder.transform.position;
+        gameObject.layer = LayerMask.NameToLayer("Shield");
+        Collider2D playerCollider = wielder.GetCollider();
+        Physics2D.IgnoreCollision(cc, playerCollider, true);
+        rb.simulated = true;
+        cc.enabled = true;
+        animator.SetBool("shielded", true);
+        wielder.WeaponUsed();
+    }
 
+    public virtual void WielderDied()
+    {
+        Destroy(gameObject);
     }
 
     public void HitByPlasma(Vector3 blackHole)
@@ -174,12 +285,12 @@ public class NWeapon : MonoBehaviour {
         StartCoroutine(plasmaCoroutine);
     }
 
-    public virtual void HitByFire()
+    public virtual void HitByFire(Collision2D collision)
     {
 
     }
 
-    public virtual void HitByWater()
+    public virtual void HitByWater(Collision2D collision)
     {
 
     }
@@ -194,13 +305,48 @@ public class NWeapon : MonoBehaviour {
 
     }
 
+    public void HitByPlasmaShield(Vector3 blackHole)
+    {
+        
+    }
+
+    public virtual void HitByFireShield(Collision2D collision)
+    {
+
+    }
+
+    public virtual void HitByWaterShield(Collision2D collision)
+    {
+
+    }
+
+    public virtual void HitByAirShield(Vector2 normal, NPlayerController wielder)
+    {
+
+    }
+
+    public virtual void HitByEarthShield()
+    {
+
+    }
+
 
     #endregion
 
     #region Private Helpers
-    protected virtual IEnumerator LifetimeTimer()
+    protected virtual IEnumerator ShieldDissipate()
     {
-        yield return new WaitForSeconds(lifetime);
+        animator.SetBool("dissipated", true);
+        cc.enabled = false;
+        rb.simulated = false;
+        yield return new WaitForSeconds(0.25f);
+        Destroy(gameObject);
+    }
+
+    protected virtual IEnumerator LifetimeTimer(float l)
+    {
+        l = l == 0 ? lifetime : l;
+        yield return new WaitForSeconds(l);
         Destroy(gameObject);
     }
 

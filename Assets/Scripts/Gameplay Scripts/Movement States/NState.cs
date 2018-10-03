@@ -9,7 +9,6 @@ public class NState {
     protected NPlayerController player;
     protected Rigidbody2D rb;
     protected BoxCollider2D bc;
-    protected Animator ac;
     protected SpriteRenderer sr;
     protected NStateSO bd;
     protected EState state;
@@ -27,6 +26,8 @@ public class NState {
     protected float frozenGravityPerFrame;
 
     // Members
+    protected Vector2 lastFrame;
+    protected float speedY;
     protected RaycastHit2D[] hits;
     protected int platformsLayer;
 
@@ -37,8 +38,6 @@ public class NState {
         rb = info.r;
         bc = info.b;
         bd = info.bd;
-        ac = info.ac;
-        sr = info.sr;
         joystick = info.j;
         freshJumpButton = false;
         heldJumpButton = false;
@@ -48,6 +47,8 @@ public class NState {
         frozenGravityPerFrame = info.bd.frozenGravityPerFrame;
 
         platformsLayer = LayerMask.NameToLayer("Platforms");
+
+        lastFrame = rb.position;
     }
 
     public virtual void EnterState()
@@ -72,12 +73,17 @@ public class NState {
                 freshJumpButton = joystick.GetButtonDown("Jump");
                 heldJumpButton = joystick.GetButton("Jump");
                 slamButton = joystick.GetButton("Slam");
-                //bool jb = joystick.getbutt
             }
             if (leftStick.x < 0)
-                sr.flipX = true;
+            {
+                player.SpriteFlipX(true);
+                //player.SetAnimatorBools("flipX", true);
+            }
             else if (leftStick.x > 0)
-                sr.flipX = false;
+            {
+                player.SpriteFlipX(false);
+                //player.SetAnimatorBools("flipX", false);
+            }
         }
     }
 
@@ -88,7 +94,14 @@ public class NState {
             Vector2 dist = player.GetPlasmaPull().transform.position - player.transform.position;
             rb.velocity += (dist / dist.sqrMagnitude) * (player.GetPlasmaPull().transform.localScale.x * 0.5f);
         }
-        ac.SetFloat("speed", Mathf.Abs(rb.velocity.x));
+        player.SetAnimatorFloats("speedXraw", rb.velocity.x);
+        player.SetAnimatorFloats("speedX", Mathf.Abs(rb.velocity.x));
+        speedY = (rb.position.y - lastFrame.y) / Time.fixedDeltaTime;
+        player.SetAnimatorFloats("speedY", speedY);
+        //ac.SetFloat("speed", Mathf.Abs(rb.velocity.x));
+        //ac.SetFloat("speedX", Mathf.Abs(rb.velocity.x));
+        //ac.SetFloat("speedY", rb.velocity.y);
+        lastFrame = rb.position;
     }
 
     public void SetBool(string s, bool b)

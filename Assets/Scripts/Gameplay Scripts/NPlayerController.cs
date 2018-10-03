@@ -9,18 +9,14 @@ public struct NStateInfo
     public Rigidbody2D r;
     public BoxCollider2D b;
     public Player j;
-    public Animator ac;
-    public SpriteRenderer sr;
     public NStateSO bd;
 
-    public NStateInfo(NPlayerController p, Rigidbody2D r, BoxCollider2D b, Player j, Animator ac, SpriteRenderer sr, NStateSO bd)
+    public NStateInfo(NPlayerController p, Rigidbody2D r, BoxCollider2D b, Player j, NStateSO bd)
     {
         this.p = p;
         this.r = r;
         this.b = b;
         this.j = j;
-        this.ac = ac;
-        this.sr = sr;
         this.bd = bd;
     }
 }
@@ -32,16 +28,19 @@ public class NPlayerController : MonoBehaviour {
     
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
-    private Animator animator;
-    private SpriteRenderer spriteRenderer;
-    private ParticleSystem fireParticles;
-    private ParticleSystem bloodParticles;
+    private Animator[] animators;
+    private float bodySync;
+    private SpriteRenderer[] spriteRenderers;
     [SerializeField] private NStateSO balanceData;
     [SerializeField] private int playerNumber;
+    [SerializeField] private float weaponCooldownTime;
 
     [Tooltip("air, fire, water, earth, plasma")]
     [SerializeField] private int[] weaponCounts;
     [SerializeField] private Transform airPrefab;
+    [SerializeField] private Transform frozenPrefab;
+    [SerializeField] private ParticleSystem fireParticles;
+    [SerializeField] private ParticleSystem bloodParticles;
     private NLevelManager levelManager;
     private bool living;
     private Player joystick;
@@ -61,19 +60,28 @@ public class NPlayerController : MonoBehaviour {
     public EState state;
 
     private bool grabButton;
-    private bool dischargeButton;
-    private bool shieldButton;
+    private bool dischargeCooldown;
     private bool swapButton;
+    private Vector2 rightStick;
+
+    public Animator armMachine;
+    public Animator legMachine;
     #endregion
 
     #region Monobehaviour
     void Start() {
         rigidBody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        fireParticles = transform.GetChild(0).GetComponent<ParticleSystem>();
-        bloodParticles = transform.GetChild(1).GetComponent<ParticleSystem>();
+        animators = new Animator[4];
+        animators[0] = transform.GetChild(2).GetComponent<Animator>();
+        animators[1] = transform.GetChild(2).GetChild(0).GetComponent<Animator>();
+        animators[2] = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
+        animators[3] = transform.GetChild(2).GetChild(2).GetComponent<Animator>();
+        spriteRenderers = new SpriteRenderer[4];
+        spriteRenderers[0] = transform.GetChild(2).GetComponent<SpriteRenderer>();
+        spriteRenderers[1] = transform.GetChild(2).GetChild(0).GetComponent<SpriteRenderer>();
+        spriteRenderers[2] = transform.GetChild(2).GetChild(1).GetComponent<SpriteRenderer>();
+        spriteRenderers[3] = transform.GetChild(2).GetChild(2).GetComponent<SpriteRenderer>();
 
         joystick = ReInput.players.GetPlayer(playerNumber);
         movementBools = new Dictionary<string, bool>();
@@ -86,8 +94,10 @@ public class NPlayerController : MonoBehaviour {
         movementBools["slipped"] = false;
         movementBools["doubled"] = false;
         movementBools["active"] = false;
-        NStateInfo info = new NStateInfo(this, rigidBody, boxCollider, joystick, animator, spriteRenderer, balanceData);
-        movementStates = new NState[13];
+        movementBools["dodged"] = false;
+        movementBools["boosted"] = false;
+        NStateInfo info = new NStateInfo(this, rigidBody, boxCollider, joystick, balanceData);
+        movementStates = new NState[16];
         movementStates[0] = new NStateNormal(info, EState.normal);
         movementStates[1] = new NStateJump1(info, EState.jump1);
         movementStates[2] = new NStateJump2(info, EState.jump2);
@@ -101,7 +111,9 @@ public class NPlayerController : MonoBehaviour {
         movementStates[10] = new NStateSlam(info, EState.slam);
         movementStates[11] = new NStateBounced(info, EState.boinked, info.bd.boinkedInitialVelocity, info.bd.boinkedTransitionLockoutFrames);
         movementStates[12] = new NStateInactive(info, EState.inactive);
-
+        movementStates[13] = new NStateAirDodge(info, EState.airDodge);
+        movementStates[14] = new NStateSuspended(info, EState.suspended);
+        movementStates[15] = new NStateFireBoost(info, EState.fireBoost);
         movementState = movementStates[12];
 
         weapons = new SortedList<EElement, Queue<NWeapon>>(6);
@@ -121,6 +133,8 @@ public class NPlayerController : MonoBehaviour {
 
     void Update()
     {
+        SetBodySyncTime();
+
         if (movementState != null)
         {
             movementState.StateUpdate();
@@ -147,38 +161,6 @@ public class NPlayerController : MonoBehaviour {
                 }
             }
 
-            dischargeButton = joystick.GetButtonDown("Discharge Weapon");
-            if (dischargeButton && weapon != null)
-            {
-                Vector2 angle = new Vector2(joystick.GetAxis("Aim Horizontal"), joystick.GetAxis("Aim Vertical")).normalized;
-                weapon.Discharge(angle, boxCollider, spriteRenderer.flipX);
-                weapons[weaponEquipped].Dequeue();
-                weapon = null;
-                if (weapons[weaponEquipped].Count != 0)
-                {
-                    SetWeaponAngles(weaponEquipped, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
-                    weapon = weapons[weaponEquipped].Peek();
-                }
-                else
-                {
-                    if (avatar && CycleWeaponEquipped())
-                    {
-                        weapon = weapons[weaponEquipped].Peek();
-                        SetAllWeaponAngles();
-                    }
-                    else
-                    {
-                        weaponEquipped = EElement.air;
-                    }
-                }
-            }
-
-            shieldButton = joystick.GetButtonDown("Shield");
-            if (shieldButton && weapon != null)
-            {
-
-            }
-
             swapButton = joystick.GetButtonDown("Swap Weapon");
             if (avatar && swapButton)
             {
@@ -197,13 +179,17 @@ public class NPlayerController : MonoBehaviour {
         {
             movementState.StateFixedUpdate();
         }
+        //if (!(weapon != null))
+        //{
+        //    SetAnimatorBools("casting", false);
+        //}
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
         NPlayerController otherPlayer = col.gameObject.GetComponent<NPlayerController>();
         if (otherPlayer != null && onFire != null)
-            otherPlayer.HitByFire();
+            otherPlayer.HitByFire(Vector2.zero);
     }
 
     private void OnTriggerStay2D(Collider2D collider)
@@ -280,16 +266,104 @@ public class NPlayerController : MonoBehaviour {
         return plasmaPull;
     }
 
+    public Rigidbody2D GetRigidbody()
+    {
+        return rigidBody;
+    }
+
+    public Vector2 GetNextFramePosition()
+    {
+        return rigidBody.position + (rigidBody.velocity * Time.fixedDeltaTime);
+    }
+
+    public bool GetWeaponCooled()
+    {
+        return !dischargeCooldown;
+    }
+
+    public void SetAnimators(RuntimeAnimatorController[] controllers)
+    {
+        for (int i = 0; i < 4; i++)
+            animators[i].runtimeAnimatorController = controllers[i];
+    }
+
+    public void SetPants(Color p)
+    {
+        spriteRenderers[3].color = p;
+    }
+
+    public void SpriteFlipX(bool flip)
+    {
+        foreach (SpriteRenderer sr in spriteRenderers)
+            sr.flipX = flip;
+    }
+
+    public bool GetFlipX()
+    {
+        return spriteRenderers[0].flipX;
+    }
+
+    public void SetAnimatorBools(string param, bool b)
+    {
+        foreach (Animator ac in animators)
+            ac.SetBool(param, b);
+    }
+
+    public void SetAnimatorFloats(string param, float f)
+    {
+        foreach (Animator ac in animators)
+            ac.SetFloat(param, f);
+    }
+
+    public void SetAnimatorTriggers(string param)
+    {
+        foreach (Animator ac in animators)
+            ac.SetTrigger(param);
+    }
+
     public void Bounce()
     {
         movementState.SetBool("bounced", true);
+    }
+
+    public void WeaponUsed()
+    {
+        weapons[weaponEquipped].Dequeue();
+        weapon = null;
+        if (weapons[weaponEquipped].Count != 0)
+        {
+            SetWeaponAngles(weaponEquipped, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
+            weapon = weapons[weaponEquipped].Peek();
+        }
+        else
+        {
+            if (avatar && CycleWeaponEquipped())
+            {
+                weapon = weapons[weaponEquipped].Peek();
+                SetAllWeaponAngles();
+            }
+            else
+            {
+                weaponEquipped = EElement.air;
+            }
+        }
+        dischargeCooldown = true;
+        StartCoroutine("WeaponCooldown");
     }
 
     public void HitByAir(Vector2 direction)
     {
         NStatePushed pushed = (NStatePushed)movementStates[6];
         pushed.SetPushedDirection(direction);
-        movementState.SetBool("pushed", true);
+        pushed.SetPushedVelocity(7.5f);
+        SetMovementBool("pushed", true);
+    }
+
+    public void AirMobility()
+    {
+        NStateAirDodge dodged = (NStateAirDodge)movementStates[13];
+        dodged.SetDashDirection(new Vector2(joystick.GetAxis("Move Horizontal"), joystick.GetAxis("Move Vertical")));
+        SetMovementBool("dodged", true);
     }
 
     public void HitByEarth(Vector2 direction)
@@ -304,7 +378,7 @@ public class NPlayerController : MonoBehaviour {
         levelManager.RemovePlayer(gameObject);
     }
 
-    public void HitByFire()
+    public void HitByFire(Vector2 direction)
     {
         if (living)
         {
@@ -314,11 +388,48 @@ public class NPlayerController : MonoBehaviour {
                 frozen = null;
             }
             movementState.SetBool("frozen", false);
-            animator.SetBool("frozen", false);
+            SetAnimatorsPlaying(true);
+
+            if (direction != Vector2.zero)
+            {
+                NStatePushed pushed = (NStatePushed)movementStates[6];
+                pushed.SetPushedDirection(direction);
+                pushed.SetPushedVelocity(10f);
+                movementState.SetBool("pushed", true);
+            }
+            
             fireParticles.Play();
             if (!(onFire != null) && !movementState.GetBool("ashed"))
                 onFire = StartCoroutine(DeathByFire());
         }
+    }
+
+    public float FireMobility()
+    {
+        NStateSuspended suspended = (NStateSuspended)movementStates[14];
+        NStateFireBoost boosted = (NStateFireBoost)movementStates[15];
+        Vector2 boostDirection = new Vector2(joystick.GetAxis("Move Horizontal"), joystick.GetAxis("Move Vertical"));
+        if (boostDirection == Vector2.zero)
+            boostDirection = GetFlipX() ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
+        boosted.SetBoostDirection(boostDirection);
+        SetMovementBool("boosted", true);
+        return suspended.GetSuspensionTime();
+    }
+
+    private IEnumerator DelayedFireMobility(float suspensionTime, Vector2 boostDirection)
+    {
+        yield return new WaitForSeconds(suspensionTime);
+        // TO DO:
+        // Use this function to universalize the delayed fire boost between the movement state machine,
+        // the animator, and the weapon itself
+    }
+
+    public void FireMobilityCollision(Vector2 direction)
+    {
+        NStatePushed pushed = (NStatePushed)movementStates[6];
+        pushed.SetPushedDirection(direction);
+        pushed.SetPushedVelocity(10f);
+        SetMovementBool("pushed", true);
     }
 
     public void HitByWater()
@@ -330,7 +441,7 @@ public class NPlayerController : MonoBehaviour {
                 Extinguish();
             }
             movementState.SetBool("frozen", true);
-            animator.SetBool("frozen", true);
+            SetAnimatorsPlaying(false);
             if (!(frozen != null))
                 frozen = StartCoroutine(Frozen());
         }
@@ -505,16 +616,8 @@ public class NPlayerController : MonoBehaviour {
     {
         foreach (KeyValuePair<EElement, Queue<NWeapon>> e in weapons)
         {
-            if (e.Key == EElement.earth || e.Key == EElement.plasma)
-            {
-                while (e.Value.Count != 0)
-                    e.Value.Dequeue().Discharge(Vector2.zero, boxCollider, spriteRenderer.flipX);
-            }
-            else
-            {
-                while (e.Value.Count != 0)
-                    Destroy(e.Value.Dequeue().gameObject);
-            }
+            while (e.Value.Count != 0)
+                e.Value.Dequeue().WielderDied();
         }
     }
 
@@ -529,9 +632,13 @@ public class NPlayerController : MonoBehaviour {
 
     private IEnumerator Frozen()
     {
+        Transform frozenEffect = Instantiate(frozenPrefab);
+        frozenEffect.SetParent(transform);
+        frozenEffect.localPosition = new Vector3(0f,0f,0f);
         yield return new WaitForSeconds(2f);
-        animator.SetBool("frozen", false);
+        Destroy(frozenEffect.gameObject);
         movementState.SetBool("frozen", false);
+        SetAnimatorsPlaying(true);
         frozen = null;
     }
 
@@ -546,5 +653,31 @@ public class NPlayerController : MonoBehaviour {
         ReleaseAllWeapons();
     }
 
+    private IEnumerator WeaponCooldown()
+    {
+        yield return new WaitForSeconds(weaponCooldownTime);
+        dischargeCooldown = false;
+    }
+
+    private void SetBodySyncTime()
+    {
+        float speedX = animators[2].GetFloat("speedX");
+        float maxSpeed = balanceData.normalMaxLateralVelocity;
+        float minSpeed = 0;
+        float ratio = (speedX - minSpeed) / (maxSpeed - minSpeed);
+        float maxMultiplier = 2;
+        float minMultiplier = 1;
+        float multiplier = (ratio * (maxMultiplier - minMultiplier)) + minMultiplier;
+        multiplier = multiplier == minMultiplier ? 0.35f : multiplier;
+        bodySync += Time.deltaTime * multiplier;
+        bodySync = bodySync > 1f ? bodySync - 1f : bodySync;
+        SetAnimatorFloats("bodySync", bodySync);
+    }
+
+    private void SetAnimatorsPlaying(bool p)
+    {
+        foreach (Animator animator in animators)
+            animator.enabled = p;
+    }
     #endregion
 }

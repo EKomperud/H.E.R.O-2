@@ -6,27 +6,29 @@ using UnityEngine;
 public class NStateAirborne : NState
 {
     protected float directionSwitchRatio;
-    protected float maxLateralVelocity;
+    protected float hardMaxLateralVelocity;
+    protected float softMaxLateralVelocity;
 
     private float doubleJumpDelay;
 
     public NStateAirborne(NStateInfo info, EState state) : base(info, state)
     {
         directionSwitchRatio = info.bd.airborneDirectionSwitchRatio;
-        maxLateralVelocity = info.bd.airborneMaxLateralVelocity;
+        hardMaxLateralVelocity = info.bd.airborneHardMaxLateralVelocity;
+        softMaxLateralVelocity = info.bd.airborneSoftMaxLateralVelocity;
     }
 
     public override void EnterState()
     {
         base.EnterState();
         doubleJumpDelay = 0.075f;
-        ac.SetBool("grounded", false);
+        player.SetAnimatorBools("falling", true);
     }
 
     public override void ExitState()
     {
         base.ExitState();
-
+        player.SetAnimatorBools("falling", false);
     }
 
     public override void StateUpdate()
@@ -53,6 +55,10 @@ public class NStateAirborne : NState
             return player.StateTransition(EState.ashes);
         else if (GetBool("spiked"))
             return player.StateTransition(EState.spiked);
+        else if (GetBool("dodged"))
+            return player.StateTransition(EState.airDodge);
+        else if (GetBool("boosted"))
+            return player.StateTransition(EState.suspended);
         else if (GetBool("pushed"))
             return player.StateTransition(EState.pushed);
         else if (GetBool("bounced"))
@@ -63,6 +69,7 @@ public class NStateAirborne : NState
         BottomCheck();
         if (GroundCheck() || HeadCheck())
         {
+            player.SetAnimatorTriggers("landing");
             if (IceCheck())
                 return player.StateTransition(EState.slipped);
             return player.StateTransition(EState.normal);
@@ -75,28 +82,21 @@ public class NStateAirborne : NState
     protected void PhysicsUpdate()
     {
         float x = 0;
-        float y = rb.velocity.y - globalGravityPerFrame;
-        if (leftStick.x > 0)
+        float y = rb.velocity.y - (GetBool("frozen") ? frozenGravityPerFrame : globalGravityPerFrame);
+        float leftStickSign = Mathf.Sign(leftStick.x);
+        float rbSign = Mathf.Sign(rb.velocity.x);
+        if (leftStick.x != 0)
         {
-            x = rb.velocity.x > 0 ? rb.velocity.x : rb.velocity.x * directionSwitchRatio;
-            x = Mathf.Min(x + (leftStick.x * 1.5f), maxLateralVelocity * Mathf.Abs(leftStick.x));
-        }
-        else if (leftStick.x < 0)
-        {
-            x = rb.velocity.x < 0 ? rb.velocity.x : rb.velocity.x * directionSwitchRatio;
-            x = Mathf.Max(x + (leftStick.x * 1.5f), -maxLateralVelocity * Mathf.Abs(leftStick.x));
-        }
-        else if (GetBool("frozen"))
-        {
-            x = rb.velocity.x;
-            y = rb.velocity.y - frozenGravityPerFrame;
+            x = rbSign == leftStickSign ? rb.velocity.x : rb.velocity.x * directionSwitchRatio;
+            x += leftStick.x * 1.2f;
         }
         else
         {
-            float sign = rb.velocity.x / Mathf.Abs(rb.velocity.x);
-            x = Mathf.Abs(rb.velocity.x) > 1.5f ? rb.velocity.x - (sign * 1.05f) : 0f;
+            x = Mathf.Abs(rb.velocity.x) > 1.5f ? rb.velocity.x - (rbSign * 1.05f) : 0f;
         }
 
+        x = Mathf.Abs(x) > hardMaxLateralVelocity ? rbSign * hardMaxLateralVelocity : x;
+        x = Mathf.Abs(x) > softMaxLateralVelocity ? x * 0.85f : x;
         rb.velocity = new Vector2(x, y);
     }
     #endregion

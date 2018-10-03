@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class NPersistentGameDataSO : ScriptableObject {
 
+    [Header("Universal Player Data")]
+    [SerializeField] public Sprite frozenSprite;
+
     [Header("Player Setup Data")]
     [SerializeField] public int[] playerCharacterChoices;
     [SerializeField] public NCharacterTemplate[] characterTemplates;

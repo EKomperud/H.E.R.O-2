@@ -5,7 +5,7 @@ using UnityEngine;
 public class NStatePushed : NState {
 
     private Vector2 pushDirection;
-    private float pushInitialVelocity;
+    private float pushVelocity;
     private float _pushDuration;
     private float pushDuration;
 
@@ -13,18 +13,16 @@ public class NStatePushed : NState {
     {
         this.pushDirection = pushDirection;
         _pushDuration = info.bd.pushedDuration;
-        pushInitialVelocity = info.bd.pushedInitialVelocity;
     }
 
     public override void EnterState()
     {
         base.EnterState();
-        rb.velocity = pushDirection * pushInitialVelocity;
+        rb.velocity = pushDirection * pushVelocity;
         if (pushDirection.x < 0)
-            sr.flipX = true;
+            player.SpriteFlipX(true);
         else if (pushDirection.x > 0)
-            sr.flipX = false;
-        ac.SetBool("grounded", false);
+            player.SpriteFlipX(false);
         pushDuration = _pushDuration;
     }
 
@@ -38,9 +36,9 @@ public class NStatePushed : NState {
     {
         base.StateUpdate();
         if (pushDirection.x < 0)
-            sr.flipX = true;
+            player.SpriteFlipX(true);
         else if (pushDirection.x > 0)
-            sr.flipX = false;
+            player.SpriteFlipX(false);
     }
 
     public override void StateFixedUpdate()
@@ -61,15 +59,19 @@ public class NStatePushed : NState {
             return player.StateTransition(EState.ashes);
         else if (GetBool("spiked"))
             return player.StateTransition(EState.spiked);
+        else if (GetBool("dodged") && pushDuration <= 0)
+            return player.StateTransition(EState.airDodge);
+        else if (GetBool("boosted") && pushDuration <= 0)
+            return player.StateTransition(EState.suspended);
         else if (GetBool("pushed"))
             return player.StateTransition(EState.pushed);
         else if (GetBool("bounced"))
             return player.StateTransition(EState.bounced);
 
         pushDuration -= Time.fixedDeltaTime;
+        BottomCheck();
         if (pushDuration <= 0)
         {
-            BottomCheck();
             if (GroundCheck() || HeadCheck())
             {
                 if (IceCheck())
@@ -95,13 +97,22 @@ public class NStatePushed : NState {
             x = Mathf.Abs(rb.velocity.x) > 1.5f ? rb.velocity.x - (sign * 0.15f) : 0f;
         }
 
-        float y = rb.velocity.y - globalGravityPerFrame;
+        float y = 0;
+        if (GroundCheck())
+            y = pushVelocity * (pushDuration / _pushDuration);
+        else
+            y = rb.velocity.y - globalGravityPerFrame;
         rb.velocity = new Vector2(x, y);
     }
 
     public void SetPushedDirection(Vector2 direction)
     {
-        pushDirection = direction;
+        pushDirection = direction.normalized;
+    }
+
+    public void SetPushedVelocity(float v)
+    {
+        pushVelocity = v;
     }
     #endregion
 }
